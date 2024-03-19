@@ -1,0 +1,61 @@
+*
++ Me:
+- Task Note
+	+ Có thời gian, độ quan trọng, vv
+	+ Có thể có lặp
+	+ Dưới dòng thời gian sẽ có Due-Date vv...
+
++ Trúc:
+- Default Text Note
+	+ Có chữ...
+	+ Nhiều chữ...
+	+ Rất nhiều chữ...
+	
++ Hạnh:
+- Private Note
+	+ Có mật khẩu
+	+ Lưu j đó bảo mật chắc thế
+	
++ Sơn:
+- Reminder Note
+	+ Nhắc qua thông báo khi đến thời gian
+	+ Có cài đặt nếu thông báo rồi thì có tự xóa hay không
+	
++ Thái:
+- To-do Note
+	+ Là 1 list các việc cần làm
+	+ Có cài đặt nếu hoàn thành 1 To-do thì sẽ làm gì
+		-> Chuyển cái To-Do xuống dưới cuối List hoặc xóa
+		
+	
+* Phần của mọi người:
+	+ 1 Class tương ứng với Note của các bạn
+		- Tham khảo DefaultNote và AttachableNote
+		- Hàm DeleteFromStorage có thể dùng ở mọi class kế thừa từ nó, nên không cần viết lại
+	+ 1 item_container_small_note để hiện thị ở MainActivity
+		- Có noteTitle, noteDateAndType
+	+ 1 NoteActivity
+		- Dùng để tạo 1 Note mới hoặc sửa 1 Note cũ
+		- Tham khảo AttachableNoteActivity cho Layout, đặc biệt là thanh titleBar
+		- Các bạn nhớ làm có cả Menu
+	+ 1 ViewHolder kèm các thao tác và Class tương ứng:
+		- Xem và thêm ở NoteAdapter
+	+ Và các phần còn lại và bản thân Note của các bạn cần
+	+ Dùng các màu đã được đặt sẵn 
+	
+* Phần cần thêm sau:
+- Dark mode / Light mode
+	+ Có thể hiện ở phần cài đặt
+	
+- Settings ?
+	+ Các cài đặt cần thiết của ứng dụng?
+	+ Bằng Preference hoặc...
+
+- ActionMenu + ContextMenu ?
+	+ ActionMenu: Settings
+	
+- Side Menu:
+	+ Hiện Note theo Category, Color?
+	
+* Setup Colors for Notes!
+	+ Damn, that's a good one

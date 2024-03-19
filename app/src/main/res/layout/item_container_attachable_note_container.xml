@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/containerView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_36sdp"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/containerIcon"
+        android:layout_width="@dimen/_36sdp"
+        android:layout_height="@dimen/_36sdp"
+        android:padding="@dimen/_6sdp"
+        android:src="@drawable/icon_file"
+        app:tint="@color/black"
+        app:layout_constraintStart_toStartOf="@id/containerView"
+        app:layout_constraintTop_toTopOf="@id/containerView"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/containerSettings"
+        android:layout_width="@dimen/_36sdp"
+        android:layout_height="@dimen/_36sdp"
+        android:padding="@dimen/_6sdp"
+        android:src="@drawable/icon_more"
+        app:tint="@color/black"
+        app:layout_constraintEnd_toEndOf="@id/containerView"
+        app:layout_constraintTop_toTopOf="@id/containerView"/>
+
+    <TextView
+        android:id="@+id/containerName"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_36sdp"
+        android:layout_marginStart="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:selectAllOnFocus="true"
+        android:hint="Name here..."
+        android:textSize="@dimen/_16ssp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textColorHint="@color/secondary_text"
+        android:background="@android:color/transparent"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="@id/containerView"
+        app:layout_constraintTop_toTopOf="@id/containerView"
+        app:layout_constraintEnd_toStartOf="@id/containerSettings" />
+
+    <EditText
+        android:id="@+id/containerContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        android:paddingTop="@dimen/_6sdp"
+        android:paddingBottom="@dimen/_6sdp"
+        android:focusable="true"
+        android:hint="Your description here..."
+        android:textSize="@dimen/_16ssp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/secondary_text"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/containerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

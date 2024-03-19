@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuItemReqRES"
+        android:title="Request Read External Storage" />
+
+    <item
+        android:id="@+id/menuItemReqWES"
+        android:title="Request Write External Storage" />
+
+    <item
+        android:id="@+id/menuItemReqMES"
+        android:title="Request Manage External Storage" />
+</menu>

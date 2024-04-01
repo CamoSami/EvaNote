@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_36sdp"
-            android:background="@color/gray"/>
+            android:background="?android:attr/textColorTertiary"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/backButton"
@@ -27,7 +27,7 @@
             android:layout_height="@dimen/_36sdp"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_back"
-            app:tint="@color/black"/>
+            app:tint="?android:attr/textColorPrimary"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,8 +39,8 @@
             android:text="New Note"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textColorHint="@color/secondary_text"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textColorHint="?android:attr/textColorSecondary"
             android:background="@android:color/transparent"
             android:maxLines="1"
             android:ellipsize="end"/>
@@ -80,7 +80,8 @@
                     android:text="DEFAULT NOTE"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"
                     android:layout_gravity="center_horizontal"
                     android:ellipsize="end"/>
 
@@ -95,7 +96,8 @@
                     android:text="A basic Note to store your text"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="normal"
-                    android:textColor="@color/primary_text"/>
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"/>
 
             </FrameLayout>
 
@@ -120,7 +122,8 @@
                     android:text="PRIVATE NOTE"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"
                     android:layout_gravity="center_horizontal"
                     android:ellipsize="end"/>
 
@@ -135,7 +138,8 @@
                     android:text="A Note protected by a password to safeguard its content (don't rely on it though)"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="normal"
-                    android:textColor="@color/primary_text"/>
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"/>
 
             </FrameLayout>
 
@@ -160,7 +164,8 @@
                     android:text="REMINDER NOTE"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"
                     android:layout_gravity="center_horizontal"
                     android:ellipsize="end"/>
 
@@ -175,7 +180,8 @@
                     android:text="A Note that will reminds you of its content through notification"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="normal"
-                    android:textColor="@color/primary_text"/>
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"/>
 
             </FrameLayout>
 
@@ -200,7 +206,8 @@
                     android:text="TO-DO NOTE"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"
                     android:layout_gravity="center_horizontal"
                     android:ellipsize="end"/>
 
@@ -215,7 +222,8 @@
                     android:text="A Note that list things that you should do"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="normal"
-                    android:textColor="@color/primary_text"/>
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"/>
 
             </FrameLayout>
 
@@ -240,7 +248,8 @@
                     android:text="TASK NOTE"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"
                     android:layout_gravity="center_horizontal"
                     android:ellipsize="end"/>
 
@@ -255,7 +264,8 @@
                     android:text="A Note of tasks should be done through out the day and can be repeated for subsequent uses"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="normal"
-                    android:textColor="@color/primary_text"/>
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"/>
 
             </FrameLayout>
 
@@ -282,7 +292,8 @@
                     android:text="ATTACHABLE NOTE"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"
                     android:layout_gravity="center_horizontal"
                     android:ellipsize="end"/>
 
@@ -297,7 +308,8 @@
                     android:text="A Note that can also let you insert a multitude of different things, so long that you have other means to open it"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="normal"
-                    android:textColor="@color/primary_text"/>
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:background="@android:color/transparent"/>
 
             </FrameLayout>
 

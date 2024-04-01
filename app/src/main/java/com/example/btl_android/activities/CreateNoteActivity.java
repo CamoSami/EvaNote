@@ -25,9 +25,28 @@ public class CreateNoteActivity extends AppCompatActivity
 
 	private void SetListeners()
 	{
+		//  TODO: Các bạn tự bổ sung
+
+		this.binding.newTodoNote.setOnClickListener(view -> {
+			Intent intent = new Intent(this, TodoNoteActivity.class);
+
+			startActivity(intent);
+
+			finish();
+		});
+
 		this.binding.newAttachableNote.setOnClickListener(view ->
 		{
 			Intent intent = new Intent(this, AttachableNoteActivity.class);
+
+			startActivity(intent);
+
+			finish();
+		});
+
+		this.binding.newTaskNote.setOnClickListener(view ->
+		{
+			Intent intent = new Intent(this, TaskNoteActivity.class);
 
 			startActivity(intent);
 

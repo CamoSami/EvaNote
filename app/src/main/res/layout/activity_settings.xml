@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SettingsActivity">
+
+    <FrameLayout
+        android:id="@+id/actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_36sdp"
+            android:background="?android:attr/textColorTertiary"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/backButton"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/icon_back"
+            app:tint="?android:attr/textColorPrimary"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_8sdp"
+            android:paddingBottom="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_36sdp"
+            android:hint="@string/title_of_the_note"
+            android:text="EvaNote Settings"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textColorHint="?android:attr/textColorSecondary"
+            android:background="@android:color/transparent"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="always"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actionBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/generalSettingsSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/textViewGeneralSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_24sdp"
+                    android:text="General Settings"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/textViewGeneralSettings" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/generalSettingsIsEditing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:longClickable="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textViewGeneralSettings">
+
+                    <TextView
+                        android:id="@+id/generalSettingsIsEditingTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Change Default Note View Type"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="@dimen/_16ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/generalSettingsIsEditingDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Change the view type the Note will be initially on when opened from the main menu."
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="@dimen/_14ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/generalSettingsIsEditingTitle" />
+
+                    <TextView
+                        android:id="@+id/generalSettingsIsEditingCurrent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:text="@string/current_default_view_type"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="@dimen/_14ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/generalSettingsIsEditingDesc" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/generalSettingsIsEditing" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/generalSettingsStorageLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:longClickable="true"
+                    app:layout_constraintTop_toBottomOf="@id/generalSettingsIsEditing">
+
+                    <TextView
+                        android:id="@+id/generalSettingsStorageLocationTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Storage Location"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="@dimen/_16ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/generalSettingsStorageLocationCurrent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="*current location via PreferenceManager*"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="@dimen/_14ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/generalSettingsStorageLocationTitle" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/generalSettingsStorageLocation" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/generalSettingsRequestPermission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:longClickable="true"
+                    app:layout_constraintTop_toBottomOf="@id/generalSettingsStorageLocation">
+
+                    <TextView
+                        android:id="@+id/generalSettingsRequestPermissionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Permissions"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="@dimen/_16ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/generalSettingsRequestPermissionCurrent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Check if all permissions required for EvaNote has been granted"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="@dimen/_14ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/generalSettingsRequestPermissionTitle" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/generalSettingsRequestPermission" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/generalSettingsDarkMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:longClickable="true"
+                    app:layout_constraintTop_toBottomOf="@id/generalSettingsRequestPermission">
+
+                    <TextView
+                        android:id="@+id/generalSettingsDarkModeTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Dark Mode"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="@dimen/_16ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/generalSettingsDarkModeCurrent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Change the current theme for the application"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="@dimen/_14ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/generalSettingsDarkModeTitle" />
+
+                    <Spinner
+                        android:id="@+id/generalSettingsDarkModeSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColorHint="?android:attr/textColorSecondary"
+                        android:background="?android:attr/textColorTertiary"
+                        app:layout_constraintTop_toBottomOf="@id/generalSettingsDarkModeCurrent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/generalSettingsDarkMode" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/defaultNoteSettingsSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/generalSettingsSection">
+
+                <TextView
+                    android:id="@+id/textViewDefaultNoteSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_24sdp"
+                    android:text="Default Note"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/textViewDefaultNoteSettings" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    app:layout_constraintTop_toBottomOf="@id/textViewDefaultNoteSettings">
+
+                    <!-- What Settings? -->
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/privateNoteSettingsSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/defaultNoteSettingsSection">
+
+                <TextView
+                    android:id="@+id/textViewPrivateNoteSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_24sdp"
+                    android:text="Private Note"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/textViewPrivateNoteSettings" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    app:layout_constraintTop_toBottomOf="@id/textViewPrivateNoteSettings">
+
+                    <!-- What Settings? -->
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/reminderNoteSettingsSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/privateNoteSettingsSection">
+
+                <TextView
+                    android:id="@+id/textViewReminderNoteSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_24sdp"
+                    android:text="Reminder Note"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/textViewReminderNoteSettings" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    app:layout_constraintTop_toBottomOf="@id/textViewReminderNoteSettings">
+
+                    <!-- What Settings? -->
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/todoNoteSettingsSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reminderNoteSettingsSection">
+
+                <TextView
+                    android:id="@+id/textViewTodoNoteSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_24sdp"
+                    android:text="Todo Note"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/textViewTodoNoteSettings" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    app:layout_constraintTop_toBottomOf="@id/textViewTodoNoteSettings">
+
+                    <!-- What Settings? -->
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/taskNoteSettingsSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reminderNoteSettingsSection">
+
+                <TextView
+                    android:id="@+id/textViewTaskNoteSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_24sdp"
+                    android:text="Task Note"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/textViewTaskNoteSettings" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/taskNoteSettingsDeleteOnCompletion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:longClickable="true"
+                    app:layout_constraintTop_toBottomOf="@id/textViewTaskNoteSettings">
+
+                    <CheckBox
+                        android:id="@+id/taskNoteSettingsDeleteOnCompletionCheckBox"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:gravity="center_vertical"
+                        android:text=""
+                        android:background="@android:color/transparent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/taskNoteSettingsDeleteOnCompletionTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_6sdp"
+                        android:text="Delete on Completion"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="@dimen/_16ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@id/taskNoteSettingsDeleteOnCompletionCheckBox"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/taskNoteSettingsDeleteOnCompletionDesc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_6sdp"
+                        android:text="If the Task Note is not repeatable, then delete the Note when ticking the CheckBox, untick the CheckBox of the TaskNote to cancel."
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="@dimen/_14ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@id/taskNoteSettingsDeleteOnCompletionCheckBox"
+                        app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteOnCompletionTitle"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteOnCompletion" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/taskNoteSettingsDeleteAfter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:longClickable="true"
+                    app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteOnCompletion">
+
+                    <TextView
+                        android:id="@+id/taskNoteSettingsDeleteAfterTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Delete After Completion"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="@dimen/_16ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/taskNoteSettingsDeleteAfterDesc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="If the Task Note is not repeatable, then delete the Note when ticking the CheckBox after:"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="@dimen/_14ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteAfterTitle"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <Spinner
+                        android:id="@+id/taskNoteSettingsDeleteAfterSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColorHint="?android:attr/textColorSecondary"
+                        android:background="?android:attr/textColorTertiary"
+                        app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteAfterDesc"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteAfter" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/attachableNoteSettingsSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsSection">
+
+                <TextView
+                    android:id="@+id/textViewAttachableNoteSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_24sdp"
+                    android:text="Attachable Note"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiary"
+                    app:layout_constraintTop_toBottomOf="@id/textViewAttachableNoteSettings" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    app:layout_constraintTop_toBottomOf="@id/textViewAttachableNoteSettings">
+
+                    <!-- What Settings? -->
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

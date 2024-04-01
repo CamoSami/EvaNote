@@ -28,6 +28,7 @@ public class AttachableNote_ContainerAdapter extends RecyclerView.Adapter<Recycl
 
 	private final List<AttachableNote_Container> containersList;
 	private final AttachableNoteListener attachableNoteListener;
+	private boolean isEditing = true;
 	public static final int FILE_CONTAINER = 0;
 	public static final int LINK_CONTAINER = 1;
 
@@ -35,6 +36,12 @@ public class AttachableNote_ContainerAdapter extends RecyclerView.Adapter<Recycl
 	{
 		this.containersList = filesList;
 		this.attachableNoteListener = attachableNoteListener;
+	}
+
+	public void SetEditing(boolean isEditing) {
+		this.isEditing = isEditing;
+
+		this.notifyItemRangeChanged(0, this.containersList.size());
 	}
 
 	@NonNull
@@ -97,37 +104,73 @@ public class AttachableNote_ContainerAdapter extends RecyclerView.Adapter<Recycl
 			this.binding.containerName.setText(container.getContainerName());
 			this.binding.containerContent.setText(container.getContainerContent());
 
+			if (!AttachableNote_ContainerAdapter.this.isEditing)
+			{
+				this.binding.containerSettings.setVisibility(View.GONE);
+
+				EditText contentEditText = this.binding.containerContent;
+
+				if (contentEditText.getText().toString().equals(""))
+				{
+					contentEditText.setVisibility(View.GONE);
+				}
+				else
+				{
+					contentEditText.setFocusable(false);
+					contentEditText.setFocusableInTouchMode(false);
+				}
+			}
+			else
+			{
+				this.binding.containerSettings.setVisibility(View.VISIBLE);
+
+				EditText contentEditText = this.binding.containerContent;
+
+				if (contentEditText.getText().toString().equals(""))
+				{
+					contentEditText.setVisibility(View.VISIBLE);
+				}
+				else
+				{
+					contentEditText.setFocusable(true);
+					contentEditText.setFocusableInTouchMode(true);
+				}
+			}
+
 			this.SetFileIcon(container);
 			this.SetListeners(container);
 		}
 
 		public void SetFileIcon(AttachableNote_Container container)
 		{
-			if (container.getContainerLink().toString().contains(".txt"))
+			if (container.getContainerLink().contains(".txt"))
 			{
 				//      Is Text
 
 				this.binding.containerIcon.setImageResource(R.drawable.icon_txt);
 			}
-			else if (container.getContainerLink().toString().contains(".pdf"))
+			else if (container.getContainerLink().contains(".pdf"))
 			{
 				//      Is PDF
 
 				this.binding.containerIcon.setImageResource(R.drawable.icon_pdf);
 			}
-			else if (container.getContainerLink().toString().contains(".jpg") || container.getContainerLink().toString().contains(".png") || container.getContainerLink().toString().contains(".jpeg"))
+			else if (container.getContainerLink().contains(".jpg") ||
+					container.getContainerLink().contains(".png") ||
+					container.getContainerLink().contains(".jpeg"))
 			{
 				//      Is Image
 
 				this.binding.containerIcon.setImageResource(R.drawable.icon_image);
 			}
-			else if (container.getContainerLink().toString().contains(".mp3") || container.getContainerLink().toString().contains(".wav"))
+			else if (container.getContainerLink().contains(".mp3") ||
+					container.getContainerLink().contains(".wav"))
 			{
 				//      Is Audio
 
 				this.binding.containerIcon.setImageResource(R.drawable.icon_audio);
 			}
-			else if (container.getContainerLink().toString().contains("."))
+			else if (container.getContainerLink().contains("."))
 			{
 				//      Is File
 
@@ -255,6 +298,39 @@ public class AttachableNote_ContainerAdapter extends RecyclerView.Adapter<Recycl
 		{
 			this.binding.containerName.setText(container.getContainerName());
 			this.binding.containerContent.setText(container.getContainerContent());
+
+			if (!AttachableNote_ContainerAdapter.this.isEditing)
+			{
+				this.binding.containerSettings.setVisibility(View.GONE);
+
+				EditText contentEditText = this.binding.containerContent;
+
+				if (contentEditText.getText().toString().equals(""))
+				{
+					contentEditText.setVisibility(View.GONE);
+				}
+				else
+				{
+					contentEditText.setFocusable(false);
+					contentEditText.setFocusableInTouchMode(false);
+				}
+			}
+			else
+			{
+				this.binding.containerSettings.setVisibility(View.VISIBLE);
+
+				EditText contentEditText = this.binding.containerContent;
+
+				if (contentEditText.getText().toString().equals(""))
+				{
+					contentEditText.setVisibility(View.VISIBLE);
+				}
+				else
+				{
+					contentEditText.setFocusable(true);
+					contentEditText.setFocusableInTouchMode(true);
+				}
+			}
 
 			this.SetLinkIcon(container);
 			this.SetListeners(container);

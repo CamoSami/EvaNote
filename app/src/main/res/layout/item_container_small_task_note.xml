@@ -3,19 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_12sdp"
+    android:layout_marginStart="@dimen/_20sdp"
+    android:layout_marginEnd="@dimen/_20sdp"
     android:longClickable="true">
+
+    <CheckBox
+        android:id="@+id/noteCheckbox"
+        android:layout_width="@dimen/_36sdp"
+        android:layout_height="@dimen/_36sdp"
+        android:text=""
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/layoutAddNew"
+        app:layout_constraintTop_toTopOf="@id/layoutAddNew"
+        app:layout_constraintBottom_toBottomOf="@id/layoutAddNew" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutAddNew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_marginTop="@dimen/_12sdp"
-        android:layout_marginStart="@dimen/_20sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
         android:background="@drawable/background_content_darker"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toEndOf="@id/noteCheckbox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iconFavorited"
@@ -23,93 +35,94 @@
             android:layout_height="@dimen/_30sdp"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_favorited"
-            app:tint="@color/black"
+            android:background="@android:color/transparent"
+            app:tint="?android:attr/textColorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iconRepeatable"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/icon_repeatable"
+            android:background="@android:color/transparent"
+            app:tint="?android:attr/textColorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iconFavorited"/>
+
+        <CheckBox
+            android:id="@+id/noteTaskCheckbox"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:gravity="center_vertical"
+            android:text=""
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/noteTitle"
+            app:layout_constraintBottom_toBottomOf="@id/noteDateAndType"/>
 
         <TextView
             android:id="@+id/noteTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_3sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
             android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/_6sdp"
             android:text="TEMP TITLE TEST TAWIHDOAWIHD"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
-            android:textColor="@color/primary_text"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintTop_toTopOf="parent"
+            android:background="@android:color/transparent"
             app:layout_constraintEnd_toStartOf="@id/iconFavorited"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/noteTaskCheckbox"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/noteDateAndType"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_16sdp"
-            android:layout_marginEnd="@dimen/_32sdp"
+            android:layout_marginEnd="@dimen/_6sdp"
             android:text="time time time yada yadaawdawdawdwdawda"
             android:textSize="@dimen/_16ssp"
             android:textStyle="normal"
-            android:textColor="@color/secondary_text"
+            android:textColor="?android:attr/textColorSecondary"
+            android:background="@android:color/transparent"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/noteTitle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/noteTaskCheckbox"
+            app:layout_constraintEnd_toStartOf="@id/iconFavorited"/>
 
-        <TextView
-            android:id="@+id/noteTask1"
-            android:layout_width="match_parent"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/noteSubTaskRecyclerView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_3sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:text="Tdnawoidhawdoahwoduahwaouwdhoawudhaowudhaowudhaouwhhdaowudhaouwhdaouwhdaowudhowaudhoauwhaowudh"
-            android:textSize="@dimen/_16ssp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_text"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:background="@android:color/transparent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/noteDateAndType"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-
-        <TextView
-            android:id="@+id/noteTask2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_3sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:text="Tdnawoidhawdoahwoduahwaouwdhoawudhaowudhaowudhaouwhhdaowudhaouwhdaouwhdaowudhowaudhoauwhaowudh"
-            android:textSize="@dimen/_16ssp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_text"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/noteTask1"
-            app:layout_constraintStart_toStartOf="parent"/>
-
+            app:layout_constraintStart_toStartOf="@id/noteDateAndType"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/noteContent"/>
 
         <TextView
-            android:id="@+id/noteTask3"
-            android:layout_width="match_parent"
+            android:id="@+id/noteContent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_3sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginBottom="@dimen/_3sdp"
-            android:text="Tdnawoidhawdoahwoduahwaouwdhoawudhaowudhaowudhaouwhhdaowudhaouwhdaouwhdaowudhowaudhoauwhaowudh"
-            android:textSize="@dimen/_16ssp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_text"
-            android:maxLines="1"
+            android:layout_marginEnd="@dimen/_6sdp"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/noteTask2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:maxLines="2"
+            android:text="Tdnawoidhawdoahwoduahwaouwdhoawudhaowudhaowudhaouwhhdaowudhaouwhdaouwhdaowudhowaudhoauwhaowudh"
+            android:textColor="?android:attr/textColorPrimary"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/noteDateAndType"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

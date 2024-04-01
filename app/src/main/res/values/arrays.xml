@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="repeatableType">
+        <item>Minutes</item>
+        <item>Hours</item>
+        <item>Days</item>
+        <item>Weeks</item>
+        <item>Months</item>
+    </string-array>
+
+    <string-array name="sortType">
+        <item>By Title</item>
+        <item>By Date Created</item>
+        <item>By Date Modified</item>
+    </string-array>
+
+    <string-array name="deleteAfter">
+        <item>Instant</item>
+        <item>1 second</item>
+        <item>2 second</item>
+        <item>3 second</item>
+        <item>4 second</item>
+        <item>5 second</item>
+    </string-array>
+
+    <string-array name="theme">
+        <item>System</item>
+        <item>Dark Mode</item>
+        <item>Light Mode</item>
+    </string-array>
+</resources>

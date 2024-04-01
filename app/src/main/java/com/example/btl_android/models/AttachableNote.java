@@ -39,9 +39,10 @@ public class AttachableNote extends _DefaultNote
 		this.containers = attachableNote.getContainers();
 	}
 
-	public AttachableNote(String fileName, String title, Date date, String content, boolean isFavorite, List<AttachableNote_Container> containers)
+	public AttachableNote(String fileName, String title, Date dateCreated, Date dateModified,
+	                      String content, boolean isFavorite, List<AttachableNote_Container> containers)
 	{
-		super(fileName, title, date, content, isFavorite);
+		super(fileName, title, dateCreated, dateModified, content, isFavorite);
 
 		this.containers = containers;
 	}
@@ -72,9 +73,9 @@ public class AttachableNote extends _DefaultNote
 		//      Write Defaults
 		Map<String, String> map = new HashMap<>();
 
-		map.put(Constants.JSON_DEFAULT_TYPE, this.getClass().getSimpleName());
 		map.put(Constants.JSON_DEFAULT_TITLE, this.getTitle());
-		map.put(Constants.JSON_DEFAULT_DATE, longDateFormat.format(this.getDate()));
+		map.put(Constants.JSON_DEFAULT_DATE_CREATED, longDateFormat.format(this.getDateCreated()));
+		map.put(Constants.JSON_DEFAULT_DATE_MODIFIED, longDateFormat.format(this.getDateModified()));
 		map.put(Constants.JSON_DEFAULT_CONTENT, this.getContent());
 		map.put(Constants.JSON_DEFAULT_FAVORITE, String.valueOf(this.isFavorite()));
 
@@ -86,12 +87,12 @@ public class AttachableNote extends _DefaultNote
 			map = new HashMap<>();
 			AttachableNote_Container container = this.containers.get(i);
 
-			map.put(Constants.JSON_ATTACHABLE_NOTE_TYPE, String.valueOf(container.getContainerType()));
-			map.put(Constants.JSON_ATTACHABLE_NOTE_LINK, container.getContainerLink());
-			map.put(Constants.JSON_ATTACHABLE_NOTE_NAME, container.getContainerName());
-			map.put(Constants.JSON_ATTACHABLE_NOTE_CONTENT, container.getContainerContent());
+			map.put(Constants.JSON_ATTACHABLE_NOTE_CONTAINER_TYPE, String.valueOf(container.getContainerType()));
+			map.put(Constants.JSON_ATTACHABLE_NOTE_CONTAINER_LINK, container.getContainerLink());
+			map.put(Constants.JSON_ATTACHABLE_NOTE_CONTAINER_NAME, container.getContainerName());
+			map.put(Constants.JSON_ATTACHABLE_NOTE_CONTAINER_CONTENT, container.getContainerContent());
 
-			noteMap.put(Constants.JSON_ATTACHABLE_NOTE + i, map);
+			noteMap.put(Constants.JSON_ATTACHABLE_NOTE_CONTAINER + i, map);
 		}
 
 		//      Get GSON class to write Map<> -> JSON
@@ -100,21 +101,21 @@ public class AttachableNote extends _DefaultNote
 
 		//      Get Directory via PrefereceManager
 		PreferenceManager preferenceManager = new PreferenceManager(context);
-		String directory = preferenceManager.getString(Constants.PREFERENCE_STORAGE_DIRECTORY);
+		String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
 		File file;
 		int i = 1;
 
 		if (this.fileName == null)
 		{
 			//      TODO: File + Date Format + .txt
-			this.fileName = "Note" + longDateFormat.format(this.getDate()) + ".txt";
+			this.fileName = "AttachableNote" + longDateFormat.format(this.getDateCreated()) + ".txt";
 
 			file = new File(directory, this.fileName);
 
 			try
 			{
 				while (!file.createNewFile()) {
-					this.fileName = "Note" + longDateFormat.format(this.getDate()) + "(" + i++ + ").txt";
+					this.fileName = "AttachableNote" + longDateFormat.format(this.getDateCreated()) + "(" + i++ + ").txt";
 
 					file = new File(directory, this.fileName);
 				}
@@ -211,7 +212,7 @@ public class AttachableNote extends _DefaultNote
 		Gson gson = new Gson();
 
 		PreferenceManager preferenceManager = new PreferenceManager(context);
-		String directory = preferenceManager.getString(Constants.PREFERENCE_STORAGE_DIRECTORY);
+		String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
 		File file = new File(directory, fileName);
 		String readFile;
 
@@ -261,25 +262,26 @@ public class AttachableNote extends _DefaultNote
 
 			note.setFileName(fileName);
 			note.setTitle(map.get(Constants.JSON_DEFAULT_TITLE));
-			note.setDate(longDateFormat.parse(map.get(Constants.JSON_DEFAULT_DATE)));
+			note.setDateCreated(longDateFormat.parse(map.get(Constants.JSON_DEFAULT_DATE_CREATED)));
+			note.setDateModified(longDateFormat.parse(map.get(Constants.JSON_DEFAULT_DATE_MODIFIED)));
 			note.setContent(map.get(Constants.JSON_DEFAULT_CONTENT));
 			note.setFavorite(Boolean.parseBoolean(map.get(Constants.JSON_DEFAULT_FAVORITE)));
 
 			//      Read Container
 			List<AttachableNote_Container> containers = new ArrayList<>();
 			int i = 0;
-			map = noteMap.get(Constants.JSON_ATTACHABLE_NOTE + i);
+			map = noteMap.get(Constants.JSON_ATTACHABLE_NOTE_CONTAINER + i);
 
 			while (map != null) {
 				AttachableNote_Container container = new AttachableNote_Container();
 
-				container.setContainerType(Integer.parseInt(map.get(Constants.JSON_ATTACHABLE_NOTE_TYPE)));
-				container.setContainerName(map.get(Constants.JSON_ATTACHABLE_NOTE_NAME));
-				container.setContainerLink(map.get(Constants.JSON_ATTACHABLE_NOTE_LINK));
-				container.setContainerContent(map.get(Constants.JSON_ATTACHABLE_NOTE_CONTENT));
+				container.setContainerType(Integer.parseInt(map.get(Constants.JSON_ATTACHABLE_NOTE_CONTAINER_TYPE)));
+				container.setContainerName(map.get(Constants.JSON_ATTACHABLE_NOTE_CONTAINER_NAME));
+				container.setContainerLink(map.get(Constants.JSON_ATTACHABLE_NOTE_CONTAINER_LINK));
+				container.setContainerContent(map.get(Constants.JSON_ATTACHABLE_NOTE_CONTAINER_CONTENT));
 
 				containers.add(container);
-				map = noteMap.get(Constants.JSON_ATTACHABLE_NOTE + ++i);
+				map = noteMap.get(Constants.JSON_ATTACHABLE_NOTE_CONTAINER + ++i);
 			}
 
 			note.setContainers(containers);

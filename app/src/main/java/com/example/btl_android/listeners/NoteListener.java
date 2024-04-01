@@ -4,6 +4,6 @@ public interface NoteListener
 {
 	void onNoteClick(int position);
 
-	void onNoteLongClick(int position);
+	void onNoteLongClick();
 	boolean isEditting();
 }

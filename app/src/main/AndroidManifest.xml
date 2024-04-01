@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
     <queries>
@@ -25,20 +27,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BTL_ANDROID"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.TaskNoteActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.myapp.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
 
-
         <activity
             android:name=".activities.AttachableNoteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.TodoNoteActivity"
             android:exported="false" />
         <activity
             android:name=".activities.CreateNoteActivity"

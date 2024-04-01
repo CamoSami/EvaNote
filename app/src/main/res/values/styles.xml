@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyLightDatePickerTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:datePickerStyle">@style/MyLightDatePickerStyle</item>
+    </style>
+
+    <style name="MyLightTimePickerTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:timePickerStyle">@style/MyLightTimePickerStyle</item>
+    </style>
+
+    <style name="MyLightDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="colorAccent">@color/primary_darker</item>
+    </style>
+
+    <style name="MyLightTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
+        <item name="colorAccent">@color/primary_darker</item>
+    </style>
+
+    <style name="MyDatePickerTheme" parent="android:Theme.Material.Dialog">
+        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+    </style>
+
+    <style name="MyTimePickerTheme" parent="android:Theme.Material.Dialog">
+        <item name="android:timePickerStyle">@style/MyTimePickerStyle</item>
+    </style>
+
+    <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.DatePicker">
+        <item name="colorAccent">@color/primary_darkest</item>
+    </style>
+
+    <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.TimePicker">
+        <item name="colorAccent">@color/primary_darkest</item>
+    </style>
+</resources>

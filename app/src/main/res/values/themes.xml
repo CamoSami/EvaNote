@@ -1,12 +1,26 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.BTL_ANDROID" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:datePickerDialogTheme">@style/MyLightDatePickerTheme</item>
+        <item name="android:timePickerDialogTheme">@style/MyLightTimePickerTheme</item>
+
         <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/primary_darker</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorAccent">@color/primary_darker</item>
         <item name="android:statusBarColor">@color/primary_darker</item>
 
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:background">@color/gray</item>
+
+        <item name="colorOnPrimary">@color/primary_text</item>
+        <item name="colorOnSecondary">@color/secondary_text</item>
+
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+        <item name="android:textColorTertiary">@color/mid_gray</item>
+
+        <item name="android:text">@color/mid_gray</item>
     </style>
 
     <style name="Theme.BTL_ANDROID" parent="Base.Theme.BTL_ANDROID" />
+
 </resources>

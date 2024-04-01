@@ -45,15 +45,15 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     //  Scalable Size Unit
-    implementation("com.intuit.sdp:sdp-android:1.1.0");
-    implementation("com.intuit.ssp:ssp-android:1.1.0");
+    implementation("com.intuit.sdp:sdp-android:1.1.0")
+    implementation("com.intuit.ssp:ssp-android:1.1.0")
 
     //  Rounded ImageView
-    implementation("com.makeramen:roundedimageview:2.3.0");
+    implementation("com.makeramen:roundedimageview:2.3.0")
 
     //  Multidex
     implementation("androidx.multidex:multidex:2.0.1")
 
     //  JSON
-    implementation("com.google.code.gson:gson:2.8.6")
+    implementation("com.google.code.gson:gson:2.10.1")
 }

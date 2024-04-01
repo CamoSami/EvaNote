@@ -10,7 +10,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,7 +18,6 @@ import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -36,6 +34,7 @@ import com.example.btl_android.models.AttachableNote_Container;
 import com.example.btl_android.models._DefaultNote;
 import com.example.btl_android.utilities.Constants;
 import com.example.btl_android.utilities.NewlineInputFilter;
+import com.example.btl_android.utilities.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,7 +51,6 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 	private AttachableNote_ContainerAdapter fileNoteFileAdapter;
 	private int currentContainerPosition = -1;
 	private Date dateCreated = null;
-	private boolean isConfirmed = false;
 	public static final int REQUEST_CODE_ADD_FILE = 1;
 
 	@Override
@@ -63,17 +61,19 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 		this.binding = ActivityAttachableNoteBinding.inflate(getLayoutInflater());
 		this.setContentView(this.binding.getRoot());
 
-		//      List, Adapter List, The likes
-
 		//      Filters
 		this.binding.titleEditText.setFilters(new InputFilter[]{new NewlineInputFilter()});
 
 		Intent intent = this.getIntent();
 		Bundle bundle = intent.getExtras();
 
+		PreferenceManager preferenceManager = new PreferenceManager(this);
+		this.isEditing = preferenceManager.getBoolean(Constants.SETTINGS_NOTE_DEFAULT_IS_EDITING);
+
 		//      Listeners
 		this.SetListeners();
 		this.ReadToActivity(bundle);
+		this.SetEditting(this.isEditing);
 	}
 
 	@Override
@@ -86,10 +86,6 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 		}
 		else
 		{
-			if (this.isConfirmed) {
-				return;
-			}
-
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 			builder.setTitle("Leave Confirmation");
@@ -113,13 +109,15 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 	}
 
 	private void ReadToActivity(Bundle bundle) {
-		if (bundle == null) {
+		if (bundle == null)
+		{
 			//      If New
 			this.containersList = new ArrayList<>();
 			this.fileNoteFileAdapter = new AttachableNote_ContainerAdapter(this.containersList, this);
 			this.binding.fileRecyclerView.setAdapter(this.fileNoteFileAdapter);
 		}
-		else {
+		else
+		{
 			//      If Edit
 			String fileName = bundle.getString(Constants.BUNDLE_FILENAME_KEY);
 
@@ -130,14 +128,19 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 				this.containersList = new ArrayList<>();
 			}
 
-			this.fileNoteFileAdapter = new AttachableNote_ContainerAdapter(this.containersList, this);
+			this.fileNoteFileAdapter = new AttachableNote_ContainerAdapter
+					(
+							this.containersList,
+							this
+					);
 			this.binding.fileRecyclerView.setAdapter(this.fileNoteFileAdapter);
+			this.fileNoteFileAdapter.notifyItemRangeInserted(0, this.containersList.size());
 
 			this.fileName = fileName;
 			this.binding.titleEditText.setText(attachableNote.getTitle());
 			this.binding.contentEditText.setText(attachableNote.getContent());
 			this.isFavorite = attachableNote.isFavorite();
-			this.dateCreated = attachableNote.getDate();
+			this.dateCreated = attachableNote.getDateCreated();
 		}
 	}
 
@@ -146,16 +149,14 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 		//      Back Button
 		this.binding.backButton.setOnClickListener(view ->
 		{
-			if (this.SaveNote(view)) {
+			if (this.SaveNote(view))
+			{
 				setResult(Activity.RESULT_OK);
 
 				finish();
 			}
-			else {
-				if (this.isConfirmed) {
-					return;
-				}
-
+			else
+			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 				builder.setTitle("Leave Confirmation");
@@ -243,6 +244,12 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 			popupMenu.show();
 		});
 
+		//      The Pencil / Book Button
+		this.binding.editButton.setOnClickListener(view ->
+		{
+			this.SetEditting(!this.isEditing);
+		});
+
 		//      The Add File Button
 		this.binding.addFileButton.setOnClickListener(view ->
 		{
@@ -296,43 +303,29 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 
 			builder.show();
 		});
-
-		//      The View That Surrounds The Edit Text Of Text Content
-		this.binding.contentTextView.setOnClickListener(view ->
-		{
-			//            Toast.makeText(this, "CLICKED!", Toast.LENGTH_SHORT).show();
-
-			this.binding.contentEditText.requestFocus();
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.showSoftInput(this.binding.contentEditText, InputMethodManager.SHOW_IMPLICIT);
-		});
-
-		//      The Pencil / Book Button
-		this.binding.editButton.setOnClickListener(view ->
-		{
-			this.SetEditting(!this.isEditing);
-		});
 	}
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			View view = getCurrentFocus();
-			if ( view instanceof EditText) {
-				Rect outRect = new Rect();
-				view.getGlobalVisibleRect(outRect);
-				if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
-					Log.d("DispatchTouchEventTemp", "touchevent");
-
-					view.clearFocus();
-
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-				}
-			}
-		}
-		return super.dispatchTouchEvent(event);
-	}
+//	@Override
+//	public boolean dispatchTouchEvent(MotionEvent event) {
+//		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//			View view = getCurrentFocus();
+//			if ( view instanceof EditText) {
+//				Rect outRect = new Rect();
+//				view.getGlobalVisibleRect(outRect);
+//
+//				if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+////					Log.d("DispatchTouchEventTemp", "touchevent");
+//
+//					view.clearFocus();
+//
+//					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//					imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//				}
+//			}
+//		}
+//
+//		return super.dispatchTouchEvent(event);
+//	}
 
 	@Override
 	public void OnAddOrEditContainer(int position)
@@ -407,7 +400,7 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 
 		if (this.containersList.size() == 0)
 		{
-			this.binding.noteView.setVisibility(View.GONE);
+//			this.binding.noteView.setVisibility(View.GONE);
 		}
 	}
 
@@ -426,7 +419,7 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 
 		if (this.containersList.size() >= 1)
 		{
-			this.binding.noteView.setVisibility(View.VISIBLE);
+//			this.binding.noteView.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -485,6 +478,7 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 				this.fileName,
 				this.binding.titleEditText.getText().toString(),
 				this.dateCreated,
+				Calendar.getInstance().getTime(),
 				this.binding.contentEditText.getText().toString(),
 				this.isFavorite,
 				this.containersList
@@ -492,20 +486,12 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 
 		//      Not validated, just simply want to leave
 		if (!attachableNote.Validate()) {
-			this.isConfirmed = true;
-			this.finish();
+//			this.finish();
 
 			return false;
 		}
 
-		if (attachableNote.WriteToStorage(this, false))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return attachableNote.WriteToStorage(this, false);
 	}
 
 	private void openWith(Uri fileUri, String mimeType)
@@ -544,7 +530,7 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 
 			if (this.containersList.size() == 0)
 			{
-				this.binding.noteView.setVisibility(View.GONE);
+//				this.binding.noteView.setVisibility(View.GONE);
 			}
 
 			this.binding.contentEditText.setFocusable(false);
@@ -554,25 +540,6 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 			this.binding.titleEditText.setFocusable(false);
 			this.binding.titleEditText.setFocusableInTouchMode(false);
 			this.binding.titleEditText.setHint("");
-
-			this.binding.contentTextView.setEnabled(false);
-
-			for (int i = 0; i < this.containersList.size(); i++)
-			{
-				View childView = this.binding.fileRecyclerView.getChildAt(i);
-
-				childView.findViewById(R.id.containerSettings).setVisibility(View.GONE);
-
-				EditText contentEditText = ((EditText)childView.findViewById(R.id.containerContent));
-
-				if (contentEditText.getText().toString().equals("")) {
-					contentEditText.setVisibility(View.GONE);
-				}
-				else {
-					contentEditText.setFocusable(false);
-					contentEditText.setFocusableInTouchMode(false);
-				}
-			}
 
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -591,7 +558,7 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 
 			if (this.containersList.size() != 0)
 			{
-				this.binding.noteView.setVisibility(View.VISIBLE);
+//				this.binding.noteView.setVisibility(View.VISIBLE);
 			}
 
 			this.binding.contentEditText.setFocusable(true);
@@ -601,27 +568,9 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 			this.binding.titleEditText.setFocusable(true);
 			this.binding.titleEditText.setFocusableInTouchMode(true);
 			this.binding.titleEditText.setHint(R.string.title_of_the_note);
-
-			this.binding.contentTextView.setEnabled(true);
-
-			for (int i = 0; i < this.containersList.size(); i++)
-			{
-				View childView = this.binding.fileRecyclerView.getChildAt(i);
-
-				childView.findViewById(R.id.containerSettings).setVisibility(View.VISIBLE);
-
-				EditText contentEditText = ((EditText)childView.findViewById(R.id.containerContent));
-
-				if (contentEditText.getText().toString().equals("")) {
-					contentEditText.setVisibility(View.VISIBLE);
-				}
-				else {
-					contentEditText.setFocusable(true);
-					contentEditText.setFocusableInTouchMode(true);
-				}
-			}
 		}
 
 		this.isEditing = isEditting;
+		this.fileNoteFileAdapter.SetEditing(isEditting);
 	}
 }

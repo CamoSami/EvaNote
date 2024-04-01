@@ -14,28 +14,40 @@ public class _DefaultNote
 	//      Saved Values
 	protected String fileName;
 	protected String title;
-	protected Date date;
+	protected Date dateCreated;
+	protected Date dateModified;
 	protected String content;
 	protected boolean isFavorite;
 
 	//      Not Saved Value
 	protected boolean isChecked = false;
 
+	//      SORTING!
+	public enum SortType {
+		ByTitle,
+		ByDateCreated,
+		ByDateModified
+	}
+	public static SortType sortType = SortType.ByDateCreated;
+
 	public _DefaultNote() {};
 
-	public _DefaultNote(_DefaultNote defaultNote) {
+	public _DefaultNote(_DefaultNote defaultNote)
+	{
 		this.fileName = defaultNote.getFileName();
 		this.title = defaultNote.getTitle();
-		this.date = defaultNote.getDate();
+		this.dateCreated = defaultNote.getDateCreated();
 		this.content = defaultNote.getContent();
 		this.isFavorite = defaultNote.isFavorite();
 	}
 
-	public _DefaultNote(String fileName, String title, Date date, String content, boolean isFavorite)
+	public _DefaultNote(String fileName, String title, Date dateCreated, Date dateModified, String content,
+	                    boolean isFavorite)
 	{
 		this.fileName = fileName;
 		this.title = title;
-		this.date = date;
+		this.dateCreated = dateCreated;
+		this.dateModified = dateModified;
 		this.content = content;
 		this.isFavorite = isFavorite;
 	}
@@ -67,14 +79,24 @@ public class _DefaultNote
 		}
 	}
 
-	public Date getDate()
+	public Date getDateCreated()
 	{
-		return date;
+		return dateCreated;
 	}
 
-	public void setDate(Date date)
+	public void setDateCreated(Date dateCreated)
 	{
-		this.date = date;
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getDateModified()
+	{
+		return dateModified;
+	}
+
+	public void setDateModified(Date dateModified)
+	{
+		this.dateModified = dateModified;
 	}
 
 	public String getContent()
@@ -116,7 +138,7 @@ public class _DefaultNote
 
 	public boolean Validate()
 	{
-		return (!Objects.equals(title, "") || !Objects.equals(content, ""));
+		return (!Objects.equals(this.title, "") || !Objects.equals(this.content, ""));
 	}
 
 	public boolean WriteToStorage(Context context, boolean isDuplicated)
@@ -132,7 +154,7 @@ public class _DefaultNote
 	public static boolean DeleteFromStorage(Context context, String fileName)
 	{
 		PreferenceManager preferenceManager = new PreferenceManager(context);
-		String directory = preferenceManager.getString(Constants.PREFERENCE_STORAGE_DIRECTORY);
+		String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
 		File file = new File(directory, fileName);
 
 		return file.delete();

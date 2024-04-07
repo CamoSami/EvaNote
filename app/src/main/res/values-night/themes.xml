@@ -13,10 +13,11 @@
 
         <item name="colorOnPrimary">@color/gray</item>
         <item name="colorOnSecondary">@color/mid_gray</item>
+        <item name="colorOnTertiary">@color/midder_gray</item>
 
         <item name="android:textColorPrimary">@color/gray</item>
         <item name="android:textColorSecondary">@color/mid_gray</item>
-        <item name="android:textColorTertiary">#3D3D3D</item>
+        <item name="android:textColorTertiary">@color/midder_gray</item>
 
         <item name="android:text">@color/black</item>
     </style>

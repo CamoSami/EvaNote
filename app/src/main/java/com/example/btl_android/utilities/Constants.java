@@ -5,18 +5,24 @@ public class Constants
 	//      Preference Key
 	public static final String PREFERENCE_KEY = "evaNote";
 
+	//      First Start Up
+	public static final String APP_NOT_FIRST_START_UP = "appNotFirstStartUp";
+
 	//      Settings
 	public static final String SETTINGS_STORAGE_LOCATION = "storageDirectory";
 	public static final String SETTINGS_SORT_TYPE = "sortType";
-	public static final String SETTINGS_SORT_ASCENDING = "sortAscending";
-	//          is Editting or Not?
+	public static final String SETTINGS_SORT_IS_REVERSED = "sortIsReversed";
+	//          is Editing or Not?
 	public static final String SETTINGS_NOTE_DEFAULT_IS_EDITING = "settingsNoteDefaultIsEditing";
 	//          Theme
 	public static final String SETTINGS_APP_THEME = "settingsAppTheme";
 	//          Task Note
 	public static final String TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION =
 			"taskNoteSettingsDeleteOnCompletion";
-	public static final String TASK_NOTE_SETTINGS_DELETE_AFTER = "taskNoteSettingsDeleteAfter";
+	public static final String TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION_AFTER =
+			"taskNoteSettingsDeleteOnCompletionAfter";
+	public static final String TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION =
+			"taskNoteSettingsSortToBottomOnCompletion";
 
 	//      Note Type
 	public static final int DEFAULT_NOTE = 0;
@@ -48,9 +54,10 @@ public class Constants
 	public static final String JSON_TASK_NOTE_REPEATABLE_TYPE = "taskNoteRepeatableType";
 	public static final String JSON_TASK_NOTE_DUE_DATE = "taskNoteDueDate";
 	public static final String JSON_TASK_NOTE_HAS_DEADLINE = "taskNoteHasDeadline";
+	public static final String JSON_TASK_NOTE_IS_DONE = "taskNoteIsDone";
 	public static final String JSON_TASK_NOTE_SUB_TASKS = "taskNoteSubTasks";
 	public static final String JSON_TASK_NOTE_SUB_TASKS_TASK_TITLE = "taskNoteSubTasksTaskTitle";
 	public static final String JSON_TASK_NOTE_SUB_TASKS_IS_DONE = "taskNoteSubTasksIsDone";
-	//          TODO NOTE
+	//          TO DO NOTE
 	public static final String JSON_TODO_NOTE_NAME_FILE = "todoNote.txt";
 }

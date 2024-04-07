@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".activities.EnterPassWordActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/backButton"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginTop="4dp"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/icon_back"
+            app:layout_constraintEnd_toStartOf="@+id/settingsButton"
+            app:layout_constraintHorizontal_bias="0.001"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?android:attr/textColorPrimary"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/settingsButton"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_gravity="right"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/icon_more"
+            app:tint="?android:attr/textColorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:gravity="center"
+        android:text="ENTER THE PASSWORD"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?android:attr/textColorSecondary"
+        android:background="@android:color/transparent"
+        android:textSize="@dimen/_35sdp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:boxBackgroundMode="none"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/EP_edtPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:inputType="textPassword"
+            android:textColor="?android:attr/textColorSecondary"
+            android:background="@android:color/transparent"
+            android:maxLength="6"
+            android:text=""
+            android:textSize="@dimen/_30sdp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/_15sdp"
+        android:gravity="center"
+        android:columnCount="3">
+
+        <Button
+            android:id="@+id/EP_btn1"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <Button
+            android:id="@+id/EP_btn2"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="2"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <Button
+            android:id="@+id/EP_btn3"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="3"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <Button
+            android:id="@+id/EP_btn4"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="4"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <Button
+            android:id="@+id/EP_btn5"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="5"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <Button
+            android:id="@+id/EP_btn6"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="6"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <Button
+            android:id="@+id/EP_btn7"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="7"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <Button
+            android:id="@+id/EP_btn8"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="8"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <Button
+            android:id="@+id/EP_btn9"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="9"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/EP_btnDelete"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_x"
+            app:tint="?android:attr/textColorPrimary"/>
+
+        <Button
+            android:id="@+id/EP_btn0"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/epfpn_btnnumber"
+            android:text="0"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_20sdp"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/EP_btnDone"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_65sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_tick"
+            app:tint="?android:attr/textColorPrimary"/>
+
+    </GridLayout>
+</LinearLayout>

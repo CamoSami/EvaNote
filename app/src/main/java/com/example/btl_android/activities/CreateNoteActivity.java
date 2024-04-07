@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.btl_android.databinding.ActivityCreateNoteBinding;
 
@@ -26,6 +27,21 @@ public class CreateNoteActivity extends AppCompatActivity
 	private void SetListeners()
 	{
 		//  TODO: Các bạn tự bổ sung
+		this.binding.newDefaultNote.setOnClickListener(view -> {
+			Toast.makeText(this, "No Default Note yet", Toast.LENGTH_SHORT).show();
+		});
+
+		this.binding.newPrivateNote.setOnClickListener(view -> {
+			Intent intent = new Intent(this, EnterPassWordActivity.class);
+
+			startActivity(intent);
+
+			finish();
+		});
+
+		this.binding.newReminderNote.setOnClickListener(view -> {
+			Toast.makeText(this, "No Reminder Note yet", Toast.LENGTH_SHORT).show();
+		});
 
 		this.binding.newTodoNote.setOnClickListener(view -> {
 			Intent intent = new Intent(this, TodoNoteActivity.class);

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.StartUpSettingsActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_36sdp"
+            android:background="?android:attr/textColorTertiary"
+            app:layout_constraintBottom_toBottomOf="@id/titleTextView"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_8sdp"
+            android:paddingBottom="@dimen/_8sdp"
+            android:text="Start Up Settings"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textColorHint="?android:attr/textColorSecondary"
+            android:background="@android:color/transparent"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/startUpSettingsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_150sdp"
+        android:text="Hey there!"
+        android:textSize="@dimen/_24ssp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/startUpSettingsText"/>
+
+    <TextView
+        android:id="@+id/startUpSettingsText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:text="Seems like this is your first time opening EvaNote!\n\nPlease do the following actions to allow EvaNote to run normally..."
+        android:textSize="@dimen/_16ssp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/startUpSettingsTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/generalSettingsStorageLocation"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_60sdp"
+        android:background="?android:attr/textColorTertiary"
+        app:layout_constraintTop_toBottomOf="@id/startUpSettingsText" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/generalSettingsStorageLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_62sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:longClickable="true"
+        app:layout_constraintTop_toBottomOf="@id/startUpSettingsText">
+
+        <TextView
+            android:id="@+id/generalSettingsStorageLocationTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Setup Storage Location"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/generalSettingsStorageLocationCurrent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="*current location via PreferenceManager*"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/generalSettingsStorageLocationTitle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:background="?android:attr/textColorTertiary"
+        app:layout_constraintTop_toBottomOf="@id/generalSettingsStorageLocation" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/generalSettingsRequestPermission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:longClickable="true"
+        app:layout_constraintTop_toBottomOf="@id/generalSettingsStorageLocation">
+
+        <TextView
+            android:id="@+id/generalSettingsRequestPermissionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Permissions"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/generalSettingsRequestPermissionCurrent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check if all permissions required for EvaNote has been granted"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/generalSettingsRequestPermissionTitle"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:background="?android:attr/textColorTertiary"
+        app:layout_constraintTop_toBottomOf="@id/generalSettingsRequestPermission" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/doneButton"
+        android:layout_width="@dimen/_48sdp"
+        android:layout_height="@dimen/_48sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        android:layout_marginBottom="@dimen/_24sdp"
+        android:padding="@dimen/_6sdp"
+        android:src="@drawable/icon_done"
+        android:background="@drawable/background_content_darker"
+        app:tint="?android:attr/textColorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

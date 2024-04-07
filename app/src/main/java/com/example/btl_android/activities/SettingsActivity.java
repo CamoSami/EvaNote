@@ -6,11 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.multidex.BuildConfig;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -28,9 +26,8 @@ import android.widget.Toast;
 import com.example.btl_android.R;
 import com.example.btl_android.databinding.ActivitySettingsBinding;
 import com.example.btl_android.utilities.Constants;
+import com.example.btl_android.utilities.NoteComparator;
 import com.example.btl_android.utilities.PreferenceManager;
-
-import java.net.URLDecoder;
 
 public class SettingsActivity
 		extends AppCompatActivity
@@ -86,15 +83,18 @@ public class SettingsActivity
 		);
 
 		//          Storage Location
+		String storageLocation =
+				this.preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
+
 		this.binding.generalSettingsStorageLocationCurrent.setText(
-			this.preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION)
+				storageLocation == null ? "None" : storageLocation
 		);
 
 		//          Theme Spinners
 		ArrayAdapter<CharSequence> arrayAdapter1 = ArrayAdapter.createFromResource(
 				this,
 				R.array.theme,
-				R.layout.spinner_item
+				R.layout.spinner_item_left
 		);
 		arrayAdapter1.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
 		this.binding.generalSettingsDarkModeSpinner.setAdapter(arrayAdapter1);
@@ -116,44 +116,73 @@ public class SettingsActivity
 		//          Delete On Completion
 		boolean deleteOnCompletion = this.preferenceManager.getBoolean(Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION);
 
-		this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.setChecked(deleteOnCompletion);
+		if (deleteOnCompletion)
+		{
+			this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.setChecked(true);
 
-		this.binding.taskNoteSettingsDeleteAfterTitle.setEnabled(deleteOnCompletion);
-		this.binding.taskNoteSettingsDeleteAfterDesc.setEnabled(deleteOnCompletion);
-		this.binding.taskNoteSettingsDeleteAfterSpinner.setEnabled(deleteOnCompletion);
+			//      Delete on Completion After
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterTitle.setEnabled(true);
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterDesc.setEnabled(true);
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterSpinner.setEnabled(true);
 
-		this.binding.taskNoteSettingsDeleteAfterTitle.setTextColor(
-				this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.isChecked() ?
-						typedValuePrimary.data :
-						typedValueSecondary.data
-		);
-		this.binding.taskNoteSettingsDeleteAfterDesc.setTextColor(
-				this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.isChecked() ?
-						typedValueSecondary.data :
-						typedValueTertiary.data
-		);
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterTitle.setTextColor(typedValuePrimary.data);
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterDesc.setTextColor(typedValueSecondary.data);
+
+			//      Sort to Bottom
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterTitle.setEnabled(false);
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterDesc.setEnabled(false);
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterCheckBox.setEnabled(false);
+
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterTitle.setTextColor(typedValueSecondary.data);
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterDesc.setTextColor(typedValueTertiary.data);
+		}
+		else
+		{
+			this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.setChecked(false);
+
+			//      Delete on Completion After
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterTitle.setEnabled(false);
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterDesc.setEnabled(false);
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterSpinner.setEnabled(false);
+
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterTitle.setTextColor(typedValueSecondary.data);
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterDesc.setTextColor(typedValueTertiary.data);
+
+			//      Sort to Bottom
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterTitle.setEnabled(true);
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterDesc.setEnabled(true);
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterCheckBox.setEnabled(true);
+
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterTitle.setTextColor(typedValuePrimary.data);
+			this.binding.taskNoteSettingsSortToBottomOnCompletionAfterDesc.setTextColor(typedValueSecondary.data);
+		}
 
 		//          Delete After Spinner
 		ArrayAdapter<CharSequence> arrayAdapter2 = ArrayAdapter.createFromResource(
 				this,
 				R.array.deleteAfter,
-				R.layout.spinner_item
+				R.layout.spinner_item_left
 		);
 		arrayAdapter2.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
-		this.binding.taskNoteSettingsDeleteAfterSpinner.setAdapter(arrayAdapter2);
+		this.binding.taskNoteSettingsDeleteOnCompletionAfterSpinner.setAdapter(arrayAdapter2);
 
-		String deleteAfterSeconds = this.preferenceManager.getString(Constants.TASK_NOTE_SETTINGS_DELETE_AFTER);
+		String deleteAfterSeconds = this.preferenceManager.getString(Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION_AFTER);
 
 		if (deleteAfterSeconds == null)
 		{
-			this.preferenceManager.putString(Constants.TASK_NOTE_SETTINGS_DELETE_AFTER, "2");
+			this.preferenceManager.putString(Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION_AFTER, "2");
 
-			this.binding.taskNoteSettingsDeleteAfterSpinner.setSelection(2);
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterSpinner.setSelection(2);
 		}
 		else
 		{
-			this.binding.taskNoteSettingsDeleteAfterSpinner.setSelection(Integer.parseInt(deleteAfterSeconds));
+			this.binding.taskNoteSettingsDeleteOnCompletionAfterSpinner.setSelection(Integer.parseInt(deleteAfterSeconds));
 		}
+
+		//          Sort to Bottom
+		this.binding.taskNoteSettingsSortToBottomOnCompletionAfterCheckBox.setChecked(
+				this.preferenceManager.getBoolean(Constants.TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION)
+		);
 	}
 
 	private void SetListeners()
@@ -209,7 +238,7 @@ public class SettingsActivity
 		this.binding.generalSettingsRequestPermission.setOnClickListener(view -> {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
 			{
-				if (!Environment.isExternalStorageManager()){
+				if (this.CheckPermission(null, 0)){
 					Intent getPermission = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
 
 					startActivity(getPermission);
@@ -217,9 +246,23 @@ public class SettingsActivity
 			}
 			else
 			{
-				this.CheckPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
-				this.CheckPermission(Manifest.permission.READ_EXTERNAL_STORAGE, REQUEST_CODE_READ_EXTERNAL_STORAGE);
-				this.CheckPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, REQUEST_CODE_MANAGE_EXTERNAL_STORAGE);
+				if (this.CheckPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+						REQUEST_CODE_WRITE_EXTERNAL_STORAGE))
+				{
+					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
+				}
+
+				if (this.CheckPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+						REQUEST_CODE_READ_EXTERNAL_STORAGE))
+				{
+					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_READ_EXTERNAL_STORAGE);
+				}
+
+				if (this.CheckPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+						REQUEST_CODE_MANAGE_EXTERNAL_STORAGE))
+				{
+					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, REQUEST_CODE_MANAGE_EXTERNAL_STORAGE);
+				}
 			}
 		});
 
@@ -258,35 +301,74 @@ public class SettingsActivity
 
 			this.preferenceManager.putBoolean(Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION, deleteOnCompletion);
 
-			this.binding.taskNoteSettingsDeleteAfterTitle.setEnabled(deleteOnCompletion);
-			this.binding.taskNoteSettingsDeleteAfterDesc.setEnabled(deleteOnCompletion);
-			this.binding.taskNoteSettingsDeleteAfterSpinner.setEnabled(deleteOnCompletion);
+			if (deleteOnCompletion)
+			{
+				this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.setChecked(true);
 
-			this.binding.taskNoteSettingsDeleteAfterTitle.setTextColor(
-					this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.isChecked() ?
-							typedValuePrimary.data :
-							typedValueSecondary.data
-			);
-			this.binding.taskNoteSettingsDeleteAfterDesc.setTextColor(
-					this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.isChecked() ?
-							typedValueSecondary.data :
-							typedValueTertiary.data
-			);
+				//      Delete on Completion After
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterTitle.setEnabled(true);
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterDesc.setEnabled(true);
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterSpinner.setEnabled(true);
+
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterTitle.setTextColor(typedValuePrimary.data);
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterDesc.setTextColor(typedValueSecondary.data);
+
+				//      Sort to Bottom
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterTitle.setEnabled(false);
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterDesc.setEnabled(false);
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterCheckBox.setEnabled(false);
+
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterTitle.setTextColor(typedValueSecondary.data);
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterDesc.setTextColor(typedValueTertiary.data);
+			}
+			else
+			{
+				this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.setChecked(false);
+
+				//      Delete on Completion After
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterTitle.setEnabled(false);
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterDesc.setEnabled(false);
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterSpinner.setEnabled(false);
+
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterTitle.setTextColor(typedValueSecondary.data);
+				this.binding.taskNoteSettingsDeleteOnCompletionAfterDesc.setTextColor(typedValueTertiary.data);
+
+				//      Sort to Bottom
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterTitle.setEnabled(true);
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterDesc.setEnabled(true);
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterCheckBox.setEnabled(true);
+
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterTitle.setTextColor(typedValuePrimary.data);
+				this.binding.taskNoteSettingsSortToBottomOnCompletionAfterDesc.setTextColor(typedValueSecondary.data);
+			}
 		});
 
-		//          Delete After
-		this.binding.taskNoteSettingsDeleteAfterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+		//          Delete on Completion After
+		this.binding.taskNoteSettingsDeleteOnCompletionAfterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 		{
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 			{
-				SettingsActivity.this.preferenceManager.putString(Constants.TASK_NOTE_SETTINGS_DELETE_AFTER, String.valueOf(position));
+				SettingsActivity.this.preferenceManager.putString(Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION_AFTER, String.valueOf(position));
 			}
 
 			@Override public void onNothingSelected(AdapterView<?> parent)
 			{
 
 			}
+		});
+
+		//          Sort to Bottom on Completion
+		this.binding.taskNoteSettingsSortToBottomOnCompletionAfterCheckBox.setOnClickListener(view ->
+		{
+			boolean isChecked =
+					this.binding.taskNoteSettingsSortToBottomOnCompletionAfterCheckBox.isChecked();
+
+			this.preferenceManager.putBoolean(
+					Constants.TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION,
+					isChecked
+			);
+			NoteComparator.taskNoteSortToBottomOnCompletion = isChecked;
 		});
 	}
 
@@ -349,17 +431,16 @@ public class SettingsActivity
 		}
 	}
 
-	private void CheckPermission(String permission, int requestCode)
+	private boolean CheckPermission(String permission, int requestCode)
 	{
-		if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
 		{
-			// Requesting the permission
-			ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-
+			return Environment.isExternalStorageManager();
 		}
 		else
 		{
-			Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
+			return ContextCompat.checkSelfPermission(this, permission) !=
+					PackageManager.PERMISSION_DENIED;
 		}
 	}
 }

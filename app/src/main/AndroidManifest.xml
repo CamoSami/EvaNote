@@ -28,6 +28,9 @@
         android:theme="@style/Theme.BTL_ANDROID"
         tools:targetApi="31">
         <activity
+            android:name=".activities.StartUpSettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.SettingsActivity"
             android:exported="false" />
         <activity
@@ -46,6 +49,12 @@
 
         <activity
             android:name=".activities.AttachableNoteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PrivateNoteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.EnterPassWordActivity"
             android:exported="false" />
         <activity
             android:name=".activities.TodoNoteActivity"

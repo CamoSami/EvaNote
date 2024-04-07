@@ -34,16 +34,24 @@
 		- Hàm DeleteFromStorage có thể dùng ở mọi class kế thừa từ nó, nên không cần viết lại
 	+ 1 item_container_small_note để hiện thị ở MainActivity
 		- Có noteTitle, noteDateAndType
-	+ 1 NoteActivity
+	+ 1 ViewHolder kèm các thao tác và Class tương ứng
+		- Xem và thêm ở NoteAdapter
+		- Áp dụng interface NoteViewHolderInterface
+	+ 1 NoteActivity và file xml của nó
 		- Dùng để tạo 1 Note mới hoặc sửa 1 Note cũ
 		- Tham khảo AttachableNoteActivity cho Layout, đặc biệt là thanh titleBar
-		- Các bạn nhớ làm có cả Menu
-	+ 1 ViewHolder kèm các thao tác và Class tương ứng:
-		- Xem và thêm ở NoteAdapter
+		- Các bạn nhớ làm có cả Popup(Action) Menu
 	+ Và các phần còn lại và bản thân Note của các bạn cần
 	+ Dùng các màu đã được đặt sẵn 
 	
 * Phần cần thêm sau:
+- MainActivity: 
+	+ Giữ NoteItem sẽ hiện các Checkbox cho các Note
+	+ Cùng lúc đó hiện 1 thanh Menu bên dưới gồm các hành động có thể làm:
+		- Xóa...
+		- Duplicate...
+		- vv...
+
 - Dark mode / Light mode
 	+ Có thể hiện ở phần cài đặt
 	

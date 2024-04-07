@@ -73,12 +73,11 @@
 
         <Spinner
             android:id="@+id/spinnerSort"
-            android:layout_width="@dimen/_180sdp"
+            android:layout_width="@dimen/_240sdp"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_100sdp"
+            android:layout_marginStart="@dimen/_40sdp"
             android:textColor="?android:attr/textColorPrimary"
-            android:textColorHint="?android:attr/textColorSecondary"
-            android:background="@android:color/transparent"/>
+            android:textColorHint="?android:attr/textColorSecondary"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/buttonSort"
@@ -110,6 +109,7 @@
         android:id="@+id/noNoteLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/sortBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -138,6 +138,44 @@
             android:textColor="?android:attr/textColorPrimary"
             android:gravity="center_horizontal"
             app:layout_constraintTop_toBottomOf="@id/noNoteTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/noDirLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/sortBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/noDirTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_200sdp"
+            android:text="Can not get Notes..."
+            android:textSize="@dimen/_24ssp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/noDirText"/>
+
+        <TextView
+            android:id="@+id/noDirText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="It seems like EvaNote has not been set up...\n\nPress here to set up EvaNote"
+            android:textSize="@dimen/_16ssp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/noDirTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 

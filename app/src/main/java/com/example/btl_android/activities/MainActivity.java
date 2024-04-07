@@ -1,25 +1,14 @@
 package com.example.btl_android.activities;
 
-import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +22,7 @@ import com.example.btl_android.adapters.NotesAdapter;
 import com.example.btl_android.databinding.ActivityMainBinding;
 import com.example.btl_android.listeners.NoteListener;
 import com.example.btl_android.models.AttachableNote;
+import com.example.btl_android.models.PrivateNote;
 import com.example.btl_android.models.TaskNote;
 import com.example.btl_android.models._DefaultNote;
 import com.example.btl_android.utilities.Constants;
@@ -52,19 +42,18 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 	private List<_DefaultNote> noteList;
 	private NotesAdapter listAdapter;
 	private PreferenceManager preferenceManager;
-	private boolean isEditting = false;
-	private boolean isAscending = true;
+	private boolean isEditing = false;
+	private boolean isReversed = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
+		//      Pref Manager
 		this.preferenceManager = new PreferenceManager(this);
-		//		this.preferenceManager.putString(Constants.PREFERENCE_STORAGE_DIRECTORY, Environment.getExternalStorageDirectory() + "/EvaNote/");
 
-
-		//      TODO: Settings and Applying them
+		//      Night/Light/System Mode
 		String appTheme = this.preferenceManager.getString(Constants.SETTINGS_APP_THEME);
 
 		if (appTheme == null)
@@ -90,35 +79,62 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			}
 		}
 
+		//      Set up Binding
 		this.binding = ActivityMainBinding.inflate(getLayoutInflater());
 		this.setContentView(this.binding.getRoot());
 
+		//      Set up Note List
 		this.noteList = new ArrayList<>();
-
 		this.listAdapter = new NotesAdapter(this.noteList, this, this);
 		this.binding.noteRecyclerView.setAdapter(this.listAdapter);
 
+		//      Set up Spinner
 		ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
 				this,
 				R.array.sortType,
-				R.layout.spinner_item
+				R.layout.spinner_item_right
 		);
 		arrayAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
 		this.binding.spinnerSort.setAdapter(arrayAdapter);
 		this.binding.spinnerSort.setSelection(0);
 
-		this.ReadFiles();
+		//      Is Reversed
+		this.isReversed = this.preferenceManager.getBoolean(Constants.SETTINGS_SORT_IS_REVERSED);
+		if (this.isReversed)
+		{
+			this.binding.buttonSort.setImageResource(R.drawable.icon_arrowup);
+		}
+		else
+		{
+			this.binding.buttonSort.setImageResource(R.drawable.icon_arrowdown);
+		}
+
+		//      Check if this is new Start Up
+		if (!this.preferenceManager.getBoolean(Constants.APP_NOT_FIRST_START_UP))
+		{
+			Intent intent = new Intent(this, StartUpSettingsActivity.class);
+
+			startActivity(intent);
+
+			this.preferenceManager.putBoolean(Constants.APP_NOT_FIRST_START_UP, true);
+		}
+		else
+		{
+			this.ReadFiles();
+		}
+
 		this.SetListeners();
 	}
 
 	private void SetListeners()
 	{
-		if (this.isEditting) {
+		if (this.isEditing)
+		{
 			this.binding.newButton.setOnClickListener(view ->
 			{
-				this.isEditting = false;
+				this.isEditing = false;
 
-				this.ChangeEdittingLayout();
+				this.ChangeEditingLayout();
 			});
 
 			this.binding.settingsButton.setOnClickListener(view ->
@@ -155,12 +171,24 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 				popupMenu.show();
 			});
 		}
-		else {
-			//      Sort Button!
-			this.binding.buttonSort.setOnClickListener(view -> {
-				this.isAscending = !this.isAscending;
+		else
+		{
+			//      No Dir!
+			this.binding.noDirLayout.setOnClickListener(view ->
+			{
+				Intent intent = new Intent(this, StartUpSettingsActivity.class);
 
-				if (this.isAscending)
+				startActivity(intent);
+
+				this.preferenceManager.putBoolean(Constants.APP_NOT_FIRST_START_UP, true);
+			});
+
+			//      Sort Button!
+			this.binding.buttonSort.setOnClickListener(view ->
+			{
+				this.isReversed = !this.isReversed;
+
+				if (this.isReversed)
 				{
 					this.binding.buttonSort.setImageResource(R.drawable.icon_arrowup);
 				}
@@ -169,9 +197,10 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					this.binding.buttonSort.setImageResource(R.drawable.icon_arrowdown);
 				}
 
-				this.preferenceManager.putBoolean(Constants.SETTINGS_SORT_ASCENDING, this.isAscending);
+				this.preferenceManager.putBoolean(Constants.SETTINGS_SORT_IS_REVERSED, this.isReversed);
+				NoteComparator.isReversed = this.isReversed;
 
-				Collections.reverse(MainActivity.this.noteList);
+				this.ReadFiles();
 
 				this.listAdapter.notifyDataSetChanged();
 			});
@@ -202,11 +231,6 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 					Collections.sort(MainActivity.this.noteList, new NoteComparator());
 
-					if (!MainActivity.this.isAscending)
-					{
-						Collections.reverse(MainActivity.this.noteList);
-					}
-
 					MainActivity.this.listAdapter.notifyDataSetChanged();
 				}
 
@@ -226,38 +250,6 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 			//      Settings!
 			this.binding.settingsButton.setOnClickListener(view ->
-//			{
-//				PopupMenu popupMenu = new PopupMenu(view.getContext(), this.binding.settingsButton);
-//
-//				popupMenu.getMenuInflater().inflate(R.menu.menu_activity_main, popupMenu.getMenu());
-//
-//				popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-//				{
-//					@Override
-//					public boolean onMenuItemClick(MenuItem menuItem)
-//					{
-//						int id = menuItem.getItemId();
-//
-//						if (id == R.id.menuItemReqRES)
-//						{
-//							CheckPermission(READ_EXTERNAL_STORAGE, REQUEST_CODE_READ_EXTERNAL_STORAGE);
-//						}
-//						else if (id == R.id.menuItemReqWES)
-//						{
-//							CheckPermission(WRITE_EXTERNAL_STORAGE, REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
-//						}
-//						else if (id == R.id.menuItemReqMES)
-//						{
-//							CheckPermission(MANAGE_EXTERNAL_STORAGE, REQUEST_CODE_MANAGE_EXTERNAL_STORAGE);
-//						}
-//
-//						return true;
-//					}
-//				});
-//
-//				// Showing the popup menu
-//				popupMenu.show();
-//			});
 			{
 				Intent intent = new Intent(this, SettingsActivity.class);
 
@@ -278,11 +270,11 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 	@Override public void onBackPressed()
 	{
-		if (this.isEditting)
+		if (this.isEditing)
 		{
-			this.isEditting = false;
+			this.isEditing = false;
 
-			this.ChangeEdittingLayout();
+			this.ChangeEditingLayout();
 		}
 		else
 		{
@@ -299,7 +291,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		{
 			return;
 		}
-		else {
+		else
+		{
 			this.ReadFiles();
 		}
 	}
@@ -307,7 +300,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 	@Override
 	public void onNoteClick(int position)
 	{
-		if (this.isEditting) {
+		if (this.isEditing)
+		{
 			//      Nah I am editting
 
 			return;
@@ -317,21 +311,24 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		_DefaultNote defaultNote = this.noteList.get(position);
 
 		//      TODO: Các bạn bổ sung
-		if (defaultNote instanceof AttachableNote) {
+		if (defaultNote instanceof AttachableNote)
+		{
 			Intent intent = new Intent(this, AttachableNoteActivity.class);
 
 			intent.putExtra(Constants.BUNDLE_FILENAME_KEY, defaultNote.getFileName());
 
 			startActivity(intent);
 		}
-		else if (defaultNote instanceof TaskNote) {
+		else if (defaultNote instanceof TaskNote)
+		{
 			Intent intent = new Intent(this, TaskNoteActivity.class);
 
 			intent.putExtra(Constants.BUNDLE_FILENAME_KEY, defaultNote.getFileName());
 
 			startActivity(intent);
 		}
-		else {
+		else
+		{
 			Log.d("MainActivityTemp", "onNoteClick: Unknown Note");
 
 			Toast.makeText(this, "Note Type not Found", Toast.LENGTH_SHORT).show();
@@ -340,14 +337,14 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 	@Override
 	public void onNoteLongClick() {
-		if (this.isEditting)
+		if (this.isEditing)
 		{
 			return;
 		}
 
-		this.isEditting = true;
+		this.isEditing = true;
 
-		this.ChangeEdittingLayout();
+		this.ChangeEditingLayout();
 	}
 
 
@@ -380,8 +377,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					}
 				}
 
-				MainActivity.this.isEditting = false;
-				MainActivity.this.ChangeEdittingLayout();
+				MainActivity.this.isEditing = false;
+				MainActivity.this.ChangeEditingLayout();
 			}
 		});
 
@@ -432,11 +429,12 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			}
 		}
 
-		MainActivity.this.isEditting = false;
-		MainActivity.this.ChangeEdittingLayout();
+		this.isEditing = false;
+		this.ChangeEditingLayout();
 	}
 
-	private void onNoteFavorite() {
+	private void onNoteFavorite()
+	{
 		for (int i = 0; i < this.noteList.size(); i++)
 		{
 			_DefaultNote defaultNote = MainActivity.this.noteList.get(i);
@@ -446,7 +444,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 				defaultNote.setFavorite(!defaultNote.isFavorite());
 
 				//      TODO: Các bạn bổ sung
-				if (defaultNote instanceof AttachableNote) {
+				if (defaultNote instanceof AttachableNote)
+				{
 					AttachableNote attachableNote = (AttachableNote) defaultNote;
 
 					if (!attachableNote.WriteToStorage(MainActivity.this, false))
@@ -456,7 +455,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 						Toast.makeText(MainActivity.this, "Failed to favorite the Note", Toast.LENGTH_SHORT).show();
 					}
 				}
-				else if (defaultNote instanceof TaskNote) {
+				else if (defaultNote instanceof TaskNote)
+				{
 					TaskNote taskNote = (TaskNote) defaultNote;
 
 					if (!taskNote.WriteToStorage(MainActivity.this, false))
@@ -469,14 +469,19 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			}
 		}
 
-		MainActivity.this.isEditting = false;
-		MainActivity.this.ChangeEdittingLayout();
+		this.isEditing = false;
+		this.ChangeEditingLayout();
+
+		this.ReadFiles();
 	}
 
-	private void ChangeEdittingLayout() {
-		this.listAdapter.SetEditing(this.isEditting);
+	private void ChangeEditingLayout()
+	{
+		Collections.sort(this.noteList, new NoteComparator());
+		this.listAdapter.SetEditing(this.isEditing);
 
-		if (this.isEditting) {
+		if (this.isEditing)
+		{
 			this.binding.newButton.setImageResource(R.drawable.icon_back);
 			this.binding.settingsButton.setImageResource(R.drawable.icon_more);
 
@@ -484,7 +489,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 			this.SetListeners();
 		}
-		else {
+		else
+		{
 			this.binding.newButton.setImageResource(R.drawable.icon_add);
 			this.binding.settingsButton.setImageResource(R.drawable.icon_settings);
 
@@ -494,25 +500,49 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		}
 	}
 
-	private void ReadFiles() {
+	public void ReadFiles()
+	{
+		//      Initiate
 		String directory = this.preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
+		this.noteList.clear();
+
+		//      Check if no Directory or unreadable Directory
+		if (directory == null)
+		{
+			this.binding.noDirLayout.setVisibility(View.VISIBLE);
+
+			this.listAdapter.notifyDataSetChanged();
+			this.binding.noteRecyclerView.scrollToPosition(0);
+
+			return;
+		}
+		else
+		{
+			this.binding.noDirLayout.setVisibility(View.GONE);
+		}
+
+		//      Get Files
 		File dir = new File(directory);
 		File[] files = dir.listFiles();
 
-		if (files == null || files.length == 0) {
+		//      Check if any Files scanned
+		if (files == null || files.length == 0)
+		{
 			this.binding.noNoteLayout.setVisibility(View.VISIBLE);
 
 			this.listAdapter.notifyDataSetChanged();
 			this.binding.noteRecyclerView.scrollToPosition(0);
 		}
-		else {
+		else
+		{
 			this.binding.noNoteLayout.setVisibility(View.GONE);
 
 			for (File file : files)
 			{
 				String noteName = file.getName();
 
-				if (noteName.contains("AttachableNote")) {
+				if (noteName.contains("AttachableNote"))
+				{
 					AttachableNote attachableNote = AttachableNote.ReadFromStorage(this, file.getName());
 
 					if (attachableNote != null)
@@ -520,7 +550,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 						this.noteList.add(attachableNote);
 					}
 				}
-				else if (noteName.contains("TaskNote")) {
+				else if (noteName.contains("TaskNote"))
+				{
 					TaskNote taskNote = TaskNote.ReadFromStorage(this, file.getName());
 
 					if (taskNote != null)
@@ -528,8 +559,25 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 						this.noteList.add(taskNote);
 					}
 				}
+				else if (noteName.contains("PrivateNote"))
+				{
+					PrivateNote privateNote = PrivateNote.ReadFromStorage(this, file.getName());
+
+					if (privateNote != null)
+					{
+						this.noteList.add(privateNote);
+					}
+				}
+				else if (noteName.contains("Note"))
+				{
+					//      is File even a Note?
+
+					Toast.makeText(this, "Note Type unidentified, can not Read " + noteName,
+							Toast.LENGTH_SHORT).show();
+				}
 			}
 
+			//      Sort Type...
 			String sortType = this.preferenceManager.getString(Constants.SETTINGS_SORT_TYPE);
 
 			_DefaultNote.sortType =
@@ -539,7 +587,6 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 									_DefaultNote.SortType.ByTitle.toString()
 					);
 
-			//      Sort Type
 			switch (_DefaultNote.sortType)
 			{
 				case ByTitle:
@@ -557,31 +604,26 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					break;
 			}
 
-			//      Sort Button
-			this.isAscending =
-					this.preferenceManager.getBoolean(Constants.SETTINGS_SORT_ASCENDING);
-			if (this.isAscending)
-			{
-				this.binding.buttonSort.setImageResource(R.drawable.icon_arrowup);
-			}
-			else
-			{
-				this.binding.buttonSort.setImageResource(R.drawable.icon_arrowdown);
-			}
+			//      Necessities
+			NoteComparator noteComparator = new NoteComparator();
 
-			Collections.sort(this.noteList, new NoteComparator());
+			NoteComparator.isReversed = this.isReversed;
+			NoteComparator.taskNoteSortToBottomOnCompletion = this.preferenceManager.getBoolean(
+					Constants.TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION
+			);
+			NoteComparator.taskNoteDeleteOnCompletion = this.preferenceManager.getBoolean(
+					Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION
+			);
 
-			if (!this.isAscending)
-			{
-				Collections.reverse(this.noteList);
-			}
+			Collections.sort(this.noteList, noteComparator);
 
 			this.listAdapter.notifyDataSetChanged();
 			this.binding.noteRecyclerView.scrollToPosition(0);
 		}
 	}
 
-	public boolean isEditting() {
-		return this.isEditting;
+	public boolean isEditing()
+	{
+		return this.isEditing;
 	}
 }

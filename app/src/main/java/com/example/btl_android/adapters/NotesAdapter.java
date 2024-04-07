@@ -17,8 +17,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.btl_android.R;
+import com.example.btl_android.activities.MainActivity;
 import com.example.btl_android.activities.TodoNoteActivity;
 import com.example.btl_android.databinding.ItemContainerSmallAttachableNoteBinding;
+import com.example.btl_android.databinding.ItemContainerSmallPrivateNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallTaskNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallTodoNoteBinding;
 import com.example.btl_android.interfaces.NoteViewHolderInterface;
@@ -26,6 +28,7 @@ import com.example.btl_android.listeners.NoteListener;
 import com.example.btl_android.listeners.TaskNoteViewHolderListener;
 import com.example.btl_android.models.AttachableNote;
 import com.example.btl_android.models.AttachableNote_Container;
+import com.example.btl_android.models.PrivateNote;
 import com.example.btl_android.models.TaskNote;
 import com.example.btl_android.models.TaskNote_SubTask;
 import com.example.btl_android.models.TodoListNote;
@@ -33,7 +36,6 @@ import com.example.btl_android.models._DefaultNote;
 import com.example.btl_android.utilities.Constants;
 import com.example.btl_android.utilities.PreferenceManager;
 
-import java.lang.ref.PhantomReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -90,6 +92,16 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 					)
 			);
 		}
+		//Hanh add
+		else if (viewType == Constants.PRIVATE_NOTE){
+			return new PrivateNoteViewHolder(
+					ItemContainerSmallPrivateNoteBinding.inflate(
+							LayoutInflater.from(parent.getContext()),
+							parent,
+							false
+					)
+			);
+		}
 		else
 		{
 			Log.d("ERROREEEEEEEEEE", "onCreateViewHolder: Unknown Note");
@@ -121,8 +133,16 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		else if(getItemViewType(position) == Constants.TODO_NOTE) {
 			Log.d("Thai: Load", "LoadSummarizedNote: ");
 			TodoNoteViewHolder todoNoteViewHolder = (TodoNoteViewHolder) holder;
+
 			todoNoteViewHolder.LoadSummarizedNote(this.notesList.get(position));
 			todoNoteViewHolder.SetListeners(this.notesList.get(position));
+		}
+		else if (getItemViewType(position) == Constants.PRIVATE_NOTE)
+		{
+			PrivateNoteViewHolder privateNoteViewHolder = (PrivateNoteViewHolder) holder;
+
+			privateNoteViewHolder.LoadSummarizedNote(this.notesList.get(position));
+			privateNoteViewHolder.SetListeners(this.notesList.get(position));
 		}
 	}
 
@@ -146,8 +166,11 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		{
 			return Constants.TASK_NOTE;
 		}
-		else if(this.notesList.get(position).getClass() == TodoListNote.class) {
+		else if (this.notesList.get(position).getClass() == TodoListNote.class) {
 			return Constants.TODO_NOTE;
+		}
+		else if (this.notesList.get(position).getClass() == PrivateNote.class){
+			return Constants.PRIVATE_NOTE;
 		}
  		else
 		{
@@ -309,8 +332,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				return;
 			}
 
-			taskNote.setChecked(false);
-
+			taskNote.setDone(false);
 			for (TaskNote_SubTask subTask : this.subTasksList)
 			{
 				subTask.setDone(false);
@@ -368,110 +390,6 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		{
 			this.taskNote = (TaskNote) defaultNote;
 
-			this.binding.noteCheckbox.setOnClickListener(view ->
-			{
-				this.taskNote.setChecked(this.binding.noteCheckbox.isChecked());
-			});
-
-			this.binding.noteTaskCheckbox.setOnClickListener(view ->
-			{
-				boolean isChecked = this.binding.noteTaskCheckbox.isChecked();
-
-				this.taskNote.setChecked(isChecked);
-
-				TypedValue typedValueSecondary = new TypedValue(), typedValuePrimary = new TypedValue();
-				Resources.Theme theme = context.getTheme();
-				theme.resolveAttribute(
-						com.google.android.material.R.attr.colorOnPrimary,
-						typedValuePrimary,
-						true
-				);
-				theme.resolveAttribute(
-						com.google.android.material.R.attr.colorOnSecondary,
-						typedValueSecondary,
-						true
-				);
-
-				this.binding.noteContent.setTextColor(
-						isChecked ?
-								typedValueSecondary.data :
-								typedValuePrimary.data
-				);
-				this.binding.noteTitle.setTextColor(
-						isChecked ?
-								typedValueSecondary.data :
-								typedValuePrimary.data
-				);
-
-				if (!isChecked)
-				{
-					if (!this.taskNote.WriteToStorage(NotesAdapter.this.context, false))
-					{
-						Log.d("AttachableNoteViewHolderTemp", "Failed to write to storage");
-
-						Toast.makeText(NotesAdapter.this.context,
-								"Failed to save the Note",
-								Toast.LENGTH_SHORT).show();
-					}
-				}
-				else if (this.taskNote.IsRepeatable())
-				{
-					Toast.makeText(NotesAdapter.this.context,
-							"Note has been completed! Preparing to repeat the TaskNote...",
-							Toast.LENGTH_SHORT
-					).show();
-
-					(new Handler()).postDelayed(() -> RepeatTaskNote(this.taskNote), 3000);
-				}
-				else
-				{
-					if (NotesAdapter.this.preferenceManager.getBoolean(Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION))
-					{
-						//      Delete On Completion
-						Toast.makeText(NotesAdapter.this.context,
-								"Note has been completed! Deleting TaskNote...", Toast.LENGTH_SHORT
-						).show();
-
-						String tempDeleteAfter =
-								NotesAdapter.this.preferenceManager.getString(Constants.TASK_NOTE_SETTINGS_DELETE_AFTER);
-
-						(new Handler()).postDelayed(() ->
-						{
-							if (!_DefaultNote.DeleteFromStorage(NotesAdapter.this.context,
-									this.taskNote.getFileName()
-							))
-							{
-								Log.d("AttachableNoteViewHolderTemp", "Failed to delete Note");
-
-								Toast.makeText(NotesAdapter.this.context, "Failed to save the Note",
-										Toast.LENGTH_SHORT
-								).show();
-							}
-
-							NotesAdapter.this.notifyItemRemoved(NotesAdapter.this.notesList.indexOf(defaultNote));
-						}, tempDeleteAfter == null ? 2000 :
-								Integer.parseInt(tempDeleteAfter) * 1000L);
-					}
-					else
-					{
-						//      Naw
-						Toast.makeText(NotesAdapter.this.context,
-								"Note has been completed! TaskNote does not repeat...",
-								Toast.LENGTH_SHORT
-						).show();
-
-						if (!this.taskNote.WriteToStorage(NotesAdapter.this.context, false))
-						{
-							Log.d("AttachableNoteViewHolderTemp", "Failed to write to storage");
-
-							Toast.makeText(NotesAdapter.this.context,
-									"Failed to save the Note",
-									Toast.LENGTH_SHORT).show();
-						}
-					}
-				}
-			});
-
 			if (NotesAdapter.this.isEditing)
 			{
 				//      Meh
@@ -494,6 +412,121 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			}
 			else
 			{
+				this.binding.noteTaskCheckbox.setOnClickListener(view ->
+				{
+					boolean isChecked = this.binding.noteTaskCheckbox.isChecked();
+					this.taskNote.setDone(isChecked);
+
+					TypedValue typedValueSecondary = new TypedValue(), typedValuePrimary = new TypedValue();
+					Resources.Theme theme = context.getTheme();
+					theme.resolveAttribute(
+							com.google.android.material.R.attr.colorOnPrimary,
+							typedValuePrimary,
+							true
+					);
+					theme.resolveAttribute(
+							com.google.android.material.R.attr.colorOnSecondary,
+							typedValueSecondary,
+							true
+					);
+
+					this.binding.noteContent.setTextColor(
+							isChecked ?
+									typedValueSecondary.data :
+									typedValuePrimary.data
+					);
+					this.binding.noteTitle.setTextColor(
+							isChecked ?
+									typedValueSecondary.data :
+									typedValuePrimary.data
+					);
+
+					if (!isChecked)
+					{
+						//      Uncheck TaskNote
+						if (!this.taskNote.WriteToStorage(NotesAdapter.this.context, false))
+						{
+							Log.d("AttachableNoteViewHolderTemp", "Failed to write to storage");
+
+							Toast.makeText(NotesAdapter.this.context,
+									"Failed to save the Note",
+									Toast.LENGTH_SHORT).show();
+						}
+
+						if (NotesAdapter.this.preferenceManager.getBoolean(Constants.TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION))
+						{
+							NotesAdapter.this.noteListener.ReadFiles();
+						}
+					}
+					else if (this.taskNote.IsRepeatable())
+					{
+						//      Check TaskNote, but is Repeatable
+						Toast.makeText(NotesAdapter.this.context,
+								"Note has been completed! Preparing to repeat the TaskNote...",
+								Toast.LENGTH_SHORT
+						).show();
+
+						(new Handler()).postDelayed(() -> RepeatTaskNote(this.taskNote), 3000);
+					}
+					else
+					{
+						//      Check TaskNote, but is not Repeatable
+						if (NotesAdapter.this.preferenceManager.getBoolean(Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION))
+						{
+							//      Delete On Completion
+							Toast.makeText(NotesAdapter.this.context,
+									"Note has been completed! Deleting TaskNote...", Toast.LENGTH_SHORT
+							).show();
+
+							String tempDeleteAfter =
+									NotesAdapter.this.preferenceManager.getString(Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION_AFTER);
+
+							(new Handler()).postDelayed(() ->
+							{
+								if (!_DefaultNote.DeleteFromStorage(NotesAdapter.this.context,
+										this.taskNote.getFileName()
+								))
+								{
+									Log.d("AttachableNoteViewHolderTemp", "Failed to delete Note");
+
+									Toast.makeText(NotesAdapter.this.context, "Failed to save the Note",
+											Toast.LENGTH_SHORT
+									).show();
+								}
+
+								NotesAdapter.this.notifyItemRemoved(NotesAdapter.this.notesList.indexOf(defaultNote));
+							}, tempDeleteAfter == null ? 2000 :
+									Integer.parseInt(tempDeleteAfter) * 1000L);
+						}
+						else
+						{
+							//      Naw
+							Toast.makeText(NotesAdapter.this.context,
+									"Note has been completed! TaskNote does not repeat...",
+									Toast.LENGTH_SHORT
+							).show();
+
+							if (!this.taskNote.WriteToStorage(NotesAdapter.this.context, false))
+							{
+								Log.d("AttachableNoteViewHolderTemp", "Failed to write to storage");
+
+								Toast.makeText(NotesAdapter.this.context,
+										"Failed to save the Note",
+										Toast.LENGTH_SHORT).show();
+
+								this.binding.noteTaskCheckbox.setChecked(false);
+
+								return;
+							}
+
+							if (NotesAdapter.this.preferenceManager.getBoolean(Constants.TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION))
+							{
+								NotesAdapter.this.noteListener.ReadFiles();
+							}
+						}
+					}
+				});
+
 				//      Meh
 				this.binding.getRoot().setOnClickListener(view ->
 				{
@@ -518,6 +551,20 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			//      Conversion / Initiate
 			this.taskNote = (TaskNote) defaultNote;
 
+			TypedValue typedValueSecondary = new TypedValue(), typedValuePrimary = new TypedValue();
+			Resources.Theme theme = context.getTheme();
+			theme.resolveAttribute(
+					com.google.android.material.R.attr.colorOnPrimary,
+					typedValuePrimary,
+					true
+			);
+			theme.resolveAttribute(
+					com.google.android.material.R.attr.colorOnSecondary,
+					typedValueSecondary,
+					true
+			);
+
+			//      Sub Tasks
 			this.subTasksList = this.taskNote.getSubTasks();
 			this.subTaskAdapter = new SmallTaskNote_SubTaskAdapter(
 					this.subTasksList,
@@ -567,6 +614,21 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				this.subTaskAdapter.SetEditing(false);
 			}
 
+			//      Is Done?
+			boolean isDone = this.taskNote.isDone();
+			this.binding.noteTaskCheckbox.setChecked(isDone);
+
+			if (isDone)
+			{
+				this.binding.noteContent.setTextColor(typedValueSecondary.data);
+				this.binding.noteTitle.setTextColor(typedValueSecondary.data);
+			}
+			else
+			{
+				this.binding.noteContent.setTextColor(typedValuePrimary.data);
+				this.binding.noteTitle.setTextColor(typedValuePrimary.data);
+			}
+
 			//      Get Favoritism
 			boolean isFavorite = defaultNote.isFavorite();
 
@@ -594,9 +656,10 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				this.binding.noteTitle.setVisibility(View.VISIBLE);
 			}
 
-			//      Date and Type
+			//      Date and Type (Use sometimes, down there)
 			String dateAndType = null;
 
+			//      Has Deadline...
 			if (this.taskNote.isHasDeadline())
 			{
 				dateAndType = NotesAdapter.GetShorterDate(this.taskNote.getDueDate()) +
@@ -618,12 +681,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 						" | " +
 						this.taskNote.getClass().getSimpleName().replace("Note", "");
 
-				TypedValue typedValue = new TypedValue();
-				Resources.Theme theme = context.getTheme();
-				theme.resolveAttribute(com.google.android.material.R.attr.colorOnSecondary, typedValue,
-						true);
-
-				this.binding.noteDateAndType.setTextColor(typedValue.data);
+				this.binding.noteDateAndType.setTextColor(typedValueSecondary.data);
 			}
 
 			this.binding.noteDateAndType.setText(dateAndType);
@@ -832,6 +890,117 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			String content = attachableNote.getContent().substring(0, Math.min(100, attachableNote.getContent().length()));
 
 			this.binding.noteContent.setText(content);
+		}
+	}
+
+	public class PrivateNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface{
+		private final ItemContainerSmallPrivateNoteBinding binding;
+		public PrivateNoteViewHolder(ItemContainerSmallPrivateNoteBinding itemContainerSmallPrivateNoteBinding){
+			super(itemContainerSmallPrivateNoteBinding.getRoot());
+
+			binding = itemContainerSmallPrivateNoteBinding;
+		}
+		public void SetListeners(_DefaultNote defaultNote) {
+			this.binding.noteCheckbox.setOnClickListener(view ->
+			{
+				defaultNote.setChecked(defaultNote.isChecked());
+			});
+
+			if (NotesAdapter.this.isEditing) {
+				this.binding.getRoot().setOnClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
+					defaultNote.setChecked(defaultNote.isChecked());
+				});
+
+				//      Context Menu
+				this.binding.getRoot().setOnLongClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
+					defaultNote.setChecked(!defaultNote.isChecked());
+					return false;
+				});
+			}
+			else
+			{
+				this.binding.getRoot().setOnClickListener(view ->
+				{
+					noteListener.onNoteClick(NotesAdapter.this.notesList.indexOf(defaultNote));
+				});
+
+				//      Context Menu
+				this.binding.getRoot().setOnLongClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(true);
+					defaultNote.setChecked(true);
+
+					noteListener.onNoteLongClick();
+
+					return false;
+				});
+			}
+		}
+		@Override
+		public void LoadSummarizedNote(_DefaultNote defaultNote)
+		{
+			if (NotesAdapter.this.isEditing)
+			{
+				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+						0,
+						ConstraintLayout.LayoutParams.WRAP_CONTENT
+				);
+				layoutParams.startToEnd = R.id.noteCheckbox;
+				layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+
+				this.binding.layoutAddNew.setLayoutParams(layoutParams);
+			}
+			else
+			{
+				this.binding.noteCheckbox.setChecked(false);
+				defaultNote.setChecked(false);
+				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+						ConstraintLayout.LayoutParams.MATCH_PARENT,
+						ConstraintLayout.LayoutParams.WRAP_CONTENT
+				);
+				layoutParams.startToEnd = R.id.noteCheckbox;
+				layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+
+				this.binding.layoutAddNew.setLayoutParams(layoutParams);
+			}
+			//      Get Favoritism
+			boolean isFavorite = defaultNote.isFavorite();
+
+			if (isFavorite)
+			{
+				binding.iconFavorited.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				binding.iconFavorited.setVisibility(View.GONE);
+			}
+			//      Get Title
+			String title = defaultNote.getTitle();
+			//			Log.d("NotesAdapter", "Title: " + title);
+
+			if (title.length() == 0)
+			{
+				binding.noteTitle.setText(null);
+				binding.noteTitle.setVisibility(View.GONE);
+			}
+			else
+			{
+				binding.noteTitle.setText(title);
+				binding.noteTitle.setVisibility(View.VISIBLE);
+			}
+			//      Date and Type
+			String dateAndType =
+					NotesAdapter.GetShorterDate(defaultNote.getDateCreated()) + " | " + defaultNote.getClass().getSimpleName().replace("Note", "");
+			binding.noteDateAndType.setText(dateAndType);
+			binding.noteDateAndType.setVisibility(View.VISIBLE);
 		}
 	}
 }

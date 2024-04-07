@@ -1,7 +1,6 @@
 package com.example.btl_android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -70,7 +69,7 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 		ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
 				this,
 				R.array.repeatableType,
-				R.layout.spinner_item
+				R.layout.spinner_item_left
 		);
 		arrayAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
 		this.binding.spinnerRepeatableType.setAdapter(arrayAdapter);
@@ -78,9 +77,6 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 
 		Intent intent = this.getIntent();
 		Bundle bundle = intent.getExtras();
-
-		PreferenceManager preferenceManager = new PreferenceManager(this);
-		this.isEditing = preferenceManager.getBoolean(Constants.SETTINGS_NOTE_DEFAULT_IS_EDITING);
 
 		//      Listeners
 		this.SetListeners();
@@ -95,9 +91,9 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 
 		if (
 				this.binding.noteTaskCheckBox.isChecked() &&
-						this.binding.editTextRepeatableCount.getText().toString().length() == 0 &&
+						this.binding.editTextRepeatableCount.getText().toString().length() != 0 &&
 						Integer.parseInt(this.binding.editTextRepeatableCount.getText().toString()) > 0
-		)
+			)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(TaskNoteActivity.this);
 
@@ -175,7 +171,11 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 			this.binding.subTaskRecyclerView.setAdapter(this.subTasksAdapter);
 		}
 		else {
-			//      If Edit
+			//      If only Edit FIle
+			PreferenceManager preferenceManager = new PreferenceManager(this);
+			this.isEditing = preferenceManager.getBoolean(Constants.SETTINGS_NOTE_DEFAULT_IS_EDITING);
+
+			//      Get File
 			String fileName = bundle.getString(Constants.BUNDLE_FILENAME_KEY);
 
 			TaskNote taskNote = (TaskNote) TaskNote.ReadFromStorage(this, fileName);
@@ -193,6 +193,8 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 			this.binding.contentEditText.setText(taskNote.getContent());
 			this.isFavorite = taskNote.isFavorite();
 			this.dateCreated = taskNote.getDateCreated();
+
+			this.binding.noteTaskCheckBox.setChecked(taskNote.isDone());
 
 			if (taskNote.getRepeatableCount() != 0)
 			{
@@ -755,7 +757,8 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 				this.repeatableType,
 				calendar.getTime(),
 				this.subTasksList,
-				hasDeadline
+				hasDeadline,
+				this.binding.noteTaskCheckBox.isChecked()
 		);
 
 		//      Not validated, just simply want to leave

@@ -41,6 +41,7 @@ public class TaskNote extends _DefaultNote
 	//          If dueDate and repeatableCount + Type -> repeat after dueDate
 	private int repeatableCount;
 	private boolean hasDeadline;
+	private boolean isDone;
 	private RepeatableType repeatableType;
 	private Date dueDate;
 	private List<TaskNote_SubTask> subTasks;
@@ -59,8 +60,7 @@ public class TaskNote extends _DefaultNote
 	                String content,
 	                boolean isFavorite,
 	                int repeatableCount, RepeatableType repeatableType, Date dueDate,
-	                List<TaskNote_SubTask> subTasks, boolean hasDeadline
-	)
+	                List<TaskNote_SubTask> subTasks, boolean hasDeadline, boolean isDone)
 	{
 		super(fileName, title, dateCreated, dateModified, content, isFavorite);
 
@@ -69,6 +69,17 @@ public class TaskNote extends _DefaultNote
 		this.dueDate = dueDate;
 		this.subTasks = subTasks;
 		this.hasDeadline = hasDeadline;
+		this.isDone = isDone;
+	}
+
+	public boolean isDone()
+	{
+		return isDone;
+	}
+
+	public void setDone(boolean done)
+	{
+		isDone = done;
 	}
 
 	public boolean isHasDeadline()
@@ -157,6 +168,7 @@ public class TaskNote extends _DefaultNote
 		map.put(Constants.JSON_TASK_NOTE_REPEATABLE_COUNT, String.valueOf(this.getRepeatableCount()));
 		map.put(Constants.JSON_TASK_NOTE_REPEATABLE_TYPE, this.getRepeatableType().toString());
 		map.put(Constants.JSON_TASK_NOTE_HAS_DEADLINE, this.isHasDeadline() ? "true" : "false");
+		map.put(Constants.JSON_TASK_NOTE_IS_DONE, this.isDone() ? "true" : "false");
 
 		noteMap.put(Constants.JSON_DEFAULT, map);
 
@@ -405,6 +417,7 @@ public class TaskNote extends _DefaultNote
 			note.setRepeatableCount(Integer.parseInt(map.get(Constants.JSON_TASK_NOTE_REPEATABLE_COUNT)));
 			note.setRepeatableType(RepeatableType.valueOf(map.get(Constants.JSON_TASK_NOTE_REPEATABLE_TYPE)));
 			note.setHasDeadline(Boolean.parseBoolean(map.get(Constants.JSON_TASK_NOTE_HAS_DEADLINE)));
+			note.setDone(Boolean.parseBoolean(map.get(Constants.JSON_TASK_NOTE_IS_DONE)));
 
 			//      Read Container
 			List<TaskNote_SubTask> subTasks = new ArrayList<>();

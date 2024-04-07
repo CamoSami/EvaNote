@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/_100sdp"
+    android:height="@dimen/_100sdp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+
+
+    <!-- Đường chéo 1 của dấu X -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M7,7L17,17" />
+
+    <!-- Đường chéo 2 của dấu X -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M7,17L17,7" />
+</vector>

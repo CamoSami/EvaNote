@@ -99,7 +99,7 @@ public class AttachableNote extends _DefaultNote
 		Gson gson = new Gson();
 		String json = gson.toJson(noteMap);
 
-		//      Get Directory via PrefereceManager
+		//      Get Directory via PreferenceManager
 		PreferenceManager preferenceManager = new PreferenceManager(context);
 		String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
 		File file;

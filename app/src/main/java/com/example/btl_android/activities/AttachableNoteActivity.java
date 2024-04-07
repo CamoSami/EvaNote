@@ -67,9 +67,6 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 		Intent intent = this.getIntent();
 		Bundle bundle = intent.getExtras();
 
-		PreferenceManager preferenceManager = new PreferenceManager(this);
-		this.isEditing = preferenceManager.getBoolean(Constants.SETTINGS_NOTE_DEFAULT_IS_EDITING);
-
 		//      Listeners
 		this.SetListeners();
 		this.ReadToActivity(bundle);
@@ -119,6 +116,9 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 		else
 		{
 			//      If Edit
+			PreferenceManager preferenceManager = new PreferenceManager(this);
+			this.isEditing = preferenceManager.getBoolean(Constants.SETTINGS_NOTE_DEFAULT_IS_EDITING);
+
 			String fileName = bundle.getString(Constants.BUNDLE_FILENAME_KEY);
 
 			AttachableNote attachableNote = AttachableNote.ReadFromStorage(this, fileName);
@@ -462,7 +462,7 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 		else
 		{
 			// If it's a file, open it with the "Open With" option
-			openWith(fileUri, mimeType);
+			this.openWith(fileUri, mimeType);
 		}
 	}
 

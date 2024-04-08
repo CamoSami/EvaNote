@@ -328,14 +328,43 @@
                     app:layout_constraintTop_toBottomOf="@id/textViewPrivateNoteSettings" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/privateNoteSettingsResetPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:longClickable="true"
                     app:layout_constraintTop_toBottomOf="@id/textViewPrivateNoteSettings">
 
-                    <!-- What Settings? -->
+                    <TextView
+                        android:id="@+id/privateNoteSettingsResetPasswordTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Reset Password"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
+                        android:textSize="@dimen/_16ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/privateNoteSettingsResetPasswordCurrent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Reset the current set Password\n\n(Can't do anything if you forget your old password though xd)"
+                        android:textColor="?android:attr/textColorSecondaryInverse"
+                        android:textSize="@dimen/_14ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/privateNoteSettingsResetPasswordTitle" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="?android:attr/textColorTertiaryInverse"
+                    app:layout_constraintTop_toBottomOf="@id/privateNoteSettingsResetPassword" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

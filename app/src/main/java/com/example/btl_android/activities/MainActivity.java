@@ -23,6 +23,7 @@ import com.example.btl_android.databinding.ActivityMainBinding;
 import com.example.btl_android.listeners.NoteListener;
 import com.example.btl_android.models.AttachableNote;
 import com.example.btl_android.models.PrivateNote;
+import com.example.btl_android.models.ReminderNote;
 import com.example.btl_android.models.TaskNote;
 import com.example.btl_android.models.TodoListNote;
 import com.example.btl_android.models._DefaultNote;
@@ -330,11 +331,18 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			intent.putExtra(Constants.BUNDLE_FILENAME_KEY, defaultNote.getFileName());
 
 			startActivity(intent);
+		}else if(defaultNote instanceof PrivateNote){
+			Intent intent = new Intent(this, EnterPassWordActivity.class);
+
+			intent.putExtra(Constants.BUNDLE_FILENAME_KEY, defaultNote.getFileName());
+
+			startActivity(intent);
 		}
 		else if (defaultNote instanceof TodoListNote) {
 			Intent intent = new Intent(this, TodoNoteActivity.class);
 
 //			Log.d("TodoNote intent 1", "onCreate: " + defaultNote.getTitle());
+
 			intent.putExtra(Constants.TODO_NOTE_KEY, (TodoListNote) defaultNote);
 			intent.putExtra(Constants.IS_TODO_NOTE_EDITING_KEY, true);
 
@@ -434,6 +442,26 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 					this.noteList.add(i++ + 1, taskNote);
 				}
+				else if (defaultNote instanceof PrivateNote){
+					PrivateNote privateNote = (PrivateNote) defaultNote;
+
+					if (!privateNote.WriteToStorage(this, true)) {
+						Toast.makeText(this, "Failed to duplicate note", Toast.LENGTH_SHORT).show();
+						continue;
+					}
+
+					this.noteList.add(i++ + 1, privateNote);
+				}
+				else if (defaultNote instanceof ReminderNote){
+					ReminderNote reminderNote = (ReminderNote) defaultNote;
+
+					if (!reminderNote.WriteToStorage(this, true)) {
+						Toast.makeText(this, "Failed to duplicate note", Toast.LENGTH_SHORT).show();
+						continue;
+					}
+
+					this.noteList.add(i++ + 1, reminderNote);
+				}
 				else {
 					Log.d("MainActivityTemp", "onNoteClick: Unknown Note");
 
@@ -475,6 +503,28 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					if (!taskNote.WriteToStorage(MainActivity.this, false))
 					{
 						Log.d("AttachableNoteViewHolderTemp", "Failed to write to storage");
+
+						Toast.makeText(MainActivity.this, "Failed to favorite the Note", Toast.LENGTH_SHORT).show();
+					}
+				}
+				else if (defaultNote instanceof PrivateNote)
+				{
+					PrivateNote privateNote = (PrivateNote) defaultNote;
+
+					if (!privateNote.WriteToStorage(MainActivity.this, false))
+					{
+						Log.d("PrivateNoteViewHolderTemp", "Failed to write to storage");
+
+						Toast.makeText(MainActivity.this, "Failed to favorite the Note", Toast.LENGTH_SHORT).show();
+					}
+				}
+				else if (defaultNote instanceof ReminderNote)
+				{
+					ReminderNote reminderNote = (ReminderNote) defaultNote;
+
+					if (!reminderNote.WriteToStorage(MainActivity.this, false))
+					{
+						Log.d("PrivateNoteViewHolderTemp", "Failed to write to storage");
 
 						Toast.makeText(MainActivity.this, "Failed to favorite the Note", Toast.LENGTH_SHORT).show();
 					}
@@ -581,7 +631,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 						this.noteList.add(privateNote);
 					}
 				}
-				else if (noteName.contains("Note"))
+				else if (!noteName.contains("Note"))
 				{
 					//      is File even a Note?
 

@@ -315,6 +315,12 @@ public class SettingsActivity
 			}
 		});
 
+		//      Private Note
+		//          Reset Password
+		this.binding.privateNoteSettingsResetPassword.setOnClickListener(view -> {
+			//      TODO: Điền đây!
+		});
+
 		//      Task Note!
 		//          Delete On Completion
 		this.binding.taskNoteSettingsDeleteOnCompletionCheckBox.setOnClickListener(view -> {

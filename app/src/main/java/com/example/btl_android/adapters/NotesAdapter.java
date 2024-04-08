@@ -171,10 +171,12 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		{
 			return Constants.TASK_NOTE;
 		}
-		else if (this.notesList.get(position).getClass() == TodoListNote.class) {
+		else if (defaultNote.getClass() == TodoListNote.class)
+		{
 			return Constants.TODO_NOTE;
 		}
-		else if (this.notesList.get(position).getClass() == PrivateNote.class){
+		else if (defaultNote.getClass() == PrivateNote.class)
+		{
 			return Constants.PRIVATE_NOTE;
 		}
  		else
@@ -1002,14 +1004,17 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				this.binding.getRoot().setOnClickListener(view ->
 				{
 					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
-					defaultNote.setChecked(defaultNote.isChecked());
+
+					defaultNote.setChecked(this.binding.noteCheckbox.isChecked());
 				});
 
 				//      Context Menu
 				this.binding.getRoot().setOnLongClickListener(view ->
 				{
 					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
-					defaultNote.setChecked(!defaultNote.isChecked());
+
+					defaultNote.setChecked(this.binding.noteCheckbox.isChecked());
+
 					return false;
 				});
 			}
@@ -1063,6 +1068,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 				this.binding.layoutAddNew.setLayoutParams(layoutParams);
 			}
+
 			//      Get Favoritism
 			boolean isFavorite = defaultNote.isFavorite();
 
@@ -1074,6 +1080,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			{
 				binding.iconFavorited.setVisibility(View.GONE);
 			}
+
 			//      Get Title
 			String title = defaultNote.getTitle();
 			//			Log.d("NotesAdapter", "Title: " + title);

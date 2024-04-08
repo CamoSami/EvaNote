@@ -15,6 +15,7 @@ import com.example.btl_android.R;
 import com.example.btl_android.databinding.ActivityPrivateNoteBinding;
 import com.example.btl_android.models.PrivateNote;
 import com.example.btl_android.utilities.Constants;
+import com.example.btl_android.utilities.PreferenceManager;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -33,25 +34,29 @@ public class PrivateNoteActivity
         super.onCreate(savedInstanceState);
         this.binding = ActivityPrivateNoteBinding.inflate(getLayoutInflater());
         setContentView(this.binding.getRoot());
+
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         this.ReadToActivity(bundle);
         this.SetListeners();
-
     }
     //Trả về activity được truyền từ main
+
     private void ReadToActivity(Bundle bundle) {
-        if (bundle == null) {
+        if (bundle == null)
+        {
             //      If New
             this.fileName = null;
             this.binding.titleEditText.setText(null);
             this.binding.editTextText.setText(null);
             this.isFavorite = false;
         }
-        else {
+        else
+        {
+            PreferenceManager preferenceManager = new PreferenceManager(this);
+            this.isEditing = preferenceManager.getBoolean(Constants.SETTINGS_NOTE_DEFAULT_IS_EDITING);
             //      If Edit
             String fileName = bundle.getString(Constants.BUNDLE_FILENAME_KEY);
-
             PrivateNote privateNote = PrivateNote.ReadFromStorage(this, fileName);
             this.fileName = fileName;
             this.binding.titleEditText.setText(privateNote.getTitle());
@@ -60,6 +65,7 @@ public class PrivateNoteActivity
             this.dateCreated = privateNote.getDateCreated();
         }
     }
+
     private void SetListeners(){
         this.binding.backButton.setOnClickListener(view ->{
             if (this.SaveNote(view)) {
@@ -93,9 +99,10 @@ public class PrivateNoteActivity
         });
         this.binding.editButton.setOnClickListener(view ->
         {
-            this.SetEditting(!this.isEditing);
+            this.SetEditing(!this.isEditing);
         });
     }
+
     private boolean SaveNote(View view) {
         view.requestFocus();
 
@@ -129,9 +136,10 @@ public class PrivateNoteActivity
             return false;
         }
     }
-    public void SetEditting(boolean isEditting)
+
+    public void SetEditing(boolean isEditing)
     {
-        if (!isEditting)
+        if (!isEditing)
         {
             this.binding.editButton.setImageResource(R.drawable.icon_read);
 
@@ -166,6 +174,6 @@ public class PrivateNoteActivity
 
         }
 
-        this.isEditing = isEditting;
+        this.isEditing = isEditing;
     }
 }

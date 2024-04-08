@@ -17,7 +17,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -28,10 +30,12 @@ import java.util.regex.Pattern;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.IvParameterSpec;
 
 
 public class PrivateNote extends _DefaultNote{
-    private static final String SECRET_KEY = "SECRET";
+    private final static String TOKEN_KEY = "123456781234567812345678";
+
     public PrivateNote(){}
 
     public PrivateNote(PrivateNote privateNote) {
@@ -60,7 +64,7 @@ public class PrivateNote extends _DefaultNote{
         noteMap.put(Constants.JSON_DEFAULT_TITLE, this.getTitle());
         noteMap.put(Constants.JSON_DEFAULT_DATE_CREATED, longDateFormat.format(this.getDateCreated()));
         noteMap.put(Constants.JSON_DEFAULT_DATE_MODIFIED, longDateFormat.format(this.getDateModified()));
-        noteMap.put(Constants.JSON_DEFAULT_CONTENT, encrypt(this.content));
+        noteMap.put(Constants.JSON_DEFAULT_CONTENT, encrypt(this.getContent()));
         noteMap.put(Constants.JSON_DEFAULT_FAVORITE, String.valueOf(this.isFavorite()));
 
         //      Get GSON class to write Map<> -> JSON
@@ -68,9 +72,7 @@ public class PrivateNote extends _DefaultNote{
         String json = gson.toJson(noteMap);
 
         //      Get Directory via PrefereceManager
-        //lưu cài đặt
         PreferenceManager preferenceManager = new PreferenceManager(context);
-            //vị trí lưu note
         String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
         File file;
         int i = 1;
@@ -211,7 +213,7 @@ public class PrivateNote extends _DefaultNote{
             return null;
         }
 
-        Map<String, Map<String, String>> noteMap = gson.fromJson(readFile, typeToken.getType());
+        Map<String, String> noteMap = gson.fromJson(readFile, typeToken.getType());
 
         if (noteMap == null) {
             Log.d("AttachableNoteTemp", "File not read");
@@ -226,18 +228,16 @@ public class PrivateNote extends _DefaultNote{
         PrivateNote note = new PrivateNote();
 
         try {
-            String EncyptedContent, DecyptedContent;
             //      Read Default
-            Map<String, String> map = noteMap.get(Constants.JSON_DEFAULT);
-
             note.setFileName(fileName);
-            note.setTitle(map.get(Constants.JSON_DEFAULT_TITLE));
-            note.setDateCreated(longDateFormat.parse(map.get(Constants.JSON_DEFAULT_DATE_CREATED)));
-            note.setDateModified(longDateFormat.parse(map.get(Constants.JSON_DEFAULT_DATE_MODIFIED)));
-            EncyptedContent = map.get(Constants.JSON_DEFAULT_CONTENT);
-            DecyptedContent = decrypt(EncyptedContent);
-            note.setContent(DecyptedContent);
-            note.setFavorite(Boolean.parseBoolean(map.get(Constants.JSON_DEFAULT_FAVORITE)));
+            note.setTitle(noteMap.get(Constants.JSON_DEFAULT_TITLE));
+            note.setDateCreated(longDateFormat.parse(noteMap.get(Constants.JSON_DEFAULT_DATE_CREATED)));
+            note.setDateModified(longDateFormat.parse(noteMap.get(Constants.JSON_DEFAULT_DATE_MODIFIED)));
+            note.setFavorite(Boolean.parseBoolean(noteMap.get(Constants.JSON_DEFAULT_FAVORITE)));
+
+            String EncryptedContent = noteMap.get(Constants.JSON_DEFAULT_CONTENT);
+            String DecryptedContent = decrypt(EncryptedContent);
+            note.setContent(DecryptedContent);
 
             return note;
         }
@@ -253,33 +253,46 @@ public class PrivateNote extends _DefaultNote{
             return null;
         }
     }
-    private static String encrypt(String data) {
-        try {
-            SecretKeySpec key = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), "AES");
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] encryptedBytes = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
 
-            //Chuyển đổi mảng byte đã mã hóa thành chuỗi Base64
-            return Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
-        } catch (Exception e) {
+    public static String encrypt(String plain){
+        try {
+            byte[] iv = new byte[16];
+            new SecureRandom().nextBytes(iv); //Hàm tạo các giá trị ngẫu nhiên an toàn
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE,new SecretKeySpec(TOKEN_KEY.getBytes("utf-8"),
+                    "AES"), new IvParameterSpec(iv));
+            byte[] cipherText = cipher.doFinal(plain.getBytes("utf-8"));
+            byte[] ivAndCipherText = getCombineArray(iv, cipherText);
+            return Base64.encodeToString(ivAndCipherText, Base64.NO_WRAP);
+
+        } catch (Exception e){
             e.printStackTrace();
+            return null;
         }
 
-        return null;
+    }
+    public static String decrypt(String encoded){
+        try{
+            // Base64.decode: Giải mã,
+            byte[] ivAndCipherText = Base64.decode(encoded,Base64.NO_WRAP); // Loại bỏ kí tự xuống dòng trong chuỗi
+            byte[] iv = Arrays.copyOfRange(ivAndCipherText, 0, 16);
+            byte[] cipherText = Arrays.copyOfRange(ivAndCipherText, 16, ivAndCipherText.length);
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(TOKEN_KEY.getBytes("utf-8"),
+                    "AES"),new IvParameterSpec(iv));
+            return new String (cipher.doFinal(cipherText), "utf-8");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    private static String decrypt(String encryptedData) {
-        try {
-            SecretKeySpec key = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), "AES");
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] decryptedBytes = cipher.doFinal(Base64.decode(encryptedData, Base64.DEFAULT));
-            return new String(decryptedBytes, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static byte[] getCombineArray(byte[] one, byte[] two){
+        byte[] combined = new byte[one.length + two.length];
+        for(int i = 0; i < combined.length; ++i){
+            combined[i] = i < one.length ? one[i] : two[i-one.length];
         }
-
-        return null;
+        return  combined;
     }
 }

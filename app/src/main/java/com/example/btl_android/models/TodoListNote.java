@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class TodoListNote extends TodoNote {
-    private Date createdDate;
-    private Date updatedDate;
 
     public TodoListNote() {
         super();
@@ -15,30 +13,16 @@ public class TodoListNote extends TodoNote {
 
     public TodoListNote(String title) {
         super(title);
-        this.createdDate = new Date();
-        this.updatedDate = new Date();
+        this.dateCreated = new Date();
+        this.dateModified = new Date();
+        this.todoNotes = new ArrayList<>();
     }
 
     public TodoListNote(TodoListNote todoListNote) {
         super(todoListNote);
-        this.createdDate = todoListNote.getCreatedDate();
-        this.updatedDate = todoListNote.getUpdatedDate();
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
+        this.dateCreated = todoListNote.dateCreated;
+        this.dateModified = todoListNote.dateModified;
+        this.todoNotes = todoListNote.todoNotes;
     }
 
     public boolean checkAllTodoChecked() {

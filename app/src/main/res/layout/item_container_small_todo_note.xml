@@ -1,21 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_12sdp"
+    android:layout_marginStart="@dimen/_20sdp"
+    android:layout_marginEnd="@dimen/_20sdp"
+    android:longClickable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <CheckBox
+        android:id="@+id/noteCheckbox"
+        android:layout_width="@dimen/_36sdp"
+        android:layout_height="@dimen/_36sdp"
+        android:text=""
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/layoutAddNew"
+        app:layout_constraintTop_toTopOf="@id/layoutAddNew"
+        app:layout_constraintBottom_toBottomOf="@id/layoutAddNew" />
+
     <LinearLayout
-        android:id="@+id/itemContainerSmallTodoNote"
+        android:id="@+id/layoutAddNew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/background_content_darker"
-        android:layout_margin="@dimen/_16sdp"
-        >
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/noteCheckbox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:background="@android:color/transparent"
             android:layout_marginVertical="@dimen/_12sdp"
             android:layout_marginHorizontal="@dimen/_14sdp"
             android:scrollY="@dimen/_2ssp"
@@ -23,30 +42,39 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/_36sdp"
                 android:orientation="horizontal"
+                android:background="@android:color/transparent"
                 android:gravity="center"
                 >
-                <EditText
-                    android:id="@+id/todoNoteListQuantity"
+                <TextView
+                    android:id="@+id/todoListTitle"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="@dimen/_28sdp"
+                    android:layout_height="match_parent"
                     android:text="Title todo list"
                     android:background="@android:color/transparent"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimaryInverse"
-                    android:textColorHint="?android:attr/textColorSecondaryInverse"
-                    />
+                    android:textColorHint="?android:attr/textColorSecondaryInverse"/>
+
+<!--                <androidx.appcompat.widget.AppCompatImageView-->
+<!--                    android:id="@+id/todoListItemTrash"-->
+<!--                    android:layout_width="@dimen/_24sdp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:src="@drawable/baseline_delete_24"/>-->
             </LinearLayout>
 
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/recycler_todo_view"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent" />-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_todo_view"
+                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

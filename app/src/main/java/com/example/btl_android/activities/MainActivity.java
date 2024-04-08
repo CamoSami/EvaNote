@@ -24,8 +24,10 @@ import com.example.btl_android.listeners.NoteListener;
 import com.example.btl_android.models.AttachableNote;
 import com.example.btl_android.models.PrivateNote;
 import com.example.btl_android.models.TaskNote;
+import com.example.btl_android.models.TodoListNote;
 import com.example.btl_android.models._DefaultNote;
 import com.example.btl_android.utilities.Constants;
+import com.example.btl_android.utilities.Helpers;
 import com.example.btl_android.utilities.NoteComparator;
 import com.example.btl_android.utilities.PreferenceManager;
 
@@ -121,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		else
 		{
 			this.ReadFiles();
+			this.ReadFilesByHelpers();
 		}
 
 		this.SetListeners();
@@ -266,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		this.noteList.clear();
 
 		this.ReadFiles();
+		this.ReadFilesByHelpers();
 	}
 
 	@Override public void onBackPressed()
@@ -324,6 +328,15 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			Intent intent = new Intent(this, TaskNoteActivity.class);
 
 			intent.putExtra(Constants.BUNDLE_FILENAME_KEY, defaultNote.getFileName());
+
+			startActivity(intent);
+		}
+		else if (defaultNote instanceof TodoListNote) {
+			Intent intent = new Intent(this, TodoNoteActivity.class);
+
+//			Log.d("TodoNote intent 1", "onCreate: " + defaultNote.getTitle());
+			intent.putExtra(Constants.TODO_NOTE_KEY, (TodoListNote) defaultNote);
+			intent.putExtra(Constants.IS_TODO_NOTE_EDITING_KEY, true);
 
 			startActivity(intent);
 		}
@@ -618,6 +631,21 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			Collections.sort(this.noteList, noteComparator);
 
 			this.listAdapter.notifyDataSetChanged();
+			this.binding.noteRecyclerView.scrollToPosition(0);
+		}
+	}
+
+	private void ReadFilesByHelpers() {
+		Helpers<TodoListNote> helpers = new Helpers<>();
+		ArrayList<TodoListNote> todoListNotes = helpers.ReadFile(this, Constants.JSON_TODO_NOTE_NAME_FILE, TodoListNote.class);
+
+		if (todoListNotes != null && todoListNotes.size() != 0) {
+			//			todoListNotes.forEach(note -> Log.d("ReadFilesByHelpers",
+			//					"ReadFilesByHelpers: " + note.getTodoNotes().size()));
+
+			this.noteList.addAll(todoListNotes);
+
+			this.listAdapter.notifyItemRangeInserted(0, this.noteList.size());
 			this.binding.noteRecyclerView.scrollToPosition(0);
 		}
 	}

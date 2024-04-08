@@ -63,11 +63,14 @@ public class Constants
 	public static final String JSON_REMINDER_NOTE_NUMBER_OF_SNOOZES = "numberOfSnoozes";
 	public static final String JSON_REMINDER_NOTE_MINUTES_EACH_SNOOZE = "minutesEachSnooze";
 	public static final String JSON_REMINDER_NOTE_REPEAT_OF_SNOOZE = "repeatOfSnooze";
-
-	//      Note Specific Constants
 	//          TO DO NOTE
 	public static final String JSON_TODO_NOTE_NAME_FILE = "todoNote.txt";
 
+	//      Note Specific Constants
+	//          TO DO NOTE
+	public static final String TODO_NOTE_KEY= "todoNote";
+	public static final String IS_TODO_NOTE_EDITING_KEY = "isEditing";
+	public static final String IS_TODO_NOTE_CREATING_KEY = "isCreating";
 	//          PRIVATE NOTE
 	public static final String CHANNEL_ID = "201";
 }

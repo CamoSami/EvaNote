@@ -1,16 +1,16 @@
 package com.example.btl_android.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.PopupMenu;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.btl_android.R;
 import com.example.btl_android.adapters.TodoListNoteAdapter;
@@ -22,14 +22,23 @@ import com.example.btl_android.utilities.Constants;
 import com.example.btl_android.utilities.Helpers;
 
 import java.util.ArrayList;
+import java.util.Date;
 
-public class TodoNoteActivity extends AppCompatActivity {
+public class TodoNoteActivity
+		extends AppCompatActivity {
     private final ArrayList<TodoListNote> data = new ArrayList<>();
+
+    private ArrayList<TodoListNote> todoListNotes = new ArrayList<>();
+
+    private TodoListNote todoListNote;
+
+    private boolean isEditting = false;
+
+    private boolean isCreating = false;
 
     private TodoListNoteAdapter adapter;
     private ActivityTodoNoteBinding binding;
 
-    private final Helpers<ArrayList<TodoListNote>> helpers = new Helpers<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,74 +49,36 @@ public class TodoNoteActivity extends AppCompatActivity {
         this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.binding.recyclerView.setAdapter(this.adapter);
 
-        //      Listeners
+        this.SetData();
         this.SetListeners();
-//        this.SetData();
-    }
-
-    private void SetData() {
-        ArrayList<TodoListNote> data = new ArrayList<>();
-
-        TodoListNote todoListNote1 = new TodoListNote("Title 1");
-        TodoListNote todoListNote2 = new TodoListNote("Title 2");
-        TodoListNote todoListNote3 = new TodoListNote("Title 3");
-
-        TodoNote SubTodoNote1 = new TodoNote("Sub Todo 1", 2);
-        TodoNote SubTodoNote2 = new TodoNote("Sub Todo 2", 2);
-        TodoNote SubTodoNote3 = new TodoNote("Sub Todo 3", 2);
-
-        TodoNote todoNote1 = new TodoNote("Todo 1");
-        TodoNote todoNote2 = new TodoNote("Todo 2");
-        TodoNote todoNote3 = new TodoNote("Todo 3");
-
-        todoNote1.getTodoNotes().add(SubTodoNote1);
-        todoNote1.getTodoNotes().add(SubTodoNote2);
-
-        todoNote2.getTodoNotes().add(SubTodoNote2);
-        todoNote2.getTodoNotes().add(SubTodoNote3);
-
-        todoListNote1.getTodoNotes().add(todoNote1);
-        todoListNote1.getTodoNotes().add(todoNote2);
-        todoListNote1.getTodoNotes().add(todoNote3);
-
-        data.add(todoListNote1);
-        data.add(todoListNote2);
-        data.add(todoListNote3);
-
-        this.binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        TodoListNoteAdapter adapter = new TodoListNoteAdapter(data);
-        this.binding.recyclerView.setAdapter(adapter);
+        this.SetUI();
     }
 
     private void SetListeners() {
         //      Back Button
         this.binding.backButton.setOnClickListener(view ->
         {
-            String json = helpers.transferObjectToJson(this.data);
-            boolean isWritten = Helpers.WriteFile(this, Constants.JSON_TODO_NOTE_NAME_FILE, json);
-            if (isWritten) {
-                setResult(Activity.RESULT_OK);
 
-                finish();
+            if(this.isCreating) {
+                this.writeFile();
             }
             else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                // Update Data
+                if(this.todoListNotes != null && this.todoListNotes.size() != 0) {
+                    boolean isRemoved = this.todoListNotes.removeIf(todoListNote -> todoListNote.getId().equals(this.todoListNote.getId()));
 
-                builder.setTitle("Leave Confirmation");
-                builder.setMessage("Note can not be saved, do you still want to leave?");
-
-                builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
+                    if (isRemoved) {
+                        if(this.data.size() != 0) {
+                            this.todoListNote.setDateModified(new Date()); // Update Date Modified
+                            this.todoListNotes.add(this.data.get(0));
+                        }
                     }
-                });
 
-                builder.setNegativeButton("Nah", null);
+                    this.data.clear();
+                    this.data.addAll(this.todoListNotes);
 
-                builder.create().show();
-
-                return;
+                    this.writeFile();
+                }
             }
         });
 
@@ -141,6 +112,58 @@ public class TodoNoteActivity extends AppCompatActivity {
             // Showing the popup menu
             popupMenu.show();
         });
+
+        // Edit mode
+        this.binding.editToDoNoteButton.setOnClickListener(view -> {
+            this.isEditting = !this.isEditting;
+            SetUI();
+        });
+    }
+
+    private void SetData() {
+        Intent intent = this.getIntent();
+        this.todoListNote = (TodoListNote) intent.getSerializableExtra(Constants.TODO_NOTE_KEY);
+        this.isEditting = intent.getBooleanExtra(Constants.IS_TODO_NOTE_EDITING_KEY, false);
+        this.isCreating = intent.getBooleanExtra(Constants.IS_TODO_NOTE_CREATING_KEY, false);
+
+        Helpers<TodoListNote> helpers = new Helpers<>();
+        this.todoListNotes = helpers.ReadFile(this, Constants.JSON_TODO_NOTE_NAME_FILE, TodoListNote.class);
+
+        if(!isEditting) {
+            if(this.todoListNotes != null && this.todoListNotes.size() != 0) {
+                this.data.addAll(this.todoListNotes);
+            }
+        }
+        else {
+            if(this.todoListNote != null) {
+                Log.d("TodoNote intent 2", "onCreate: " + this.todoListNote.getTitle());
+
+                this.data.add(this.todoListNote);
+            }
+        }
+
+        this.adapter.notifyItemInserted(this.data.size() - 1);
+    }
+
+    private void SetUI() {
+        if (this.isEditting) {
+            this.binding.editToDoNoteButton.setImageResource(R.drawable.icon_edit);
+
+        }
+        else {
+            this.binding.addNewTodoBtn.setVisibility(View.VISIBLE);
+            this.binding.editToDoNoteButton.setImageResource(R.drawable.icon_read);
+        }
+
+        if(this.isCreating && this.isEditting) {
+            this.binding.addNewTodoBtn.setVisibility(View.VISIBLE);
+        }
+        else {
+            this.binding.addNewTodoBtn.setVisibility(View.GONE);
+        }
+
+        this.adapter.setEditting(this.isEditting);
+        this.adapter.notifyDataSetChanged();
     }
 
     private void AddNewTodolist(String title) {
@@ -150,5 +173,35 @@ public class TodoNoteActivity extends AppCompatActivity {
 
         this.data.add(todoList);
         this.adapter.notifyItemInserted(this.data.size() - 1); // notify();
+    }
+
+    private void writeFile() {
+        Helpers<ArrayList<TodoListNote>> helpers = new Helpers<>();
+        String json = helpers.transferObjectToJson(this.data);
+
+        boolean isWritten = Helpers.WriteFile(this, Constants.JSON_TODO_NOTE_NAME_FILE, json);
+
+        if (isWritten) {
+            setResult(Activity.RESULT_OK);
+
+            finish();
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Leave Confirmation");
+            builder.setMessage("Note can not be saved, do you still want to leave?");
+
+            builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+
+            builder.setNegativeButton("Nah", null);
+
+            builder.create().show();
+        }
     }
 }

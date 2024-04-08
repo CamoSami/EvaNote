@@ -4,7 +4,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,29 +28,44 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
 
     private TodoListNote todoListNoteCurrent;
 
-    public TodoNoteAdapter(ArrayList<TodoNote> todoNotes, TodoListNoteAdapter todoListNoteAdapter, TodoListNote todoListNoteCurrent, ArrayList<TodoListNote> todoListNotes) {
+    private boolean isEditting = false;
+
+    public TodoNoteAdapter(ArrayList<TodoNote> todoNotes, TodoListNoteAdapter todoListNoteAdapter, TodoListNote todoListNoteCurrent) {
         this.todoNotes = todoNotes;
         this.todoListNoteAdapter = todoListNoteAdapter;
         this.todoListNoteCurrent = todoListNoteCurrent;
-        this.todoListNotes = todoListNotes;
+        this.todoListNotes = todoListNoteAdapter.getTodoListNotes();
+    }
+
+    public TodoNoteAdapter(ArrayList<TodoNote> todoNotes, TodoListNoteAdapter todoListNoteAdapter, TodoListNote todoListNoteCurrent, boolean isEditting) {
+        this.todoNotes = todoNotes;
+        this.todoListNoteAdapter = todoListNoteAdapter;
+        this.todoListNoteCurrent = todoListNoteCurrent;
+        this.todoListNotes = todoListNoteAdapter.getTodoListNotes();
+        this.isEditting = isEditting;
     }
 
     @NonNull
     @Override
     public TodoNoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         TodoNoteItemBinding view = TodoNoteItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+
         return new TodoNoteViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TodoNoteViewHolder holder, int position) {
+        Log.d("ReadFilesByHelpers",
+                "onBindViewHolder: ");
+
         TodoNoteViewHolder itemViewHolder = (TodoNoteViewHolder) holder;
         TodoNote item = this.todoNotes.get(position);
+
         itemViewHolder.SetData(item);
         itemViewHolder.SetListener(item, this.todoNotes, this);
 
-        Log.d("Testing", "onBindViewHolder: " + TodoNoteAdapter.this.todoListNoteAdapter);
-        TodoNoteAdapter adapter = new TodoNoteAdapter(item.getTodoNotes(), TodoNoteAdapter.this.todoListNoteAdapter, TodoNoteAdapter.this.todoListNoteCurrent, TodoNoteAdapter.this.todoListNotes);
+//        Log.d("Testing", "onBindViewHolder: " + TodoNoteAdapter.this.todoListNoteAdapter);
+        TodoNoteAdapter adapter = new TodoNoteAdapter(item.getTodoNotes(), TodoNoteAdapter.this.todoListNoteAdapter, TodoNoteAdapter.this.todoListNoteCurrent, this.isEditting);
         holder.recyclerSubTodoView.setLayoutManager(new LinearLayoutManager(holder.recyclerSubTodoView.getContext()));
         holder.recyclerSubTodoView.setAdapter(adapter);
 
@@ -75,10 +89,23 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
         }
 
         public void SetData(TodoNote item) {
+            Log.d("ReadFilesByHelpers",
+                    "TodoNoteViewHolder.SetData: ");
+
             this.binding.todoName.setText(item.getTitle());
             this.binding.todoCheckBox.setChecked(item.isChecked());
 
             this.recyclerSubTodoView.setVisibility(View.GONE);
+
+            if(!TodoNoteAdapter.this.isEditting) {
+                this.binding.todoItemTrash.setVisibility(View.GONE);
+                this.binding.todoName.setFocusable(false);
+            }
+
+            if(TodoNoteAdapter.this.isEditting) {
+                this.binding.todoItemTrash.setVisibility(View.VISIBLE);
+                this.binding.todoName.setFocusable(true);
+            }
         }
 
         public void SetListener(TodoNote item, ArrayList<TodoNote> todoNotes, TodoNoteAdapter adapter) {
@@ -133,23 +160,23 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
             });
 
             this.binding.todoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                Log.d("Checked---", "SetListener: ");
                 if (isChecked) {
-                    item.setIsChecked(true);
+                    item.setChecked(true);
                 } else {
-                    item.setIsChecked(false);
+                    item.setChecked(false);
                 }
 
                 if(item.layer == 1) {
-                    int index = TodoNoteAdapter.this.todoListNotes.indexOf(TodoNoteAdapter.this.todoListNoteCurrent);
                     if(TodoNoteAdapter.this.todoListNoteCurrent.checkAllTodoChecked()) {
-                        TodoNoteAdapter.this.todoListNoteCurrent.setIsChecked(true);
+                        TodoNoteAdapter.this.todoListNoteCurrent.setChecked(true);
                         // Sort todo list
                         this.sortTodoListNotes();
 
                         TodoNoteAdapter.this.todoListNoteAdapter.notifyDataSetChanged();
                     }
                     else {
-                        TodoNoteAdapter.this.todoListNoteCurrent.setIsChecked(false);
+                        TodoNoteAdapter.this.todoListNoteCurrent.setChecked(false);
                     }
 
                     TodoNoteAdapter.this.todoListNoteAdapter.notifyDataSetChanged();
@@ -171,5 +198,9 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
                 }
             });
         }
+    }
+
+    public void setEditing(boolean isEditting) {
+        this.isEditting = isEditting;
     }
 }

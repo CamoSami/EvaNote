@@ -1,6 +1,7 @@
 package com.example.btl_android.utilities;
 
 import com.example.btl_android.models.TaskNote;
+import com.example.btl_android.models.TodoListNote;
 import com.example.btl_android.models._DefaultNote;
 
 import java.util.Comparator;
@@ -55,6 +56,47 @@ public class NoteComparator implements Comparator<_DefaultNote>
 				TaskNote taskNote2 = (TaskNote) o2;
 
 				if (taskNote2.isDone())
+				{
+					return -1;
+				}
+			}
+		}
+
+		//      Check if 1 of them is taskNote something something
+		if (
+//				!NoteComparator.taskNoteDeleteOnCompletion &&
+//						NoteComparator.taskNoteSortToBottomOnCompletion
+			true
+			)
+		{
+			if (o1 instanceof TodoListNote && o2 instanceof TodoListNote)
+			{
+				TodoListNote todoListNote1 = (TodoListNote) o1;
+				TodoListNote todoListNote2 = (TodoListNote) o2;
+
+				if (todoListNote1.checkAllTodoChecked() && !todoListNote2.checkAllTodoChecked())
+				{
+					return 1;
+				}
+				else if (!todoListNote1.checkAllTodoChecked() && todoListNote2.checkAllTodoChecked())
+				{
+					return -1;
+				}
+			}
+			else if (o1 instanceof TodoListNote)
+			{
+				TodoListNote todoListNote1 = (TodoListNote) o1;
+
+				if (todoListNote1.checkAllTodoChecked())
+				{
+					return 1;
+				}
+			}
+			else if (o2 instanceof TodoListNote)
+			{
+				TodoListNote todoListNote2 = (TodoListNote) o2;
+
+				if (todoListNote2.checkAllTodoChecked())
 				{
 					return -1;
 				}

@@ -1,7 +1,6 @@
 package com.example.btl_android.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.util.Log;
@@ -14,11 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.btl_android.R;
-import com.example.btl_android.activities.MainActivity;
-import com.example.btl_android.activities.TodoNoteActivity;
 import com.example.btl_android.databinding.ItemContainerSmallAttachableNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallPrivateNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallTaskNoteBinding;
@@ -32,11 +30,13 @@ import com.example.btl_android.models.PrivateNote;
 import com.example.btl_android.models.TaskNote;
 import com.example.btl_android.models.TaskNote_SubTask;
 import com.example.btl_android.models.TodoListNote;
+import com.example.btl_android.models.TodoNote;
 import com.example.btl_android.models._DefaultNote;
 import com.example.btl_android.utilities.Constants;
 import com.example.btl_android.utilities.PreferenceManager;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -92,7 +92,13 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 					)
 			);
 		}
-		//Hanh add
+		else if (viewType == Constants.TODO_NOTE) {
+			return new TodoNoteViewHolder(ItemContainerSmallTodoNoteBinding.inflate(
+					LayoutInflater.from(parent.getContext()),
+					parent,
+					false
+			));
+		}
 		else if (viewType == Constants.PRIVATE_NOTE){
 			return new PrivateNoteViewHolder(
 					ItemContainerSmallPrivateNoteBinding.inflate(
@@ -131,7 +137,6 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			taskNoteViewHolder.SetListeners(this.notesList.get(position));
 		}
 		else if(getItemViewType(position) == Constants.TODO_NOTE) {
-			Log.d("Thai: Load", "LoadSummarizedNote: ");
 			TodoNoteViewHolder todoNoteViewHolder = (TodoNoteViewHolder) holder;
 
 			todoNoteViewHolder.LoadSummarizedNote(this.notesList.get(position));
@@ -263,33 +268,120 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 	//          + implement NoteViewHolderInterface
 	//          + Tham khảo AttachableNoteViewHolder
 
-
 	public class TodoNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface
 	{
 		private final ItemContainerSmallTodoNoteBinding binding;
+		private ArrayList<TodoNote> todoNoteList = new ArrayList<>();
+		private TodoNoteAdapter todoNoteAdapter = null;
 
 		public TodoNoteViewHolder(ItemContainerSmallTodoNoteBinding itemContainerSmallTodoNoteBinding)
 		{
 			super(itemContainerSmallTodoNoteBinding.getRoot());
+
 			binding = itemContainerSmallTodoNoteBinding;
 		}
 
 		@Override
 		public void SetListeners(_DefaultNote defaultNote)
 		{
-			binding.itemContainerSmallTodoNote.setOnClickListener(v -> {
-				Intent intent = new Intent(binding.getRoot().getContext(), TodoNoteActivity.class);
+			TodoListNote todoListNote = (TodoListNote) defaultNote;
 
-				binding.getRoot().getContext().startActivity(intent);
-			});
+			if (NotesAdapter.this.isEditing)
+			{
+				//      Meh
+				this.binding.getRoot().setOnClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
+
+					todoListNote.setChecked(this.binding.noteCheckbox.isChecked());
+				});
+
+				//      Context Menu
+				this.binding.getRoot().setOnLongClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
+
+					todoListNote.setChecked(this.binding.noteCheckbox.isChecked());
+
+					return false;
+				});
+			}
+			else {
+				this.binding.getRoot().setOnClickListener(view ->
+				{
+					noteListener.onNoteClick(NotesAdapter.this.notesList.indexOf(defaultNote));
+				});
+
+				//      Context Menu
+				this.binding.getRoot().setOnLongClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(true);
+					defaultNote.setChecked(true);
+
+					noteListener.onNoteLongClick();
+
+					return false;
+				});
+			}
 		}
 
 		@Override
 		public void LoadSummarizedNote(_DefaultNote defaultNote)
 		{
-			Log.d("Thai: Load", "LoadSummarizedNote: ");
 			TodoListNote todoListNote = (TodoListNote) defaultNote;
-			binding.todoNoteListQuantity.setText(todoListNote.getTitle());
+
+//			Log.d("Thai: Load", "LoadSummarizedNote: ");
+
+			this.binding.todoListTitle.setText(todoListNote.getTitle());
+
+			this.todoNoteList = todoListNote.getTodoNotes();
+			this.todoNoteAdapter = new TodoNoteAdapter(
+					this.todoNoteList,
+					new TodoListNoteAdapter(
+							new ArrayList<>()
+					),
+					todoListNote,
+					false
+			);
+			this.binding.recyclerTodoView.setAdapter(this.todoNoteAdapter);
+			this.binding.recyclerTodoView.setLayoutManager(new LinearLayoutManager(NotesAdapter.this.context));
+			this.todoNoteAdapter.notifyDataSetChanged();
+
+			//      If Editing
+			if (NotesAdapter.this.isEditing)
+			{
+				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+						(
+								0,
+								ConstraintLayout.LayoutParams.WRAP_CONTENT
+						);
+				layoutParams.startToEnd = R.id.noteCheckbox;
+				layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+
+				this.binding.layoutAddNew.setLayoutParams(layoutParams);
+
+				this.todoNoteAdapter.setEditing(true);
+			}
+			else
+			{
+				this.binding.noteCheckbox.setChecked(false);
+				defaultNote.setChecked(false);
+
+				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+						ConstraintLayout.LayoutParams.MATCH_PARENT,
+						ConstraintLayout.LayoutParams.WRAP_CONTENT
+				);
+				layoutParams.startToEnd = R.id.noteCheckbox;
+				layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+
+				this.binding.layoutAddNew.setLayoutParams(layoutParams);
+
+				this.todoNoteAdapter.setEditing(false);
+			}
 		}
 	}
 

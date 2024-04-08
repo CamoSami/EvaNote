@@ -6,10 +6,11 @@ import com.example.btl_android.utilities.Constants;
 import com.example.btl_android.utilities.PreferenceManager;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class _DefaultNote
+public class _DefaultNote implements Serializable
 {
 	//      Saved Values
 	protected String fileName;

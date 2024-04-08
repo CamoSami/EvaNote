@@ -4,6 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,16 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.btl_android.R;
 import com.example.btl_android.databinding.TodoListNoteItemBinding;
-import com.example.btl_android.databinding.TodoNoteItemBinding;
 import com.example.btl_android.models.TodoListNote;
-import com.example.btl_android.models.TodoNote;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class TodoListNoteAdapter extends RecyclerView.Adapter<TodoListNoteAdapter.TodoListNoteViewHolder> {
     private ArrayList<TodoListNote> todoListNotes;
+
+    private TodoNoteAdapter adapter;
+
+    private boolean isEditting = false;
 
     public TodoListNoteAdapter(ArrayList<TodoListNote> todoListNotes) {
         this.todoListNotes = todoListNotes;
@@ -40,9 +41,9 @@ public class TodoListNoteAdapter extends RecyclerView.Adapter<TodoListNoteAdapte
 
         TodoListNote item = this.todoListNotes.get(position);
 
-        TodoNoteAdapter adapter = new TodoNoteAdapter(item.getTodoNotes(), this, item, this.todoListNotes);
+        this.adapter = new TodoNoteAdapter(item.getTodoNotes(), this, item);
         holder.todoRecyclerView.setLayoutManager(new LinearLayoutManager(holder.todoRecyclerView.getContext()));
-        holder.todoRecyclerView.setAdapter(adapter);
+        holder.todoRecyclerView.setAdapter(this.adapter);
 
         itemViewHolder.SetData(item);
         itemViewHolder.SetListener(this.todoListNotes);
@@ -65,6 +66,15 @@ public class TodoListNoteAdapter extends RecyclerView.Adapter<TodoListNoteAdapte
 
         public void SetData(TodoListNote todoListNote) {
             this.binding.todoListTitle.setText(todoListNote.getTitle());
+
+            TodoListNoteAdapter.this.adapter.setEditing(TodoListNoteAdapter.this.isEditting);
+            if(!isEditting) {
+                this.binding.todoListItemTrash.setVisibility(View.GONE);
+                this.binding.todoListTitle.setEnabled(false);
+            } else {
+                this.binding.todoListItemTrash.setVisibility(View.VISIBLE);
+                this.binding.todoListTitle.setEnabled(true);
+            }
 
             // Set background if all todo is checked
             Log.d("CheckAll", "SetData: " + todoListNote.checkAllTodoChecked());
@@ -100,5 +110,13 @@ public class TodoListNoteAdapter extends RecyclerView.Adapter<TodoListNoteAdapte
                 notifyItemRangeChanged(getAdapterPosition(), todoListNotes.size());
             });
         }
+    }
+
+    public void setEditting(boolean isEditting) {
+        this.isEditting = isEditting;
+    }
+
+    public ArrayList<TodoListNote> getTodoListNotes() {
+        return this.todoListNotes;
     }
 }

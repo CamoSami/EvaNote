@@ -36,7 +36,7 @@
             android:paddingBottom="@dimen/_8sdp"
             android:layout_marginStart="@dimen/_36sdp"
             android:hint="@string/title_of_the_note"
-            android:text="New Note"
+            android:text="Todo note"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
             android:textColor="?android:attr/textColorPrimaryInverse"
@@ -46,12 +46,12 @@
             android:ellipsize="end"/>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/settingsButton"
+            android:id="@+id/editToDoNoteButton"
             android:layout_width="@dimen/_36sdp"
             android:layout_height="@dimen/_36sdp"
             android:layout_marginStart="@dimen/_280sdp"
             android:padding="@dimen/_6sdp"
-            android:src="@drawable/icon_settings"
+            android:src="@drawable/icon_edit"
             app:tint="?android:attr/textColorPrimaryInverse"/>
 
     </FrameLayout>

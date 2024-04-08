@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.btl_android.databinding.ActivityCreateNoteBinding;
+import com.example.btl_android.utilities.Constants;
 
 public class CreateNoteActivity extends AppCompatActivity
 {
@@ -49,6 +50,7 @@ public class CreateNoteActivity extends AppCompatActivity
 
 		this.binding.newTodoNote.setOnClickListener(view -> {
 			Intent intent = new Intent(this, TodoNoteActivity.class);
+			intent.putExtra(Constants.IS_TODO_NOTE_CREATING_KEY, true);
 
 			startActivity(intent);
 

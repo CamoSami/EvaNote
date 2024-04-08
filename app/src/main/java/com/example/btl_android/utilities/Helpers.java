@@ -4,20 +4,17 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.btl_android.models.TodoListNote;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import com.google.gson.reflect.TypeToken;
 
 public class Helpers<T> {
     public String transferObjectToJson(T object) {
@@ -62,6 +59,10 @@ public class Helpers<T> {
         String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
 
         File file = new File(directory, fileName);
+
+        if (!file.exists()) {
+            return null;
+        }
 
         try {
             FileInputStream stream = new FileInputStream(file);

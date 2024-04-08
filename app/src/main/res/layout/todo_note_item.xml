@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_15sdp"
         android:background="@android:color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/todoItemTrash"
+        app:layout_constraintTop_toBottomOf="@id/todoCheckBox"
         app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

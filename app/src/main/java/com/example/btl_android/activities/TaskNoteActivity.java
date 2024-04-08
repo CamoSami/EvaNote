@@ -35,6 +35,7 @@ import com.example.btl_android.models._DefaultNote;
 import com.example.btl_android.utilities.Constants;
 import com.example.btl_android.utilities.NewlineInputFilter;
 import com.example.btl_android.utilities.PreferenceManager;
+import com.google.android.material.timepicker.MaterialTimePicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,7 +61,7 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 	{
 		super.onCreate(savedInstanceState);
 
-		this.binding = ActivityTaskNoteBinding.inflate(getLayoutInflater());
+		this.binding = ActivityTaskNoteBinding.inflate(this.getLayoutInflater());
 		setContentView(this.binding.getRoot());
 
 		//      Filters
@@ -564,13 +565,24 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 					}
 				};
 
-				new TimePickerDialog(
+				TimePickerDialog dialog = new TimePickerDialog(
 						TaskNoteActivity.this,
 						time,
 						calendar.get(Calendar.HOUR_OF_DAY),
 						calendar.get(Calendar.MINUTE),
 						true
-				).show();
+				);
+
+				MaterialTimePicker timePicker = new MaterialTimePicker();
+				MaterialTimePicker.Builder builder = new MaterialTimePicker.Builder();
+
+				timePicker = builder.setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK).build();
+
+				timePicker.setHour(calendar.get(Calendar.HOUR_OF_DAY));
+				timePicker.setMinute(calendar.get(Calendar.MINUTE));
+				timePicker.show(TaskNoteActivity.this.getSupportFragmentManager(), "TimePicker");
+
+//				dialog.show();
 			}
 		});
 

@@ -36,8 +36,8 @@
                     android:background="@android:color/transparent"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textColorHint="?android:attr/textColorSecondary"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
+                    android:textColorHint="?android:attr/textColorSecondaryInverse"
                     />
             </LinearLayout>
 

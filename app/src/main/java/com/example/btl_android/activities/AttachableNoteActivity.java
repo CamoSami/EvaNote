@@ -47,10 +47,10 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 	private boolean isEditing = true;
 	private boolean isFavorite = false;
 	private String fileName = null;
+	private Date dateCreated = null;
 	private List<AttachableNote_Container> containersList;
 	private AttachableNote_ContainerAdapter fileNoteFileAdapter;
 	private int currentContainerPosition = -1;
-	private Date dateCreated = null;
 	public static final int REQUEST_CODE_ADD_FILE = 1;
 
 	@Override

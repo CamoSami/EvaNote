@@ -40,7 +40,11 @@ public class CreateNoteActivity extends AppCompatActivity
 		});
 
 		this.binding.newReminderNote.setOnClickListener(view -> {
-			Toast.makeText(this, "No Reminder Note yet", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this, ReminderNoteActivity.class);
+
+			startActivity(intent);
+
+			finish();
 		});
 
 		this.binding.newTodoNote.setOnClickListener(view -> {

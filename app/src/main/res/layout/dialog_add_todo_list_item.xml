@@ -6,7 +6,7 @@
     <LinearLayout
         app:layout_constraintTop_toTopOf="parent"
         android:orientation="vertical"
-        android:background="?android:attr/textColorTertiary"
+        android:background="?android:attr/textColorTertiaryInverse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -24,8 +24,8 @@
                 android:text="Enter title"
                 android:textSize="@dimen/_20sdp"
                 android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textColorHint="?android:attr/textColorSecondary"
+                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textColorHint="?android:attr/textColorSecondaryInverse"
                 android:background="@android:color/transparent"
                 android:textAlignment="center"/>
 
@@ -41,7 +41,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textColorHint="?android:attr/textColorSecondary"/>
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:textColorHint="?android:attr/textColorSecondaryInverse"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_36sdp"
-            android:background="?android:attr/textColorTertiary"
+            android:background="?android:attr/textColorTertiaryInverse"
             app:layout_constraintBottom_toBottomOf="@id/titleTextView"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -30,8 +30,8 @@
             android:text="Start Up Settings"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textColorHint="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:textColorHint="?android:attr/textColorSecondaryInverse"
             android:background="@android:color/transparent"
             android:maxLines="1"
             android:ellipsize="end"
@@ -47,7 +47,7 @@
         android:layout_marginTop="@dimen/_150sdp"
         android:text="Hey there!"
         android:textSize="@dimen/_24ssp"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
         android:layout_marginEnd="@dimen/_16sdp"
         android:text="Seems like this is your first time opening EvaNote!\n\nPlease do the following actions to allow EvaNote to run normally..."
         android:textSize="@dimen/_16ssp"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@id/startUpSettingsTitle"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
         android:layout_marginTop="@dimen/_60sdp"
-        android:background="?android:attr/textColorTertiary"
+        android:background="?android:attr/textColorTertiaryInverse"
         app:layout_constraintTop_toBottomOf="@id/startUpSettingsText" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Setup Storage Location"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="*current location via PreferenceManager*"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorSecondaryInverse"
             android:textSize="@dimen/_14ssp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +113,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
-        android:background="?android:attr/textColorTertiary"
+        android:background="?android:attr/textColorTertiaryInverse"
         app:layout_constraintTop_toBottomOf="@id/generalSettingsStorageLocation" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -131,7 +131,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Permissions"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -142,7 +142,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Check if all permissions required for EvaNote has been granted"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorSecondaryInverse"
             android:textSize="@dimen/_14ssp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -153,7 +153,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
-        android:background="?android:attr/textColorTertiary"
+        android:background="?android:attr/textColorTertiaryInverse"
         app:layout_constraintTop_toBottomOf="@id/generalSettingsRequestPermission" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -165,7 +165,7 @@
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_done"
         android:background="@drawable/background_content_darker"
-        app:tint="?android:attr/textColorPrimary"
+        app:tint="?android:attr/textColorPrimaryInverse"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

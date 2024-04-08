@@ -36,7 +36,7 @@
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_favorited"
             android:background="@android:color/transparent"
-            app:tint="?android:attr/textColorPrimary"
+            app:tint="?android:attr/textColorPrimaryInverse"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -47,7 +47,7 @@
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_repeatable"
             android:background="@android:color/transparent"
-            app:tint="?android:attr/textColorPrimary"
+            app:tint="?android:attr/textColorPrimaryInverse"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iconFavorited"/>
 
@@ -70,7 +70,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/_6sdp"
             android:text="TEMP TITLE TEST TAWIHDOAWIHD"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
             android:background="@android:color/transparent"
@@ -87,7 +87,7 @@
             android:text="time time time yada yadaawdawdawdwdawda"
             android:textSize="@dimen/_16ssp"
             android:textStyle="normal"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorSecondaryInverse"
             android:background="@android:color/transparent"
             android:maxLines="1"
             android:ellipsize="end"
@@ -116,7 +116,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="Tdnawoidhawdoahwoduahwaouwdhoawudhaowudhaowudhaouwhhdaowudhaouwhdaouwhdaowudhowaudhoauwhaowudh"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
             android:background="@android:color/transparent"
             android:textSize="@dimen/_16ssp"
             android:textStyle="normal"

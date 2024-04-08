@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_36sdp"
-            android:background="?android:attr/textColorTertiary"/>
+            android:background="?android:attr/textColorTertiaryInverse"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/newButton"
@@ -28,7 +28,7 @@
             android:layout_height="@dimen/_36sdp"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_add"
-            app:tint="?android:attr/textColorPrimary"/>
+            app:tint="?android:attr/textColorPrimaryInverse"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,8 +40,8 @@
             android:text="New Note"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textColorHint="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:textColorHint="?android:attr/textColorSecondaryInverse"
             android:background="@android:color/transparent"
             android:maxLines="1"
             android:ellipsize="end"/>
@@ -53,7 +53,7 @@
             android:layout_marginStart="@dimen/_280sdp"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_settings"
-            app:tint="?android:attr/textColorPrimary"/>
+            app:tint="?android:attr/textColorPrimaryInverse"/>
 
     </FrameLayout>
 
@@ -69,15 +69,15 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_36sdp"
-            android:background="?android:attr/textColorTertiary"/>
+            android:background="?android:attr/textColorTertiaryInverse"/>
 
         <Spinner
             android:id="@+id/spinnerSort"
             android:layout_width="@dimen/_240sdp"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/_40sdp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textColorHint="?android:attr/textColorSecondary"/>
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:textColorHint="?android:attr/textColorSecondaryInverse"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/buttonSort"
@@ -86,7 +86,7 @@
             android:layout_marginStart="@dimen/_280sdp"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_arrowup"
-            app:tint="?android:attr/textColorPrimary"/>
+            app:tint="?android:attr/textColorPrimaryInverse"/>
 
     </FrameLayout>
 
@@ -122,7 +122,7 @@
             android:layout_marginTop="@dimen/_200sdp"
             android:text="No Notes to show..."
             android:textSize="@dimen/_24ssp"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:text="It seems like you don't have any Notes yet\n\nPress the '+' icon to add some more!"
             android:textSize="@dimen/_16ssp"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
             android:gravity="center_horizontal"
             app:layout_constraintTop_toBottomOf="@id/noNoteTitle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -160,7 +160,7 @@
             android:layout_marginTop="@dimen/_200sdp"
             android:text="Can not get Notes..."
             android:textSize="@dimen/_24ssp"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -173,7 +173,7 @@
             android:layout_height="wrap_content"
             android:text="It seems like EvaNote has not been set up...\n\nPress here to set up EvaNote"
             android:textSize="@dimen/_16ssp"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
             android:gravity="center_horizontal"
             app:layout_constraintTop_toBottomOf="@id/noDirTitle"
             app:layout_constraintEnd_toEndOf="parent"

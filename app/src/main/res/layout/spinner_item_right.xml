@@ -9,4 +9,4 @@
     android:textSize="@dimen/_16ssp"
     android:textStyle="bold"
     android:gravity="end"
-    android:textColor="?android:attr/textColorPrimary"/>
+    android:textColor="?android:attr/textColorPrimaryInverse"/>

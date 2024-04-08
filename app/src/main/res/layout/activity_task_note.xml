@@ -19,7 +19,7 @@
         android:layout_height="@dimen/_36sdp"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_back"
-        app:tint="?android:attr/textColorPrimary"
+        app:tint="?android:attr/textColorPrimaryInverse"
         android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,8 +34,8 @@
         android:hint="Title of the Task (required)"
         android:textSize="@dimen/_16ssp"
         android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textColorHint="?android:attr/textColorSecondary"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textColorHint="?android:attr/textColorSecondaryInverse"
         android:background="@android:color/transparent"
         android:inputType="text"
         android:maxLines="1"
@@ -50,7 +50,7 @@
         android:layout_height="@dimen/_36sdp"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_more"
-        app:tint="?android:attr/textColorPrimary"
+        app:tint="?android:attr/textColorPrimaryInverse"
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -61,7 +61,7 @@
         android:layout_height="@dimen/_36sdp"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_edit"
-        app:tint="?android:attr/textColorPrimary"
+        app:tint="?android:attr/textColorPrimaryInverse"
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toStartOf="@id/settingsButton"
         app:layout_constraintTop_toTopOf="parent" />
@@ -71,7 +71,7 @@
         android:layout_height="@dimen/_2sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleBar"
-        android:background="?android:attr/textColorTertiary"/>
+        android:background="?android:attr/textColorTertiaryInverse"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -98,8 +98,8 @@
                 android:hint="Due date..."
                 android:textSize="@dimen/_16ssp"
                 android:text=""
-                android:textColor="?android:attr/textColorPrimary"
-                android:textColorHint="?android:attr/textColorSecondary"
+                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textColorHint="?android:attr/textColorSecondaryInverse"
                 android:background="@android:color/transparent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/redoDateButton"
@@ -126,7 +126,7 @@
                 android:layout_marginTop="@dimen/_3sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dueDatePicker"
-                android:background="?android:attr/textColorTertiary"/>
+                android:background="?android:attr/textColorTertiaryInverse"/>
 
             <TextView
                 android:id="@+id/dueTimePicker"
@@ -139,8 +139,8 @@
                 android:maxLines="1"
                 android:hint="Due time..."
                 android:text=""
-                android:textColor="?android:attr/textColorPrimary"
-                android:textColorHint="?android:attr/textColorSecondary"
+                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textColorHint="?android:attr/textColorSecondaryInverse"
                 android:background="@android:color/transparent"
                 android:textSize="@dimen/_16ssp"
                 app:layout_constraintEnd_toStartOf="@id/redoTimeButton"
@@ -168,7 +168,7 @@
                 android:layout_marginTop="@dimen/_3sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dueTimePicker"
-                android:background="?android:attr/textColorTertiary"/>
+                android:background="?android:attr/textColorTertiaryInverse"/>
 
             <EditText
                 android:id="@+id/editTextRepeatableCount"
@@ -180,8 +180,8 @@
                 android:textSize="@dimen/_16ssp"
                 android:inputType="number"
                 android:text=""
-                android:textColor="?android:attr/textColorPrimary"
-                android:textColorHint="?android:attr/textColorSecondary"
+                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textColorHint="?android:attr/textColorSecondaryInverse"
                 android:background="@android:color/transparent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dueTimePicker"
@@ -193,8 +193,8 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/_12sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textColorHint="?android:attr/textColorSecondary"
+                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textColorHint="?android:attr/textColorSecondaryInverse"
                 android:background="@android:color/transparent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/editTextRepeatableCount"
@@ -208,7 +208,7 @@
                 android:layout_marginTop="@dimen/_3sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/spinnerRepeatableType"
-                android:background="?android:attr/textColorTertiary"/>
+                android:background="?android:attr/textColorTertiaryInverse"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iconAddSubTask"
@@ -218,7 +218,7 @@
                 android:layout_marginStart="@dimen/_12sdp"
                 android:padding="@dimen/_6sdp"
                 android:src="@drawable/icon_add"
-                app:tint="?android:attr/textColorPrimary"
+                app:tint="?android:attr/textColorPrimaryInverse"
                 android:background="@android:color/transparent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/editTextRepeatableCount" />
@@ -231,8 +231,8 @@
                 android:layout_marginStart="@dimen/_3sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:text=""
-                android:textColor="?android:attr/textColorPrimary"
-                android:textColorHint="?android:attr/textColorSecondary"
+                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textColorHint="?android:attr/textColorSecondaryInverse"
                 android:background="@android:color/transparent"
                 android:hint="Additional Sub Task..."
                 android:textSize="@dimen/_16ssp"
@@ -264,7 +264,7 @@
                 android:layout_marginBottom="@dimen/_6sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/contentEditText"
-                android:background="?android:attr/textColorTertiary"/>
+                android:background="?android:attr/textColorTertiaryInverse"/>
 
             <CheckBox
                 android:id="@+id/noteTaskCheckBox"
@@ -288,8 +288,8 @@
                 android:minHeight="@dimen/_30sdp"
                 android:text=""
                 android:hint="@string/this_is_the_note_s_text_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textColorHint="?android:attr/textColorSecondary"
+                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textColorHint="?android:attr/textColorSecondaryInverse"
                 android:background="@android:color/transparent"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/_16ssp"

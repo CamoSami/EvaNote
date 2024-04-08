@@ -58,6 +58,16 @@ public class Constants
 	public static final String JSON_TASK_NOTE_SUB_TASKS = "taskNoteSubTasks";
 	public static final String JSON_TASK_NOTE_SUB_TASKS_TASK_TITLE = "taskNoteSubTasksTaskTitle";
 	public static final String JSON_TASK_NOTE_SUB_TASKS_IS_DONE = "taskNoteSubTasksIsDone";
+	//			REMINDER NOTE
+	public static final String JSON_REMINDER_NOTE_TIME_OF_REMINDER = "timeOfReminder";
+	public static final String JSON_REMINDER_NOTE_NUMBER_OF_SNOOZES = "numberOfSnoozes";
+	public static final String JSON_REMINDER_NOTE_MINUTES_EACH_SNOOZE = "minutesEachSnooze";
+	public static final String JSON_REMINDER_NOTE_REPEAT_OF_SNOOZE = "repeatOfSnooze";
+
+	//      Note Specific Constants
 	//          TO DO NOTE
 	public static final String JSON_TODO_NOTE_NAME_FILE = "todoNote.txt";
+
+	//          PRIVATE NOTE
+	public static final String CHANNEL_ID = "201";
 }

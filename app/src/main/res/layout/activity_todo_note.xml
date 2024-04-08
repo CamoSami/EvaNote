@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_36sdp"
-            android:background="?android:attr/textColorTertiary"/>
+            android:background="?android:attr/textColorTertiaryInverse"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/backButton"
@@ -27,7 +27,7 @@
             android:layout_height="@dimen/_36sdp"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_back"
-            app:tint="?android:attr/textColorPrimary"/>
+            app:tint="?android:attr/textColorPrimaryInverse"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,8 +39,8 @@
             android:text="New Note"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textColorHint="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:textColorHint="?android:attr/textColorSecondaryInverse"
             android:background="@android:color/transparent"
             android:maxLines="1"
             android:ellipsize="end"/>
@@ -52,7 +52,7 @@
             android:layout_marginStart="@dimen/_280sdp"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_settings"
-            app:tint="?android:attr/textColorPrimary"/>
+            app:tint="?android:attr/textColorPrimaryInverse"/>
 
     </FrameLayout>
 
@@ -79,7 +79,7 @@
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_add"
             android:background="@drawable/background_content_darker"
-            app:tint="?android:attr/textColorPrimary"
+            app:tint="?android:attr/textColorPrimaryInverse"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

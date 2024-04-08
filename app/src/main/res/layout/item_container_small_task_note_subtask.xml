@@ -27,7 +27,7 @@
         android:minHeight="@dimen/_24sdp"
         android:text="awhdauwhauoahwdoahdoawhdouawhdoahwdaudhoauwaoiwhdaowhoaihdoaiwhdoaihdoaiwhoapawidaowidoahwdoawhdoauwhdoauwhdoauwhdaoduhaowdhaowuhdoawhoauhowuhdoawhd"
         android:textSize="@dimen/_12ssp"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/noteSubTaskCheckBox"

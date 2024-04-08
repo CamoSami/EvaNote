@@ -20,7 +20,7 @@
         android:layout_height="@dimen/_36sdp"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_back"
-        app:tint="?android:attr/textColorPrimary"
+        app:tint="?android:attr/textColorPrimaryInverse"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,8 +33,8 @@
         android:hint="@string/title_of_the_note"
         android:textSize="@dimen/_16ssp"
         android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textColorHint="?android:attr/textColorSecondary"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textColorHint="?android:attr/textColorSecondaryInverse"
         android:background="@android:color/transparent"
         android:text=""
         android:inputType="text"
@@ -50,7 +50,7 @@
         android:layout_height="@dimen/_36sdp"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_more"
-        app:tint="?android:attr/textColorPrimary"
+        app:tint="?android:attr/textColorPrimaryInverse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,7 +60,7 @@
         android:layout_height="@dimen/_36sdp"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_edit"
-        app:tint="?android:attr/textColorPrimary"
+        app:tint="?android:attr/textColorPrimaryInverse"
         app:layout_constraintEnd_toStartOf="@id/settingsButton"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -70,8 +70,8 @@
         android:layout_height="0dp"
         android:ems="10"
         android:hint="Nhập nội dung"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textColorHint="?android:attr/textColorSecondary"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textColorHint="?android:attr/textColorSecondaryInverse"
         android:background="@android:color/transparent"
         android:text=""
         android:gravity="start"

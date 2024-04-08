@@ -21,7 +21,7 @@
         android:layout_height="@dimen/_36sdp"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_file"
-        app:tint="?android:attr/textColorPrimary"
+        app:tint="?android:attr/textColorPrimaryInverse"
         android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="@id/containerView"
         app:layout_constraintTop_toTopOf="@id/containerView"/>
@@ -32,7 +32,7 @@
         android:layout_height="@dimen/_36sdp"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_more"
-        app:tint="?android:attr/textColorPrimary"
+        app:tint="?android:attr/textColorPrimaryInverse"
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="@id/containerView"
         app:layout_constraintTop_toTopOf="@id/containerView"/>
@@ -48,8 +48,8 @@
         android:hint="Name here..."
         android:textSize="@dimen/_16ssp"
         android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textColorHint="?android:attr/textColorSecondary"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textColorHint="?android:attr/textColorSecondaryInverse"
         android:text=""
         android:background="@android:color/transparent"
         android:maxLines="1"
@@ -71,8 +71,8 @@
         android:focusable="true"
         android:hint="Your description here..."
         android:textSize="@dimen/_16ssp"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textColorHint="?android:attr/textColorSecondary"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textColorHint="?android:attr/textColorSecondaryInverse"
         android:text=""
         android:background="@android:color/transparent"
         app:layout_constraintTop_toBottomOf="@id/containerView"
@@ -87,6 +87,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/containerContent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="?android:attr/textColorTertiary"/>
+        android:background="?android:attr/textColorTertiaryInverse"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

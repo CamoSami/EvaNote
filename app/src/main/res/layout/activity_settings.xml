@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_36sdp"
-            android:background="?android:attr/textColorTertiary"/>
+            android:background="?android:attr/textColorTertiaryInverse"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/backButton"
@@ -25,7 +25,7 @@
             android:layout_height="@dimen/_36sdp"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/icon_back"
-            app:tint="?android:attr/textColorPrimary"/>
+            app:tint="?android:attr/textColorPrimaryInverse"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -37,8 +37,8 @@
             android:text="EvaNote Settings"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textColorHint="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:textColorHint="?android:attr/textColorSecondaryInverse"
             android:background="@android:color/transparent"
             android:maxLines="1"
             android:ellipsize="end"/>
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_24sdp"
                     android:text="General Settings"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +82,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/textViewGeneralSettings" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -100,7 +100,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Dark Mode"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
                         android:textSize="@dimen/_16ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Change the current theme for the application"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorSecondaryInverse"
                         android:textSize="@dimen/_14ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/generalSettingsDarkModeTitle" />
@@ -121,8 +121,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
                         android:layout_marginTop="@dimen/_6sdp"
-                        android:textColor="?android:attr/textColorPrimary"
-                        android:textColorHint="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
+                        android:textColorHint="?android:attr/textColorSecondaryInverse"
                         app:layout_constraintTop_toBottomOf="@id/generalSettingsDarkModeCurrent"
                         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -131,7 +131,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/generalSettingsDarkMode" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -150,7 +150,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Change Default Note View Type"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
                         android:textSize="@dimen/_16ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +161,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Change the view type the Note will be initially on when opened from the main menu."
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorSecondaryInverse"
                         android:textSize="@dimen/_14ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/generalSettingsIsEditingTitle" />
@@ -172,7 +172,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_6sdp"
                         android:text="@string/current_default_view_type"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorSecondaryInverse"
                         android:textSize="@dimen/_14ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/generalSettingsIsEditingDesc" />
@@ -182,7 +182,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/generalSettingsIsEditing" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -200,7 +200,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Setup Storage Location"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
                         android:textSize="@dimen/_16ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -211,7 +211,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="*current location via PreferenceManager*"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorSecondaryInverse"
                         android:textSize="@dimen/_14ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/generalSettingsStorageLocationTitle" />
@@ -221,7 +221,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/generalSettingsStorageLocation" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -239,7 +239,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Permissions"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
                         android:textSize="@dimen/_16ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -250,7 +250,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Check if all permissions required for EvaNote has been granted"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorSecondaryInverse"
                         android:textSize="@dimen/_14ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/generalSettingsRequestPermissionTitle" />
@@ -260,7 +260,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/generalSettingsRequestPermission" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -278,7 +278,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_24sdp"
                     android:text="Default Note"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -287,7 +287,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/textViewDefaultNoteSettings" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -315,7 +315,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_24sdp"
                     android:text="Private Note"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -324,7 +324,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/textViewPrivateNoteSettings" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -352,7 +352,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_24sdp"
                     android:text="Reminder Note"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -361,7 +361,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/textViewReminderNoteSettings" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -389,7 +389,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_24sdp"
                     android:text="Todo Note"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -398,7 +398,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/textViewTodoNoteSettings" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -426,7 +426,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_24sdp"
                     android:text="Task Note"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -435,7 +435,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/textViewTaskNoteSettings" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -465,7 +465,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_6sdp"
                         android:text="Delete on Completion"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
                         android:textSize="@dimen/_16ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/taskNoteSettingsDeleteOnCompletionCheckBox"
@@ -478,7 +478,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_6sdp"
                         android:text="If the Task Note is not repeatable, then delete the Note when ticking the CheckBox, untick the CheckBox of the TaskNote to cancel."
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorSecondaryInverse"
                         android:textSize="@dimen/_14ssp"
                         app:layout_constraintStart_toEndOf="@id/taskNoteSettingsDeleteOnCompletionCheckBox"
                         app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteOnCompletionTitle"
@@ -489,7 +489,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteOnCompletion" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -507,7 +507,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Delete on Completion after..."
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
                         android:textSize="@dimen/_16ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -518,7 +518,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="If the Task Note is not repeatable, then delete the Note when ticking the CheckBox after:"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorSecondaryInverse"
                         android:textSize="@dimen/_14ssp"
                         app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteOnCompletionAfterTitle"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -528,8 +528,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
                         android:layout_marginTop="@dimen/_6sdp"
-                        android:textColor="?android:attr/textColorPrimary"
-                        android:textColorHint="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
+                        android:textColorHint="?android:attr/textColorSecondaryInverse"
                         app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteOnCompletionAfterDesc"
                         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -538,7 +538,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsDeleteOnCompletionAfter" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -568,7 +568,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_6sdp"
                         android:text="Sort to Bottom on Completion"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="?android:attr/textColorPrimaryInverse"
                         android:textSize="@dimen/_16ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/taskNoteSettingsSortToBottomOnCompletionAfterCheckBox"
@@ -581,7 +581,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_6sdp"
                         android:text="If the Task Note is not repeatable, then sort the Note to bottom of the List when ticking the Checkbox."
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textColor="?android:attr/textColorSecondaryInverse"
                         android:textSize="@dimen/_14ssp"
                         app:layout_constraintStart_toEndOf="@id/taskNoteSettingsSortToBottomOnCompletionAfterCheckBox"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -592,7 +592,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/taskNoteSettingsSortToBottomOnCompletionAfter" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -610,7 +610,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_24sdp"
                     android:text="Attachable Note"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -619,7 +619,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_2sdp"
-                    android:background="?android:attr/textColorTertiary"
+                    android:background="?android:attr/textColorTertiaryInverse"
                     app:layout_constraintTop_toBottomOf="@id/textViewAttachableNoteSettings" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.btl_android.R;
 import com.example.btl_android.databinding.ItemContainerSmallAttachableNoteBinding;
+import com.example.btl_android.databinding.ItemContainerSmallDefaultNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallPrivateNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallReminderNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallTaskNoteBinding;
@@ -94,14 +95,16 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 					)
 			);
 		}
-		else if (viewType == Constants.TODO_NOTE) {
+		else if (viewType == Constants.TODO_NOTE)
+		{
 			return new TodoNoteViewHolder(ItemContainerSmallTodoNoteBinding.inflate(
 					LayoutInflater.from(parent.getContext()),
 					parent,
 					false
 			));
 		}
-		else if (viewType == Constants.PRIVATE_NOTE) {
+		else if (viewType == Constants.PRIVATE_NOTE)
+		{
 			return new PrivateNoteViewHolder(
 					ItemContainerSmallPrivateNoteBinding.inflate(
 							LayoutInflater.from(parent.getContext()),
@@ -110,7 +113,8 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 					)
 			);
 		}
-		else if (viewType == Constants.REMINDER_NOTE) {
+		else if (viewType == Constants.REMINDER_NOTE)
+		{
 			return new ReminderNoteViewHolder(
 					ItemContainerSmallReminderNoteBinding.inflate(
 							LayoutInflater.from(parent.getContext()),
@@ -118,6 +122,14 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 							false
 					)
 			);
+		}
+		else if (viewType == Constants.DEFAULT_NOTE)
+		{
+			return new DefaultNoteViewHolder(ItemContainerSmallDefaultNoteBinding.inflate(
+					LayoutInflater.from(parent.getContext()),
+					parent,
+					false
+			));
 		}
 		else
 		{
@@ -167,6 +179,13 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			reminderNoteViewHolder.LoadSummarizedNote(this.notesList.get(position));
 			reminderNoteViewHolder.SetListeners(this.notesList.get(position));
 		}
+		else if (getItemViewType(position) == Constants.DEFAULT_NOTE)
+		{
+			DefaultNoteViewHolder defaultNoteViewHolder = (DefaultNoteViewHolder) holder;
+
+			defaultNoteViewHolder.LoadSummarizedNote(this.notesList.get(position));
+			defaultNoteViewHolder.SetListeners(this.notesList.get(position));
+		}
 	}
 
 	@Override
@@ -200,6 +219,10 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		else if (defaultNote.getClass() == ReminderNote.class)
 		{
 			return Constants.REMINDER_NOTE;
+		}
+		else if (defaultNote.getClass() == _DefaultNote.class)
+		{
+			return Constants.DEFAULT_NOTE;
 		}
  		else
 		{
@@ -310,6 +333,11 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		{
 			TodoListNote todoListNote = (TodoListNote) defaultNote;
 
+			this.binding.noteCheckbox.setOnClickListener(view ->
+			{
+				todoListNote.setChecked(this.binding.noteCheckbox.isChecked());
+			});
+
 			if (NotesAdapter.this.isEditing)
 			{
 				//      Meh
@@ -405,6 +433,22 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				this.binding.layoutAddNew.setLayoutParams(layoutParams);
 
 				this.todoNoteAdapter.setEditing(false);
+			}
+
+			String dateAndType =
+					NotesAdapter.GetShorterDate(todoListNote.getDateCreated()) +
+							" | " +
+							todoListNote.getClass().getSimpleName().replace("Note", "");
+
+			this.binding.noteDateAndType.setText(dateAndType);
+			this.binding.noteDateAndType.setVisibility(View.VISIBLE);
+
+			// If Favorite
+			if (todoListNote.isFavorite()) {
+				this.binding.iconFavoritedTodoNote.setVisibility(View.VISIBLE);
+			}
+			else {
+				this.binding.iconFavoritedTodoNote.setVisibility(View.GONE);
 			}
 		}
 	}
@@ -505,6 +549,11 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		public void SetListeners(_DefaultNote defaultNote)
 		{
 			this.taskNote = (TaskNote) defaultNote;
+
+			this.binding.noteCheckbox.setOnClickListener(view ->
+			{
+				this.taskNote.setChecked(this.binding.noteCheckbox.isChecked());
+			});
 
 			if (NotesAdapter.this.isEditing)
 			{
@@ -851,6 +900,11 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		{
 			this.reminderNote = (ReminderNote) defaultNote;
 
+			this.binding.noteCheckbox.setOnClickListener(view ->
+			{
+				this.reminderNote.setChecked(this.binding.noteCheckbox.isChecked());
+			});
+
 			if (NotesAdapter.this.isEditing)
 			{
 				//      Meh
@@ -1007,7 +1061,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		public void SetListeners(_DefaultNote defaultNote) {
 			this.binding.noteCheckbox.setOnClickListener(view ->
 			{
-				defaultNote.setChecked(defaultNote.isChecked());
+				defaultNote.setChecked(this.binding.noteCheckbox.isChecked());
 			});
 
 			if (NotesAdapter.this.isEditing) {
@@ -1015,14 +1069,16 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				this.binding.getRoot().setOnClickListener(view ->
 				{
 					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
-					defaultNote.setChecked(!defaultNote.isChecked());
+
+					defaultNote.setChecked(this.binding.noteCheckbox.isChecked());
 				});
 
 				//      Context Menu
 				this.binding.getRoot().setOnLongClickListener(view ->
 				{
 					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
-					defaultNote.setChecked(!defaultNote.isChecked());
+
+					defaultNote.setChecked(this.binding.noteCheckbox.isChecked());
 
 					return false;
 				});
@@ -1178,7 +1234,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		public void SetListeners(_DefaultNote defaultNote) {
 			this.binding.noteCheckbox.setOnClickListener(view ->
 			{
-				defaultNote.setChecked(defaultNote.isChecked());
+				defaultNote.setChecked(this.binding.noteCheckbox.isChecked());
 			});
 
 			if (NotesAdapter.this.isEditing) {
@@ -1218,6 +1274,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				});
 			}
 		}
+
 		@Override
 		public void LoadSummarizedNote(_DefaultNote defaultNote)
 		{
@@ -1238,6 +1295,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			{
 				this.binding.noteCheckbox.setChecked(false);
 				defaultNote.setChecked(false);
+
 				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
 						ConstraintLayout.LayoutParams.MATCH_PARENT,
 						ConstraintLayout.LayoutParams.WRAP_CONTENT
@@ -1281,6 +1339,134 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 					NotesAdapter.GetShorterDate(defaultNote.getDateCreated()) + " | " + defaultNote.getClass().getSimpleName().replace("Note", "");
 			binding.noteDateAndType.setText(dateAndType);
 			binding.noteDateAndType.setVisibility(View.VISIBLE);
+		}
+	}
+
+	public class DefaultNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface
+	{
+		private final ItemContainerSmallDefaultNoteBinding binding;
+
+		public DefaultNoteViewHolder(ItemContainerSmallDefaultNoteBinding binding)
+		{
+			super(binding.getRoot());
+			this.binding = binding;
+		}
+
+		@Override public void LoadSummarizedNote(_DefaultNote defaultNote)
+		{
+			//      If Editing
+			if (NotesAdapter.this.isEditing)
+			{
+				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(0,
+						ConstraintLayout.LayoutParams.WRAP_CONTENT
+				);
+				layoutParams.startToEnd = R.id.noteCheckbox;
+				layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+
+				this.binding.layoutAddNew.setLayoutParams(layoutParams);
+			}
+			else
+			{
+				this.binding.noteCheckbox.setChecked(false);
+				defaultNote.setChecked(false);
+
+				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+						ConstraintLayout.LayoutParams.MATCH_PARENT,
+						ConstraintLayout.LayoutParams.WRAP_CONTENT
+				);
+				layoutParams.startToEnd = R.id.noteCheckbox;
+				layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+
+				this.binding.layoutAddNew.setLayoutParams(layoutParams);
+			}
+
+			//      Get Favoritism
+			boolean isFavorite = defaultNote.isFavorite();
+
+			if (isFavorite)
+			{
+				this.binding.iconFavorited.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				this.binding.iconFavorited.setVisibility(View.GONE);
+			}
+
+			//      Get Title
+			String title = defaultNote.getTitle();
+
+			if (title.length() == 0)
+			{
+				this.binding.noteTitle.setText(null);
+				this.binding.noteTitle.setVisibility(View.GONE);
+			}
+			else
+			{
+				this.binding.noteTitle.setText(title);
+				this.binding.noteTitle.setVisibility(View.VISIBLE);
+			}
+
+			//      Date and Type
+			String dateAndType = NotesAdapter.GetShorterDate(defaultNote.getDateCreated()) + " | " +
+					defaultNote.getClass().getSimpleName().replace("Note", "");
+
+			this.binding.noteDateAndType.setText(dateAndType);
+			this.binding.noteDateAndType.setVisibility(View.VISIBLE);
+
+			//      Note Main Content
+			String content = defaultNote.getContent().substring(0, Math.min(100, defaultNote.getContent().length()));
+
+			this.binding.noteContent.setText(content);
+		}
+
+		@Override public void SetListeners(_DefaultNote defaultNote)
+		{
+			this.binding.noteCheckbox.setOnClickListener(view ->
+			{
+				defaultNote.setChecked(this.binding.noteCheckbox.isChecked());
+			});
+
+			if (NotesAdapter.this.isEditing)
+			{
+				this.binding.getRoot().setOnClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
+
+					defaultNote.setChecked(this.binding.noteCheckbox.isChecked());
+				});
+
+				//      Context Menu
+				this.binding.getRoot().setOnLongClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
+
+					defaultNote.setChecked(this.binding.noteCheckbox.isChecked());
+
+					return false;
+				});
+			}
+			else
+			{
+				this.binding.getRoot().setOnClickListener(view ->
+				{
+					noteListener.onNoteClick(NotesAdapter.this.notesList.indexOf(defaultNote));
+				});
+
+				//      Context Menu
+				this.binding.getRoot().setOnLongClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(true);
+					defaultNote.setChecked(true);
+
+					noteListener.onNoteLongClick();
+
+					return false;
+				});
+			}
 		}
 	}
 }

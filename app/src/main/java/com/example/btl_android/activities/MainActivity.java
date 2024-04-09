@@ -36,6 +36,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements NoteListener
 {
@@ -48,8 +49,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 	private boolean isEditing = false;
 	private boolean isReversed = true;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	@Override protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
@@ -65,7 +65,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 		}
-		else {
+		else
+		{
 			int position = Integer.parseInt(appTheme);
 
 			if (position == 0)
@@ -92,11 +93,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		this.binding.noteRecyclerView.setAdapter(this.listAdapter);
 
 		//      Set up Spinner
-		ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
-				this,
-				R.array.sortType,
-				R.layout.spinner_item_right
-		);
+		ArrayAdapter<CharSequence> arrayAdapter =
+				ArrayAdapter.createFromResource(this, R.array.sortType, R.layout.spinner_item_right);
 		arrayAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
 		this.binding.spinnerSort.setAdapter(arrayAdapter);
 		this.binding.spinnerSort.setSelection(0);
@@ -112,6 +110,13 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			this.binding.buttonSort.setImageResource(R.drawable.icon_arrowdown);
 		}
 
+		//      Set Up NoteComparator
+		NoteComparator.isReversed = this.isReversed;
+		NoteComparator.taskNoteSortToBottomOnCompletion = this.preferenceManager.getBoolean(
+				Constants.TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION);
+		NoteComparator.taskNoteDeleteOnCompletion = this.preferenceManager.getBoolean(
+				Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION);
+
 		//      Check if this is new Start Up
 		if (!this.preferenceManager.getBoolean(Constants.APP_NOT_FIRST_START_UP))
 		{
@@ -125,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		{
 			this.ReadFiles();
 			this.ReadFilesByHelpers();
+			this.SortNotes();
 		}
 
 		this.SetListeners();
@@ -149,8 +155,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 				popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
 				{
-					@Override
-					public boolean onMenuItemClick(MenuItem menuItem)
+					@Override public boolean onMenuItemClick(MenuItem menuItem)
 					{
 						int id = menuItem.getItemId();
 
@@ -201,19 +206,20 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					this.binding.buttonSort.setImageResource(R.drawable.icon_arrowdown);
 				}
 
-				this.preferenceManager.putBoolean(Constants.SETTINGS_SORT_IS_REVERSED, this.isReversed);
+				this.preferenceManager.putBoolean(Constants.SETTINGS_SORT_IS_REVERSED,
+						this.isReversed
+				);
 				NoteComparator.isReversed = this.isReversed;
 
-				this.ReadFiles();
-
-				this.listAdapter.notifyDataSetChanged();
+				this.SortNotes();
 			});
 
 			//      Spinner!
 			this.binding.spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 			{
 				@Override
-				public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+				public void onItemSelected(AdapterView<?> parent, View view, int position, long id
+				)
 				{
 					switch (position)
 					{
@@ -233,9 +239,10 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 					MainActivity.this.preferenceManager.putString(Constants.SETTINGS_SORT_TYPE, _DefaultNote.sortType.toString());
 
-					Collections.sort(MainActivity.this.noteList, new NoteComparator());
+					MainActivity.this.SortNotes();
 
 					MainActivity.this.listAdapter.notifyDataSetChanged();
+					MainActivity.this.binding.noteRecyclerView.scrollToPosition(0);
 				}
 
 				@Override public void onNothingSelected(AdapterView<?> parent)
@@ -262,8 +269,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		}
 	}
 
-	@Override
-	protected void onResume()
+	@Override protected void onResume()
 	{
 		super.onResume();
 
@@ -271,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 		this.ReadFiles();
 		this.ReadFilesByHelpers();
+		this.SortNotes();
 	}
 
 	@Override public void onBackPressed()
@@ -299,11 +306,12 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		else
 		{
 			this.ReadFiles();
+			this.ReadFilesByHelpers();
+			this.SortNotes();
 		}
 	}
 
-	@Override
-	public void onNoteClick(int position)
+	@Override public void onNoteClick(int position)
 	{
 		if (this.isEditing)
 		{
@@ -332,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 			startActivity(intent);
 		}
-		else if(defaultNote instanceof PrivateNote)
+		else if (defaultNote instanceof PrivateNote)
 		{
 			Intent intent = new Intent(this, EnterPassWordActivity.class);
 
@@ -340,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 			startActivity(intent);
 		}
-		else if(defaultNote instanceof ReminderNote)
+		else if (defaultNote instanceof ReminderNote)
 		{
 			Intent intent = new Intent(this, ReminderNoteActivity.class);
 
@@ -352,10 +360,20 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		{
 			Intent intent = new Intent(this, TodoNoteActivity.class);
 
-//			Log.d("TodoNote intent 1", "onCreate: " + defaultNote.getTitle());
+			//			Log.d("TodoNote intent 1", "onCreate: " + defaultNote.getTitle());
 
 			intent.putExtra(Constants.TODO_NOTE_KEY, (TodoListNote) defaultNote);
-			intent.putExtra(Constants.IS_TODO_NOTE_EDITING_KEY, true);
+			intent.putExtra(Constants.IS_TODO_NOTE_EDITING_KEY,
+					this.preferenceManager.getBoolean(Constants.SETTINGS_NOTE_DEFAULT_IS_EDITING)
+			);
+
+			startActivity(intent);
+		}
+		else if (defaultNote instanceof _DefaultNote)
+		{
+			Intent intent = new Intent(this, DefaultNoteActivity.class);
+
+			intent.putExtra(Constants.BUNDLE_FILENAME_KEY, defaultNote.getFileName());
 
 			startActivity(intent);
 		}
@@ -367,8 +385,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		}
 	}
 
-	@Override
-	public void onNoteLongClick() {
+	@Override public void onNoteLongClick()
+	{
 		if (this.isEditing)
 		{
 			return;
@@ -387,27 +405,41 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		builder.setTitle("Delete Confirmation");
 		builder.setMessage("Are you sure you want to delete the Note(s)?");
 
-		builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+		builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
+		{
+			@Override public void onClick(DialogInterface dialog, int which)
+			{
 				for (int i = 0; i < MainActivity.this.noteList.size(); i++)
 				{
 					_DefaultNote defaultNote = MainActivity.this.noteList.get(i);
 
-					if (defaultNote.isChecked())
+					if (defaultNote.isChecked() && defaultNote instanceof TodoListNote)
+					{
+						Log.d("Delete Confirmation", "onClick: :>>");
+						MainActivity.this.noteList.remove(i--);
+
+						MainActivity.this.DeleteTodoListNoteById(((TodoListNote) defaultNote).getId());
+					}
+					else if (defaultNote.isChecked())
 					{
 						String fileName = defaultNote.getFileName();
 
-						if (_DefaultNote.DeleteFromStorage(MainActivity.this, fileName)) {
+						if (_DefaultNote.DeleteFromStorage(MainActivity.this, fileName))
+						{
 							MainActivity.this.noteList.remove(i--);
 						}
-						else {
-							Log.d("AttachableNoteActivityTemp", "FileName = " + fileName);
+						else
+						{
+							Log.d("MainActivity.onNoteDelete()", "FileName = " + fileName);
 
-							Toast.makeText(MainActivity.this, "Failed to delete note", Toast.LENGTH_SHORT).show();
+							Toast.makeText(MainActivity.this, "Failed to delete note",
+									Toast.LENGTH_SHORT
+							).show();
 						}
 					}
 				}
+
+				MainActivity.this.SortNotes();
 
 				MainActivity.this.isEditing = false;
 				MainActivity.this.ChangeEditingLayout();
@@ -426,15 +458,18 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		{
 			_DefaultNote defaultNote = MainActivity.this.noteList.get(i);
 
-			if (defaultNote.isChecked()) {
+			if (defaultNote.isChecked())
+			{
 				//      TODO: Các bạn bổ sung
 
-//				Toast.makeText(this, defaultNote.toString(), Toast.LENGTH_SHORT).show();
+				//				Toast.makeText(this, defaultNote.toString(), Toast.LENGTH_SHORT).show();
 
-				if (defaultNote instanceof AttachableNote) {
+				if (defaultNote instanceof AttachableNote)
+				{
 					AttachableNote attachableNote = new AttachableNote((AttachableNote) defaultNote);
 
-					if (!attachableNote.WriteToStorage(this, true)) {
+					if (!attachableNote.WriteToStorage(this, true))
+					{
 						Toast.makeText(this, "Failed to duplicate note", Toast.LENGTH_SHORT).show();
 
 						continue;
@@ -442,10 +477,12 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 					this.noteList.add(i++ + 1, attachableNote);
 				}
-				else if (defaultNote instanceof TaskNote) {
+				else if (defaultNote instanceof TaskNote)
+				{
 					TaskNote taskNote = (TaskNote) defaultNote;
 
-					if (!taskNote.WriteToStorage(this, true)) {
+					if (!taskNote.WriteToStorage(this, true))
+					{
 						Toast.makeText(this, "Failed to duplicate note", Toast.LENGTH_SHORT).show();
 
 						continue;
@@ -453,33 +490,78 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 					this.noteList.add(i++ + 1, taskNote);
 				}
-				else if (defaultNote instanceof PrivateNote){
+				else if (defaultNote instanceof PrivateNote)
+				{
 					PrivateNote privateNote = (PrivateNote) defaultNote;
 
-					if (!privateNote.WriteToStorage(this, true)) {
+					if (!privateNote.WriteToStorage(this, true))
+					{
 						Toast.makeText(this, "Failed to duplicate note", Toast.LENGTH_SHORT).show();
 						continue;
 					}
 
 					this.noteList.add(i++ + 1, privateNote);
 				}
-				else if (defaultNote instanceof ReminderNote){
+				else if (defaultNote instanceof ReminderNote)
+				{
 					ReminderNote reminderNote = (ReminderNote) defaultNote;
 
-					if (!reminderNote.WriteToStorage(this, true)) {
+					if (!reminderNote.WriteToStorage(this, true))
+					{
 						Toast.makeText(this, "Failed to duplicate note", Toast.LENGTH_SHORT).show();
 						continue;
 					}
 
 					this.noteList.add(i++ + 1, reminderNote);
 				}
-				else {
+				else if (defaultNote instanceof _DefaultNote)
+				{
+
+					if (!defaultNote.WriteToStorage(this, true))
+					{
+						Toast.makeText(this, "Failed to duplicate note", Toast.LENGTH_SHORT).show();
+
+						continue;
+					}
+
+					this.noteList.add(i++ + 1, defaultNote);
+				}
+				else if (defaultNote instanceof TodoListNote)
+				{
+					TodoListNote todoListNote = (TodoListNote) defaultNote;
+					TodoListNote newTodoListNote = new TodoListNote(todoListNote);
+					newTodoListNote.setRandomId();
+
+					Helpers<TodoListNote> helpers_1 = new Helpers<>();
+					Helpers<ArrayList<TodoListNote>> helpers_2 = new Helpers<>();
+
+					ArrayList<TodoListNote> todoListNotes =
+							helpers_1.ReadFile(this, Constants.JSON_TODO_NOTE_NAME_FILE,
+									TodoListNote.class
+							);
+					todoListNotes.add(newTodoListNote);
+
+					String json = helpers_2.transferObjectToJson(todoListNotes);
+					boolean isWritten = helpers_2.WriteFile(this, Constants.JSON_TODO_NOTE_NAME_FILE, json);
+
+
+					if (!isWritten)
+					{
+						Toast.makeText(this, "Failed to duplicate note", Toast.LENGTH_SHORT).show();
+					}
+
+					this.noteList.add(i++ + 1, newTodoListNote);
+				}
+				else
+				{
 					Log.d("MainActivityTemp", "onNoteClick: Unknown Note");
 
 					Toast.makeText(this, "Note Type not Found", Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
+
+		this.SortNotes();
 
 		this.isEditing = false;
 		this.ChangeEditingLayout();
@@ -504,7 +586,9 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					{
 						Log.d("AttachableNoteViewHolderTemp", "Failed to write to storage");
 
-						Toast.makeText(MainActivity.this, "Failed to favorite the Note", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Failed to favorite the Note",
+								Toast.LENGTH_SHORT
+						).show();
 					}
 				}
 				else if (defaultNote instanceof TaskNote)
@@ -515,7 +599,9 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					{
 						Log.d("AttachableNoteViewHolderTemp", "Failed to write to storage");
 
-						Toast.makeText(MainActivity.this, "Failed to favorite the Note", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Failed to favorite the Note",
+								Toast.LENGTH_SHORT
+						).show();
 					}
 				}
 				else if (defaultNote instanceof PrivateNote)
@@ -526,7 +612,9 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					{
 						Log.d("PrivateNoteViewHolderTemp", "Failed to write to storage");
 
-						Toast.makeText(MainActivity.this, "Failed to favorite the Note", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Failed to favorite the Note",
+								Toast.LENGTH_SHORT
+						).show();
 					}
 				}
 				else if (defaultNote instanceof ReminderNote)
@@ -537,8 +625,58 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					{
 						Log.d("PrivateNoteViewHolderTemp", "Failed to write to storage");
 
-						Toast.makeText(MainActivity.this, "Failed to favorite the Note", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Failed to favorite the Note",
+								Toast.LENGTH_SHORT
+						).show();
 					}
+				}
+				else if (defaultNote instanceof _DefaultNote)
+				{
+					if (!defaultNote.WriteToStorage(MainActivity.this, false))
+					{
+						Log.d("DefaultNoteViewHolderTemp", "Failed to write to storage");
+
+						Toast.makeText(MainActivity.this, "Failed to favorite the Note",
+								Toast.LENGTH_SHORT
+						).show();
+					}
+				}
+				else if (defaultNote instanceof TodoListNote)
+				{
+					TodoListNote todoListNote = (TodoListNote) defaultNote;
+
+					Helpers<TodoListNote> helpers_1 = new Helpers<>();
+					Helpers<ArrayList<TodoListNote>> helpers_2 = new Helpers<>();
+
+					ArrayList<TodoListNote> todoListNotes =
+							helpers_1.ReadFile(this, Constants.JSON_TODO_NOTE_NAME_FILE,
+									TodoListNote.class
+							);
+					Log.d("favorite the Note", "onNoteFavorite: " + todoListNotes.size());
+					todoListNotes.forEach(todoListNote1 ->
+					{
+						if (todoListNote1.getId().equals(todoListNote.getId()))
+						{
+							Log.d("favorite the Note", "onNoteFavorite: ");
+							todoListNote1.setFavorite(todoListNote.isFavorite());
+						}
+					});
+
+					String json = helpers_2.transferObjectToJson(todoListNotes);
+					boolean isWritten = helpers_2.WriteFile(this, Constants.JSON_TODO_NOTE_NAME_FILE, json);
+
+					if (!isWritten)
+					{
+						Toast.makeText(MainActivity.this, "Failed to favorite the Note",
+								Toast.LENGTH_SHORT
+						).show();
+					}
+				}
+				else
+				{
+					Log.d("MainActivityTemp", "onNoteFav: Unknown Note");
+
+					Toast.makeText(this, "Note Type not Found", Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
@@ -546,7 +684,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		this.isEditing = false;
 		this.ChangeEditingLayout();
 
-		this.ReadFiles();
+		this.SortNotes();
 	}
 
 	private void ChangeEditingLayout()
@@ -651,12 +789,22 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 						this.noteList.add(reminderNote);
 					}
 				}
+				else if (noteName.contains("DefaultNote"))
+				{
+					_DefaultNote defaultNote = _DefaultNote.ReadFromStorage(this, file.getName());
+
+					if (defaultNote != null)
+					{
+						this.noteList.add(defaultNote);
+					}
+				}
 				else if (!noteName.contains("Note"))
 				{
 					//      is File even a Note?
 
 					Toast.makeText(this, "Note Type unidentified, can not Read " + noteName,
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT
+					).show();
 				}
 			}
 
@@ -664,11 +812,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			String sortType = this.preferenceManager.getString(Constants.SETTINGS_SORT_TYPE);
 
 			_DefaultNote.sortType =
-					_DefaultNote.SortType.valueOf(
-							sortType != null ?
-									sortType :
-									_DefaultNote.SortType.ByTitle.toString()
-					);
+					_DefaultNote.SortType.valueOf(sortType != null ? sortType : _DefaultNote.SortType.ByTitle.toString());
 
 			switch (_DefaultNote.sortType)
 			{
@@ -686,37 +830,52 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 					break;
 			}
-
-			//      Necessities
-			NoteComparator noteComparator = new NoteComparator();
-
-			NoteComparator.isReversed = this.isReversed;
-			NoteComparator.taskNoteSortToBottomOnCompletion = this.preferenceManager.getBoolean(
-					Constants.TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION
-			);
-			NoteComparator.taskNoteDeleteOnCompletion = this.preferenceManager.getBoolean(
-					Constants.TASK_NOTE_SETTINGS_DELETE_ON_COMPLETION
-			);
-
-			Collections.sort(this.noteList, noteComparator);
-
-			this.listAdapter.notifyDataSetChanged();
-			this.binding.noteRecyclerView.scrollToPosition(0);
 		}
 	}
 
-	private void ReadFilesByHelpers() {
+	private void ReadFilesByHelpers()
+	{
 		Helpers<TodoListNote> helpers = new Helpers<>();
 		ArrayList<TodoListNote> todoListNotes = helpers.ReadFile(this, Constants.JSON_TODO_NOTE_NAME_FILE, TodoListNote.class);
 
-		if (todoListNotes != null && todoListNotes.size() != 0) {
+		if (todoListNotes != null && todoListNotes.size() != 0)
+		{
 			//			todoListNotes.forEach(note -> Log.d("ReadFilesByHelpers",
 			//					"ReadFilesByHelpers: " + note.getTodoNotes().size()));
 
 			this.noteList.addAll(todoListNotes);
+			this.SortNotes();
+		}
+	}
 
-			this.listAdapter.notifyItemRangeInserted(0, this.noteList.size());
-			this.binding.noteRecyclerView.scrollToPosition(0);
+	private void SortNotes() {
+		//      Necessities
+		NoteComparator noteComparator = new NoteComparator();
+
+		Collections.sort(this.noteList, noteComparator);
+
+		this.listAdapter.notifyDataSetChanged();
+		this.binding.noteRecyclerView.scrollToPosition(0);
+	}
+
+	private void DeleteTodoListNoteById(UUID id)
+	{
+		Helpers<TodoListNote> helpers_1 = new Helpers<>();
+		Helpers<ArrayList<TodoListNote>> helpers_2 = new Helpers<>();
+		ArrayList<TodoListNote> todoListNotes = helpers_1.ReadFile(this, Constants.JSON_TODO_NOTE_NAME_FILE, TodoListNote.class);
+
+		if (todoListNotes != null && todoListNotes.size() != 0)
+		{
+			todoListNotes.removeIf(note -> note.getId().equals(id));
+
+			String json = helpers_2.transferObjectToJson(todoListNotes);
+			boolean isWritten = helpers_2.WriteFile(this, Constants.JSON_TODO_NOTE_NAME_FILE, json);
+
+			if (!isWritten)
+			{
+				Log.d("DeleteTodoListNoteById", "Failed to delete note");
+				Toast.makeText(MainActivity.this, "Failed to delete note", Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 

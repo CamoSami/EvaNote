@@ -123,6 +123,7 @@ public class TodoNoteActivity
     private void SetData() {
         Intent intent = this.getIntent();
         this.todoListNote = (TodoListNote) intent.getSerializableExtra(Constants.TODO_NOTE_KEY);
+
         this.isEditting = intent.getBooleanExtra(Constants.IS_TODO_NOTE_EDITING_KEY, false);
         this.isCreating = intent.getBooleanExtra(Constants.IS_TODO_NOTE_CREATING_KEY, false);
 

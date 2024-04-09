@@ -37,8 +37,13 @@ public class TodoNote extends _DefaultNote {
         this.isChecked = todoNote.isChecked;
         this.todoNotes = todoNote.getTodoNotes();
     }
+
     public UUID getId() {
         return id;
+    }
+
+    public void setRandomId() {
+        this.id = UUID.randomUUID();
     }
 
     public void setIsChecked(boolean isChecked) {

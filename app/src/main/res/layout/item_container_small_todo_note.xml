@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="@id/layoutAddNew"
         app:layout_constraintBottom_toBottomOf="@id/layoutAddNew" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutAddNew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,6 +29,17 @@
         app:layout_constraintStart_toEndOf="@id/noteCheckbox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iconFavoritedTodoNote"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/icon_favorited"
+            android:background="@android:color/transparent"
+            app:tint="?android:attr/textColorPrimaryInverse"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,32 +51,43 @@
             android:scrollY="@dimen/_2ssp"
             >
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_36sdp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@android:color/transparent"
-                android:gravity="center"
-                >
+                android:gravity="center">
+
                 <TextView
                     android:id="@+id/todoListTitle"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
                     android:text="Title todo list"
                     android:background="@android:color/transparent"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
+                    android:gravity="center_vertical"
                     android:textColor="?android:attr/textColorPrimaryInverse"
-                    android:textColorHint="?android:attr/textColorSecondaryInverse"/>
+                    android:textColorHint="?android:attr/textColorSecondaryInverse"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-<!--                <androidx.appcompat.widget.AppCompatImageView-->
-<!--                    android:id="@+id/todoListItemTrash"-->
-<!--                    android:layout_width="@dimen/_24sdp"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:src="@drawable/baseline_delete_24"/>-->
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/noteDateAndType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Time of Note"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
+                    android:textColorHint="?android:attr/textColorTertiaryInverse"
+                    android:background="@android:color/transparent"
+                    android:textSize="@dimen/_16ssp"
+                    android:textStyle="normal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/todoListTitle" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_todo_view"
@@ -75,6 +97,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,7 +29,11 @@ public class CreateNoteActivity extends AppCompatActivity
 	{
 		//  TODO: Các bạn tự bổ sung
 		this.binding.newDefaultNote.setOnClickListener(view -> {
-			Toast.makeText(this, "No Default Note yet", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this, DefaultNoteActivity.class);
+
+			startActivity(intent);
+
+			finish();
 		});
 
 		this.binding.newPrivateNote.setOnClickListener(view -> {

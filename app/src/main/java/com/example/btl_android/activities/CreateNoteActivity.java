@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.btl_android.databinding.ActivityCreateNoteBinding;
 import com.example.btl_android.utilities.Constants;
+import com.example.btl_android.utilities.PreferenceManager;
 
 public class CreateNoteActivity extends AppCompatActivity
 {
@@ -37,11 +38,22 @@ public class CreateNoteActivity extends AppCompatActivity
 		});
 
 		this.binding.newPrivateNote.setOnClickListener(view -> {
-			Intent intent = new Intent(this, EnterPassWordActivity.class);
+			if (new PreferenceManager(this).getString(Constants.PRIVATE_NOTE_PASSWORD) != null)
+			{
+				Intent intent = new Intent(this, EnterPassWordActivity.class);
 
-			startActivity(intent);
+				startActivity(intent);
 
-			finish();
+				finish();
+			}
+			else
+			{
+				Intent intent = new Intent(this, CreateOrChangePasswordActivity.class);
+
+				intent.putExtra("savePassWord","false");
+
+				startActivity(intent);
+			}
 		});
 
 		this.binding.newReminderNote.setOnClickListener(view -> {

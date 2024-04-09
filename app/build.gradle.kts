@@ -60,4 +60,7 @@ dependencies {
 
     //  ReminderNote?
     implementation("androidx.work:work-runtime:2.9.0")
+
+    //  Thư viện cung cấp API lấy sinh trắc học
+    implementation("androidx.biometric:biometric:1.1.0")
 }

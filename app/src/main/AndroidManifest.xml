@@ -31,6 +31,9 @@
         android:theme="@style/Theme.BTL_ANDROID"
         tools:targetApi="31">
         <activity
+            android:name=".activities.CreateOrChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.StartUpSettingsActivity"
             android:exported="false" />
         <activity

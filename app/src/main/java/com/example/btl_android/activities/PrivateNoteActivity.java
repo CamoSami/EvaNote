@@ -6,14 +6,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.btl_android.R;
 import com.example.btl_android.databinding.ActivityPrivateNoteBinding;
 import com.example.btl_android.models.PrivateNote;
+import com.example.btl_android.models._DefaultNote;
 import com.example.btl_android.utilities.Constants;
 import com.example.btl_android.utilities.PreferenceManager;
 
@@ -29,6 +34,7 @@ public class PrivateNoteActivity
     private Date dateCreated = null;
     private boolean isConfirmed = false;
     public static final int REQUEST_CODE_ADD_FILE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +43,7 @@ public class PrivateNoteActivity
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
+
         this.ReadToActivity(bundle);
         this.SetListeners();
     }
@@ -55,9 +62,11 @@ public class PrivateNoteActivity
         {
             PreferenceManager preferenceManager = new PreferenceManager(this);
             this.isEditing = preferenceManager.getBoolean(Constants.SETTINGS_NOTE_DEFAULT_IS_EDITING);
+
             //      If Edit
             String fileName = bundle.getString(Constants.BUNDLE_FILENAME_KEY);
             PrivateNote privateNote = PrivateNote.ReadFromStorage(this, fileName);
+
             this.fileName = fileName;
             this.binding.titleEditText.setText(privateNote.getTitle());
             this.binding.editTextText.setText(privateNote.getContent());
@@ -100,6 +109,70 @@ public class PrivateNoteActivity
         this.binding.editButton.setOnClickListener(view ->
         {
             this.SetEditing(!this.isEditing);
+        });
+        this.binding.settingsButton.setOnClickListener(view ->
+        {
+            PopupMenu popupMenu = new PopupMenu(view.getContext(), this.binding.settingsButton);
+
+            popupMenu.getMenuInflater().inflate(R.menu.menu_attachable_note, popupMenu.getMenu());
+
+            if (this.isFavorite)
+            {
+                popupMenu.getMenu().findItem(R.id.menuItemAddToFavorite).setTitle("Remove from Favorites");
+            }
+            else
+            {
+                popupMenu.getMenu().findItem(R.id.menuItemAddToFavorite).setTitle("Add to Favorites");
+            }
+
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+            {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem)
+                {
+                    int id = menuItem.getItemId();
+
+                    if (id == R.id.menuItemAddToFavorite)
+                    {
+                        PrivateNoteActivity.this.isFavorite = !PrivateNoteActivity.this.isFavorite;
+                    }
+                    else if (id == R.id.menuItemDelete)
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PrivateNoteActivity.this);
+
+                        builder.setTitle("Delete Confirmation");
+                        builder.setMessage("Are you sure you want to delete the Note?");
+
+                        builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (fileName == null) {
+                                    finish();
+
+                                    return;
+                                }
+
+                                if (_DefaultNote.DeleteFromStorage(PrivateNoteActivity.this, fileName)) {
+                                    PrivateNoteActivity.this.finish();
+                                }
+                                else {
+                                    Log.d("AttachableNoteActivityTemp", "FileName = " + fileName);
+
+                                    Toast.makeText(PrivateNoteActivity.this, "Failed to delete note", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        builder.setNegativeButton("Nah", null);
+
+                        builder.create().show();
+                    }
+                    return true;
+                }
+            });
+
+            // Showing the popup menu
+            popupMenu.show();
         });
     }
 

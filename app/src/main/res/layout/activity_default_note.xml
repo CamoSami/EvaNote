@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    tools:context=".activities.AttachableNoteActivity">
+    android:orientation="vertical"
+    tools:context=".activities.PrivateNoteActivity">
 
     <View
         android:id="@+id/titleBar"
@@ -21,7 +21,6 @@
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_back"
         app:tint="?android:attr/textColorPrimaryInverse"
-        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,13 +30,13 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/_8sdp"
         android:paddingBottom="@dimen/_8sdp"
-        android:text=""
         android:hint="@string/title_of_the_note"
         android:textSize="@dimen/_16ssp"
         android:textStyle="bold"
         android:textColor="?android:attr/textColorPrimaryInverse"
         android:textColorHint="?android:attr/textColorSecondaryInverse"
         android:background="@android:color/transparent"
+        android:text=""
         android:inputType="text"
         android:maxLines="1"
         android:ellipsize="end"
@@ -52,7 +51,6 @@
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_more"
         app:tint="?android:attr/textColorPrimaryInverse"
-        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,31 +61,27 @@
         android:padding="@dimen/_6sdp"
         android:src="@drawable/icon_edit"
         app:tint="?android:attr/textColorPrimaryInverse"
-        android:background="@android:color/transparent"
         app:layout_constraintEnd_toStartOf="@id/settingsButton"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_2sdp"
-        android:background="?android:attr/textColorTertiary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleBar" />
-
     <EditText
         android:id="@+id/etContent"
-        android:layout_width="407dp"
-        android:layout_height="190dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="478dp"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="Note's Content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:hint="Content of the Note..."
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textColorHint="?android:attr/textColorSecondaryInverse"
+        android:background="@android:color/transparent"
+        android:text=""
+        android:textSize="@dimen/_16ssp"
+        android:inputType="textMultiLine"
+        android:gravity="start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleBar" />
+        app:layout_constraintTop_toBottomOf="@+id/titleBar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

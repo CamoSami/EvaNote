@@ -72,5 +72,7 @@ public class Constants
 	public static final String IS_TODO_NOTE_EDITING_KEY = "isEditing";
 	public static final String IS_TODO_NOTE_CREATING_KEY = "isCreating";
 	//          PRIVATE NOTE
+	public static final String PRIVATE_NOTE_PASSWORD = "password";
+	//          REMINDER NOTE
 	public static final String CHANNEL_ID = "201";
 }

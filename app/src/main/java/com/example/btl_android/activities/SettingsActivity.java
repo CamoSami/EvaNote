@@ -353,7 +353,9 @@ public class SettingsActivity
 		//      Private Note
 		//          Reset Password
 		this.binding.privateNoteSettingsResetPassword.setOnClickListener(view -> {
-			//      TODO: Điền đây!
+			Intent intent = new Intent(SettingsActivity.this, CreateOrChangePasswordActivity.class);
+
+			startActivity(intent);
 		});
 
 		//      Task Note!

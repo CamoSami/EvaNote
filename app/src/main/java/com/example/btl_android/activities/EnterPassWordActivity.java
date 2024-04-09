@@ -1,21 +1,38 @@
 package com.example.btl_android.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.PopupMenu;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.impl.model.Preference;
 
+import com.example.btl_android.R;
 import com.example.btl_android.databinding.ActivityEnterPassWordBinding;
 import com.example.btl_android.utilities.Constants;
+import com.example.btl_android.utilities.PreferenceManager;
 
-public class EnterPassWordActivity extends AppCompatActivity
+import java.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+public class EnterPassWordActivity
+		extends AppCompatActivity
 {
     private ActivityEnterPassWordBinding binding;
-    private String pass = "";
+    private final static String TOKEN_KEY = "123456781234567812345678";
+
+    private String pass = "", oldPass;
     private String fileName = null;
 
     @Override protected void onCreate(Bundle savedInstanceState)
@@ -207,34 +224,85 @@ public class EnterPassWordActivity extends AppCompatActivity
             }
         });
 
-        this.binding.EPBtnDone.setOnClickListener(view ->
-        {
-            if (this.binding.EPEdtPassword.getText().toString().equals("123456"))
-            {
+        this.binding.EPBtnDone.setOnClickListener(view ->{
+            // Khởi tạo đối tượng SharedPreferences
+            PreferenceManager preferenceManager = new PreferenceManager(this);
+
+            // Lấy dữ liệu từ SharedPreferences
+            oldPass = preferenceManager.getString(Constants.PRIVATE_NOTE_PASSWORD);
+            oldPass = decrypt(oldPass);
+
+            if(oldPass.length() < 6){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Error")
+                        .setMessage("The file containning the password has been deleted. Please create a new password")
+                        .setPositiveButton("Update password", new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int whichButton)
+                            {
+                                Intent intent = new Intent(EnterPassWordActivity.this,
+                                        CreateOrChangePasswordActivity.class);
+                                startActivity(intent);
+                            }
+                        } );
+            }
+            if(this.binding.EPEdtPassword.getText().toString().equals(oldPass)){
                 Intent intent = new Intent(this, PrivateNoteActivity.class);
-
-                if (this.fileName != null)
-                {
-                    intent.putExtra(Constants.BUNDLE_FILENAME_KEY, this.fileName);
+                if (fileName != null) {
+                    intent.putExtra(Constants.BUNDLE_FILENAME_KEY,fileName);
                 }
-
                 startActivity(intent);
-
                 finish();
             }
-            else
-            {
+            else{
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Error");
-                builder.setMessage("Wrong Password");
+                builder.setMessage("Mật khẩu vừa nhập chưa đúng");
 
                 builder.setNegativeButton("OK", null);
 
                 builder.create().show(); //Dialog được tạo và hiện lên màn hình
-
-                this.pass = "";
-                this.binding.EPEdtPassword.setText("");
             }
         });
+        this.binding.settingsButton.setOnClickListener(view->{
+            PopupMenu popupMenu = new PopupMenu(view.getContext(), this.binding.settingsButton);
+
+            popupMenu.getMenuInflater().inflate(R.menu.menu_enter_pass_word, popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+            {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem)
+                {
+                    int id = menuItem.getItemId();
+
+                    if (id == R.id.menuItemForgetPassword)
+                    {
+                        Intent intent = new Intent(EnterPassWordActivity.this, CreateOrChangePasswordActivity.class);
+                        startActivity(intent);
+                    }
+
+                    return true;
+                }
+            });
+
+            // Showing the popup menu
+            popupMenu.show();
+        });
+    }
+    public static String decrypt(String encoded){
+        try{
+            // Base64.decode: Giải mã,
+            byte[] ivAndCipherText = Base64.decode(encoded,Base64.NO_WRAP); // Loại bỏ kí tự xuống dòng trong chuỗi
+            byte[] iv = Arrays.copyOfRange(ivAndCipherText, 0, 16);
+            byte[] cipherText = Arrays.copyOfRange(ivAndCipherText, 16, ivAndCipherText.length);
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(TOKEN_KEY.getBytes("utf-8"),
+                    "AES"),new IvParameterSpec(iv));
+            return new String (cipher.doFinal(cipherText), "utf-8");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

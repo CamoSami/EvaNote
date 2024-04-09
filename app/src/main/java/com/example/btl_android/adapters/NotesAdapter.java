@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.btl_android.R;
 import com.example.btl_android.databinding.ItemContainerSmallAttachableNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallPrivateNoteBinding;
+import com.example.btl_android.databinding.ItemContainerSmallReminderNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallTaskNoteBinding;
 import com.example.btl_android.databinding.ItemContainerSmallTodoNoteBinding;
 import com.example.btl_android.interfaces.NoteViewHolderInterface;
@@ -27,6 +28,7 @@ import com.example.btl_android.listeners.TaskNoteViewHolderListener;
 import com.example.btl_android.models.AttachableNote;
 import com.example.btl_android.models.AttachableNote_Container;
 import com.example.btl_android.models.PrivateNote;
+import com.example.btl_android.models.ReminderNote;
 import com.example.btl_android.models.TaskNote;
 import com.example.btl_android.models.TaskNote_SubTask;
 import com.example.btl_android.models.TodoListNote;
@@ -99,9 +101,18 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 					false
 			));
 		}
-		else if (viewType == Constants.PRIVATE_NOTE){
+		else if (viewType == Constants.PRIVATE_NOTE) {
 			return new PrivateNoteViewHolder(
 					ItemContainerSmallPrivateNoteBinding.inflate(
+							LayoutInflater.from(parent.getContext()),
+							parent,
+							false
+					)
+			);
+		}
+		else if (viewType == Constants.REMINDER_NOTE) {
+			return new ReminderNoteViewHolder(
+					ItemContainerSmallReminderNoteBinding.inflate(
 							LayoutInflater.from(parent.getContext()),
 							parent,
 							false
@@ -149,6 +160,13 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			privateNoteViewHolder.LoadSummarizedNote(this.notesList.get(position));
 			privateNoteViewHolder.SetListeners(this.notesList.get(position));
 		}
+		else if (getItemViewType(position) == Constants.REMINDER_NOTE)
+		{
+			ReminderNoteViewHolder reminderNoteViewHolder = (ReminderNoteViewHolder) holder;
+
+			reminderNoteViewHolder.LoadSummarizedNote(this.notesList.get(position));
+			reminderNoteViewHolder.SetListeners(this.notesList.get(position));
+		}
 	}
 
 	@Override
@@ -178,6 +196,10 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		else if (defaultNote.getClass() == PrivateNote.class)
 		{
 			return Constants.PRIVATE_NOTE;
+		}
+		else if (defaultNote.getClass() == ReminderNote.class)
+		{
+			return Constants.REMINDER_NOTE;
 		}
  		else
 		{
@@ -813,6 +835,164 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		}
 	}
 
+	public class ReminderNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface
+	{
+		private final ItemContainerSmallReminderNoteBinding binding;
+		private ReminderNote reminderNote;
+
+		public ReminderNoteViewHolder(ItemContainerSmallReminderNoteBinding itemContainerSmallReminderNoteBinding)
+		{
+			super(itemContainerSmallReminderNoteBinding.getRoot());
+
+			this.binding = itemContainerSmallReminderNoteBinding;
+		}
+
+		public void SetListeners(_DefaultNote defaultNote)
+		{
+			this.reminderNote = (ReminderNote) defaultNote;
+
+			if (NotesAdapter.this.isEditing)
+			{
+				//      Meh
+				this.binding.getRoot().setOnClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
+
+					this.reminderNote.setChecked(this.binding.noteCheckbox.isChecked());
+				});
+
+				//      Context Menu
+				this.binding.getRoot().setOnLongClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(!this.binding.noteCheckbox.isChecked());
+
+					this.reminderNote.setChecked(this.binding.noteCheckbox.isChecked());
+
+					return false;
+				});
+			}
+			else
+			{
+				//      Meh
+				this.binding.getRoot().setOnClickListener(view ->
+				{
+					noteListener.onNoteClick(NotesAdapter.this.notesList.indexOf(defaultNote));
+				});
+
+				//      Context Menu
+				this.binding.getRoot().setOnLongClickListener(view ->
+				{
+					this.binding.noteCheckbox.setChecked(true);
+					defaultNote.setChecked(true);
+
+					noteListener.onNoteLongClick();
+
+					return false;
+				});
+			}
+		}
+
+		public void LoadSummarizedNote(_DefaultNote defaultNote)
+		{
+			//      Conversion / Initiate
+			this.reminderNote = (ReminderNote) defaultNote;
+
+			TypedValue typedValueSecondary = new TypedValue(), typedValuePrimary = new TypedValue();
+			Resources.Theme theme = context.getTheme();
+			theme.resolveAttribute(
+					com.google.android.material.R.attr.colorOnPrimary,
+					typedValuePrimary,
+					true
+			);
+			theme.resolveAttribute(
+					com.google.android.material.R.attr.colorOnSecondary,
+					typedValueSecondary,
+					true
+			);
+
+			//      If Editing
+			if (NotesAdapter.this.isEditing)
+			{
+				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+						(
+								0,
+								ConstraintLayout.LayoutParams.WRAP_CONTENT
+						);
+				layoutParams.startToEnd = R.id.noteCheckbox;
+				layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+
+				this.binding.layoutAddNew.setLayoutParams(layoutParams);
+			}
+			else
+			{
+				this.binding.noteCheckbox.setChecked(false);
+				defaultNote.setChecked(false);
+
+				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+						ConstraintLayout.LayoutParams.MATCH_PARENT,
+						ConstraintLayout.LayoutParams.WRAP_CONTENT
+				);
+				layoutParams.startToEnd = R.id.noteCheckbox;
+				layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+				layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+
+				this.binding.layoutAddNew.setLayoutParams(layoutParams);
+			}
+
+			//      Get Favoritism
+			boolean isFavorite = defaultNote.isFavorite();
+
+			if (isFavorite)
+			{
+				this.binding.iconFavorited.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				this.binding.iconFavorited.setVisibility(View.GONE);
+			}
+
+			//      Get Title
+			String title = this.reminderNote.getTitle();
+			//			Log.d("NotesAdapter", "Title: " + title);
+
+			if (title.length() == 0)
+			{
+				this.binding.noteTitle.setText(null);
+				this.binding.noteTitle.setVisibility(View.GONE);
+			}
+			else
+			{
+				this.binding.noteTitle.setText(title);
+				this.binding.noteTitle.setVisibility(View.VISIBLE);
+			}
+
+			//      Date and Type (Use sometimes, down there)
+			String dateAndType = null;
+
+			//      Has Deadline...
+				dateAndType = NotesAdapter.GetShorterDate(this.reminderNote.getDateOfReminder()) +
+						" | " +
+						this.reminderNote.getClass().getSimpleName().replace("Note", "");
+
+				if (!Calendar.getInstance().getTime().after(this.reminderNote.getDateOfReminder()))
+				{
+					this.binding.noteDateAndType.setTextColor(ContextCompat.getColor(NotesAdapter.this.context, R.color.red));
+				}
+
+			this.binding.noteDateAndType.setText(dateAndType);
+			this.binding.noteDateAndType.setVisibility(View.VISIBLE);
+
+			//      Note Main Content
+			String content = this.reminderNote.getContent().substring(0, Math.min(100,
+					this.reminderNote.getContent().length()));
+
+			this.binding.noteContent.setText(content);
+		}
+	}
+
 	public class AttachableNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface
 	{
 		private final ItemContainerSmallAttachableNoteBinding binding;
@@ -987,7 +1167,8 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		}
 	}
 
-	public class PrivateNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface{
+	public class PrivateNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface
+	{
 		private final ItemContainerSmallPrivateNoteBinding binding;
 		public PrivateNoteViewHolder(ItemContainerSmallPrivateNoteBinding itemContainerSmallPrivateNoteBinding){
 			super(itemContainerSmallPrivateNoteBinding.getRoot());

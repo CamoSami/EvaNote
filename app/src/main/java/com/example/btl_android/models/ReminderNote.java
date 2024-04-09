@@ -52,7 +52,7 @@ public class ReminderNote
         this.repeatOfSnooze = repeat;
     }
 
-    public Date getTimeOfReminder()
+    public Date getDateOfReminder()
     {
         return timeOfReminder;
     }
@@ -114,7 +114,7 @@ public class ReminderNote
         map.put(Constants.JSON_DEFAULT_FAVORITE, String.valueOf(this.isFavorite()));
 
         map.put(Constants.JSON_REMINDER_NOTE_TIME_OF_REMINDER,
-                longDateFormat.format(this.getTimeOfReminder())
+                longDateFormat.format(this.getDateOfReminder())
         );
         map.put(Constants.JSON_REMINDER_NOTE_REPEAT_OF_SNOOZE,
                 String.valueOf(this.getRepeatOfSnooze())

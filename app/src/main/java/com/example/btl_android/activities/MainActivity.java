@@ -331,14 +331,25 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			intent.putExtra(Constants.BUNDLE_FILENAME_KEY, defaultNote.getFileName());
 
 			startActivity(intent);
-		}else if(defaultNote instanceof PrivateNote){
+		}
+		else if(defaultNote instanceof PrivateNote)
+		{
 			Intent intent = new Intent(this, EnterPassWordActivity.class);
 
 			intent.putExtra(Constants.BUNDLE_FILENAME_KEY, defaultNote.getFileName());
 
 			startActivity(intent);
 		}
-		else if (defaultNote instanceof TodoListNote) {
+		else if(defaultNote instanceof ReminderNote)
+		{
+			Intent intent = new Intent(this, ReminderNoteActivity.class);
+
+			intent.putExtra(Constants.BUNDLE_FILENAME_KEY, defaultNote.getFileName());
+
+			startActivity(intent);
+		}
+		else if (defaultNote instanceof TodoListNote)
+		{
 			Intent intent = new Intent(this, TodoNoteActivity.class);
 
 //			Log.d("TodoNote intent 1", "onCreate: " + defaultNote.getTitle());
@@ -629,6 +640,15 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					if (privateNote != null)
 					{
 						this.noteList.add(privateNote);
+					}
+				}
+				else if (noteName.contains("ReminderNote"))
+				{
+					ReminderNote reminderNote = ReminderNote.ReadFromStorage(this, file.getName());
+
+					if (reminderNote != null)
+					{
+						this.noteList.add(reminderNote);
 					}
 				}
 				else if (!noteName.contains("Note"))

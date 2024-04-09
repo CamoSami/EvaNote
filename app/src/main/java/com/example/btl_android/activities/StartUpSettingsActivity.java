@@ -38,6 +38,8 @@ public class StartUpSettingsActivity
 	private final int REQUEST_CODE_MANAGE_EXTERNAL_STORAGE = 0;
 	private final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 1;
 	private final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 2;
+	private final int REQUEST_CODE_POST_NOTIFICATIONS = 3;
+	private final int REQUEST_CODE_RECEIVE_BOOT_COMPLETED = 4;
 
 	@Override protected void onCreate(Bundle savedInstanceState)
 	{
@@ -85,11 +87,13 @@ public class StartUpSettingsActivity
 
 		//          Done Button
 		this.binding.doneButton.setOnClickListener(view -> {
-			boolean permissionGranted = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ?
-					this.CheckPermission(null) :
+			boolean permissionGranted = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ?
+					this.CheckPermission(null) &&
+							this.CheckPermission(Manifest.permission.POST_NOTIFICATIONS) :
 					this.CheckPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
 							this.CheckPermission(Manifest.permission.READ_EXTERNAL_STORAGE) &&
-							this.CheckPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE);
+							this.CheckPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE)) &&
+					this.CheckPermission(Manifest.permission.RECEIVE_BOOT_COMPLETED);
 
 			boolean storageLocation = this.preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION) != null;
 
@@ -136,13 +140,43 @@ public class StartUpSettingsActivity
 		this.binding.generalSettingsRequestPermission.setOnClickListener(view -> {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
 			{
+				boolean allPermissionsGranted = true;
+
 				if (!this.CheckPermission(null))
 				{
+					allPermissionsGranted = false;
+
 					Intent getPermission = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
 
 					startActivity(getPermission);
 				}
-				else
+
+				if (!this.CheckPermission(Manifest.permission.POST_NOTIFICATIONS))
+				{
+					allPermissionsGranted = false;
+
+					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS},
+							REQUEST_CODE_POST_NOTIFICATIONS
+					);
+				}
+
+				if (!this.CheckPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE))
+				{
+					allPermissionsGranted = false;
+
+					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, REQUEST_CODE_MANAGE_EXTERNAL_STORAGE);
+				}
+
+				if (!this.CheckPermission(Manifest.permission.RECEIVE_BOOT_COMPLETED))
+				{
+					allPermissionsGranted = false;
+
+					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED},
+							REQUEST_CODE_RECEIVE_BOOT_COMPLETED
+					);
+				}
+
+				if (allPermissionsGranted)
 				{
 					Toast.makeText(this, "Permissions Already Granted", Toast.LENGTH_SHORT).show();
 				}
@@ -165,11 +199,13 @@ public class StartUpSettingsActivity
 					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_READ_EXTERNAL_STORAGE);
 				}
 
-				if (!this.CheckPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE))
+				if (!this.CheckPermission(Manifest.permission.RECEIVE_BOOT_COMPLETED))
 				{
 					allPermissionsGranted = false;
 
-					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, REQUEST_CODE_MANAGE_EXTERNAL_STORAGE);
+					ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED},
+							REQUEST_CODE_RECEIVE_BOOT_COMPLETED
+					);
 				}
 
 				if (allPermissionsGranted)
@@ -278,6 +314,28 @@ public class StartUpSettingsActivity
 			else
 			{
 				Toast.makeText(this, "MANAGE_EXTERNAL_STORAGE Permission Denied", Toast.LENGTH_SHORT).show();
+			}
+		}
+		else if (requestCode == REQUEST_CODE_POST_NOTIFICATIONS)
+		{
+			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+			{
+				Toast.makeText(this, "POST_NOTIFICATIONS Permission Granted", Toast.LENGTH_SHORT).show();
+			}
+			else
+			{
+				Toast.makeText(this, "POST_NOTIFICATIONS Permission Denied", Toast.LENGTH_SHORT).show();
+			}
+		}
+		else if (requestCode == REQUEST_CODE_RECEIVE_BOOT_COMPLETED)
+		{
+			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+			{
+				Toast.makeText(this, "RECEIVE_BOOT_COMPLETED Permission Granted", Toast.LENGTH_SHORT).show();
+			}
+			else
+			{
+				Toast.makeText(this, "RECEIVE_BOOT_COMPLETED Permission Denied", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

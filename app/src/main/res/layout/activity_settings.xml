@@ -352,7 +352,7 @@
                         android:id="@+id/privateNoteSettingsResetPasswordCurrent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Reset the current set Password\n\n(Can't do anything if you forget your old password though xd)"
+                        android:text="Reset the current Password"
                         android:textColor="?android:attr/textColorSecondaryInverse"
                         android:textSize="@dimen/_14ssp"
                         app:layout_constraintStart_toStartOf="parent"

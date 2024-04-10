@@ -53,6 +53,8 @@ public class CreateNoteActivity extends AppCompatActivity
 				intent.putExtra("savePassWord","false");
 
 				startActivity(intent);
+
+				finish();
 			}
 		});
 

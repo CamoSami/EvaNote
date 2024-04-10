@@ -26,6 +26,7 @@ import com.example.btl_android.databinding.ItemContainerSmallTodoNoteBinding;
 import com.example.btl_android.interfaces.NoteViewHolderInterface;
 import com.example.btl_android.listeners.NoteListener;
 import com.example.btl_android.listeners.TaskNoteViewHolderListener;
+import com.example.btl_android.listeners.TodoNoteViewHolderListener;
 import com.example.btl_android.models.AttachableNote;
 import com.example.btl_android.models.AttachableNote_Container;
 import com.example.btl_android.models.PrivateNote;
@@ -315,7 +316,8 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 	//          + implement NoteViewHolderInterface
 	//          + Tham khảo AttachableNoteViewHolder
 
-	public class TodoNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface
+	public class TodoNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface,
+			TodoNoteViewHolderListener
 	{
 		private final ItemContainerSmallTodoNoteBinding binding;
 		private ArrayList<TodoNote> todoNoteList = new ArrayList<>();
@@ -386,14 +388,16 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 			this.binding.todoListTitle.setText(todoListNote.getTitle());
 
-			this.todoNoteList = todoListNote.getTodoNotes();
+			this.todoNoteList = (ArrayList<TodoNote>) todoListNote.getTodoNotes().clone();
+			this.todoNoteList.remove(this.todoNoteList.size() - 1);
 			this.todoNoteAdapter = new TodoNoteAdapter(
 					this.todoNoteList,
 					new TodoListNoteAdapter(
 							new ArrayList<>()
 					),
 					todoListNote,
-					false
+					false,
+					this
 			);
 			this.binding.recyclerTodoView.setAdapter(this.todoNoteAdapter);
 			this.binding.recyclerTodoView.setLayoutManager(new LinearLayoutManager(NotesAdapter.this.context));
@@ -451,6 +455,11 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				this.binding.iconFavoritedTodoNote.setVisibility(View.GONE);
 			}
 		}
+
+		@Override
+		public void onTodoNoteChanged() {
+			NotesAdapter.this.noteListener.SortNotes();
+		}
 	}
 
 	public class TaskNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface,
@@ -482,7 +491,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 					true
 			);
 
-			if (!taskNote.isChecked())
+			if (!taskNote.isDone())
 			{
 				Toast.makeText(NotesAdapter.this.context,
 						"Repeating the TaskNote canceled...",
@@ -620,14 +629,14 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 						if (NotesAdapter.this.preferenceManager.getBoolean(Constants.TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION))
 						{
-							NotesAdapter.this.noteListener.ReadFiles();
+							NotesAdapter.this.noteListener.SortNotes();
 						}
 					}
 					else if (this.taskNote.IsRepeatable())
 					{
 						//      Check TaskNote, but is Repeatable
 						Toast.makeText(NotesAdapter.this.context,
-								"Note has been completed! Preparing to repeat the TaskNote...",
+								"Note has been completed! Preparing to repeat the Task...",
 								Toast.LENGTH_SHORT
 						).show();
 
@@ -686,7 +695,7 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 							if (NotesAdapter.this.preferenceManager.getBoolean(Constants.TASK_NOTE_SETTINGS_SORT_TO_BOTTOM_ON_COMPLETION))
 							{
-								NotesAdapter.this.noteListener.ReadFiles();
+								NotesAdapter.this.noteListener.SortNotes();
 							}
 						}
 					}
@@ -1003,6 +1012,10 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				this.binding.iconFavorited.setVisibility(View.GONE);
 			}
 
+			this.binding.iconRepeatable.setVisibility(
+					this.reminderNote.getRepeatOfSnooze() ? View.VISIBLE : View.GONE
+			);
+
 			//      Get Title
 			String title = this.reminderNote.getTitle();
 			//			Log.d("NotesAdapter", "Title: " + title);
@@ -1022,7 +1035,8 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			String dateAndType = null;
 
 			//      Has Deadline...
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy",
+					Locale.getDefault());
 			dateAndType = dateFormat.format(this.reminderNote.getDateOfReminder()) + " | " +
 					this.reminderNote.getClass().getSimpleName().replace("Note", "");
 

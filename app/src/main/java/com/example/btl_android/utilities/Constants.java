@@ -73,5 +73,6 @@ public class Constants
 	//          PRIVATE NOTE
 	public static final String PRIVATE_NOTE_PASSWORD = "password";
 	//          REMINDER NOTE
-	public static final String CHANNEL_ID = "201";
+	public static final String REMINDER_NOTE_KEY = "reminderNote";
+	public static final String REMINDER_NOTE_CHANNEL_ID = "201";
 }

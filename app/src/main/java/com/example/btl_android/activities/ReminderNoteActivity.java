@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.btl_android.databinding.ActivityReminderNoteBinding;
 import com.example.btl_android.models.ReminderNote;
+import com.example.btl_android.models._DefaultNote;
 import com.example.btl_android.utilities.AlarmReceiver;
 import com.example.btl_android.utilities.Constants;
 
@@ -31,20 +33,20 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ReminderNoteActivity
-		extends AppCompatActivity {
+		extends AppCompatActivity
+{
     private ActivityReminderNoteBinding binding;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     private boolean isFavorite = false;
     private String fileName = null;
     private Date dateCreated = null;
-    private ReminderNote reminderNoteAfterSave = null;
     private final Calendar alarmTime = Calendar.getInstance();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState){
+    @Override protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-//        Log.d("TAG", "onCreate: ");
+        //        Log.d("TAG", "onCreate: ");
 
         this.binding = ActivityReminderNoteBinding.inflate(getLayoutInflater());
         setContentView(this.binding.getRoot());
@@ -52,7 +54,7 @@ public class ReminderNoteActivity
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
 
-        alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        this.alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         this.SetListeners();
         this.ReadToActivity(bundle);
@@ -64,12 +66,14 @@ public class ReminderNoteActivity
         {
             @Override public void onClick(View v)
             {
-                if (ReminderNoteActivity.this.SaveNote(v)) {
+                if (ReminderNoteActivity.this.SaveNote(v))
+                {
                     ReminderNoteActivity.this.SetAlarmListener();
 
                     ReminderNoteActivity.this.finish();
                 }
-                else {
+                else
+                {
                     AlertDialog.Builder builder =
                             new AlertDialog.Builder(ReminderNoteActivity.this);
 
@@ -78,34 +82,9 @@ public class ReminderNoteActivity
 
                     builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
                     {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
+                        @Override public void onClick(DialogInterface dialog, int which)
                         {
-                            try
-                            {
-                                Intent intent = new Intent(ReminderNoteActivity.this, AlarmReceiver.class);
-
-                                intent.setAction("Calender");
-                                intent.putExtra(Constants.BUNDLE_FILENAME_KEY,
-                                        ReminderNoteActivity.this.reminderNoteAfterSave.getFileName());
-
-                                PendingIntent sender =
-                                        PendingIntent.getBroadcast(ReminderNoteActivity.this, 0, intent,
-                                                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
-                                        );
-
-                                alarmManager.cancel(sender);
-
-                                Toast.makeText(ReminderNoteActivity.this, "Calendar reset!",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
-                            catch (Exception e)
-                            {
-                                Toast.makeText(ReminderNoteActivity.this, "Calendar reset failed!",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
+                            ReminderNoteActivity.this.ResetReminder();
 
                             finish();
                         }
@@ -114,8 +93,6 @@ public class ReminderNoteActivity
                     builder.setNegativeButton("Nah", null);
 
                     builder.create().show();
-
-                    return;
                 }
             }
         });
@@ -126,22 +103,7 @@ public class ReminderNoteActivity
             {
                 try
                 {
-                    Intent intent = new Intent(ReminderNoteActivity.this, AlarmReceiver.class);
-
-                    intent.setAction("Calender");
-                    intent.putExtra(Constants.BUNDLE_FILENAME_KEY,
-                            ReminderNoteActivity.this.reminderNoteAfterSave.getFileName());
-
-                    PendingIntent sender =
-                            PendingIntent.getBroadcast(ReminderNoteActivity.this, 0, intent,
-                                    PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
-                            );
-
-                    alarmManager.cancel(sender);
-
-                    Toast.makeText(ReminderNoteActivity.this, "Calendar reset!",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    ReminderNoteActivity.this.ResetReminder();
                 }
                 catch (Exception e)
                 {
@@ -156,44 +118,20 @@ public class ReminderNoteActivity
         {
             @Override public void onClick(View v)
             {
-                if (ReminderNoteActivity.this.SaveNote(v)) {
+                if (ReminderNoteActivity.this.SaveNote(v))
+                {
                     AlertDialog.Builder builder =
                             new AlertDialog.Builder(ReminderNoteActivity.this);
 
                     builder.setTitle("Alarm not active");
-                    builder.setMessage("Note is saved but alarm is not up, do you still want to " +
-                            "leave?");
+                    builder.setMessage(
+                            "Note is saved but alarm is not up, do you still want to " + "leave?");
 
                     builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
                     {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
+                        @Override public void onClick(DialogInterface dialog, int which)
                         {
-                            try
-                            {
-                                Intent intent = new Intent(ReminderNoteActivity.this, AlarmReceiver.class);
-
-                                intent.setAction("Calender");
-                                intent.putExtra(Constants.BUNDLE_FILENAME_KEY,
-                                        ReminderNoteActivity.this.reminderNoteAfterSave.getFileName());
-
-                                PendingIntent sender =
-                                        PendingIntent.getBroadcast(ReminderNoteActivity.this, 0, intent,
-                                                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
-                                        );
-
-                                alarmManager.cancel(sender);
-
-                                Toast.makeText(ReminderNoteActivity.this, "Calendar reset!",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
-                            catch (Exception e)
-                            {
-                                Toast.makeText(ReminderNoteActivity.this, "Calendar reset failed!",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
+                            ReminderNoteActivity.this.ResetReminder();
 
                             finish();
                         }
@@ -202,10 +140,9 @@ public class ReminderNoteActivity
                     builder.setNegativeButton("Nah", null);
 
                     builder.create().show();
-
-                    return;
                 }
-                else {
+                else
+                {
                     AlertDialog.Builder builder =
                             new AlertDialog.Builder(ReminderNoteActivity.this);
 
@@ -214,35 +151,9 @@ public class ReminderNoteActivity
 
                     builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
                     {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
+                        @Override public void onClick(DialogInterface dialog, int which)
                         {
-                            try
-                            {
-                                Intent intent = new Intent(ReminderNoteActivity.this, AlarmReceiver.class);
-
-                                intent.setAction("Calender");
-                                intent.putExtra(Constants.BUNDLE_FILENAME_KEY,
-                                        ReminderNoteActivity.this.reminderNoteAfterSave.getFileName());
-
-                                PendingIntent sender =
-                                        PendingIntent.getBroadcast(ReminderNoteActivity.this, 0, intent,
-                                                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
-                                        );
-
-                                alarmManager.cancel(sender);
-
-                                Toast.makeText(ReminderNoteActivity.this, "Reminder is canceled!",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
-                            catch (Exception e)
-                            {
-                                Toast.makeText(ReminderNoteActivity.this, "Canceling Reminder " +
-                                                "failed!",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
+                            ReminderNoteActivity.this.ResetReminder();
 
                             finish();
                         }
@@ -251,8 +162,6 @@ public class ReminderNoteActivity
                     builder.setNegativeButton("Nah", null);
 
                     builder.create().show();
-
-                    return;
                 }
             }
         });
@@ -282,12 +191,12 @@ public class ReminderNoteActivity
                 });
     }
 
-    @Override
-    public void onBackPressed()
+    @Override public void onBackPressed()
     {
         View view = new View(this);
 
-        if (this.SaveNote(view)) {
+        if (this.SaveNote(view))
+        {
             super.onBackPressed();
         }
         else
@@ -299,8 +208,7 @@ public class ReminderNoteActivity
 
             builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
             {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
+                @Override public void onClick(DialogInterface dialog, int which)
                 {
                     finish();
                 }
@@ -314,7 +222,8 @@ public class ReminderNoteActivity
         }
     }
 
-    private void ReadToActivity(Bundle bundle) {
+    private void ReadToActivity(Bundle bundle)
+    {
         if (bundle == null)
         {
             //      If New
@@ -341,7 +250,8 @@ public class ReminderNoteActivity
             ReminderNote reminderNote = ReminderNote.ReadFromStorage(this, fileName);
 
             this.fileName = fileName;
-            this.binding.txbTitle.setText(reminderNote.getTitle() == null ? "" : reminderNote.getTitle());
+            this.binding.txbTitle.setText(
+                    reminderNote.getTitle() == null ? "" : reminderNote.getTitle());
             this.binding.txbContent.setText(reminderNote.getContent());
             this.isFavorite = reminderNote.isFavorite();
             this.dateCreated = reminderNote.getDateCreated();
@@ -387,6 +297,66 @@ public class ReminderNoteActivity
         return true;
     }
 
+    public void btnDay_click(View view)
+    {
+        Calendar calendar = Calendar.getInstance();
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        alarmTime.set(Calendar.DATE, day);
+        alarmTime.set(Calendar.MONTH, month);
+        alarmTime.set(Calendar.YEAR, year);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener()
+        {
+                    @SuppressLint("DefaultLocale") @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
+                    {
+                        alarmTime.set(Calendar.DATE, dayOfMonth);
+                        alarmTime.set(Calendar.MONTH, month);
+                        alarmTime.set(Calendar.YEAR, year);
+
+                        ReminderNoteActivity.this.binding.btnDate.setText(
+                                String.format("%d/%d/%d", dayOfMonth, month + 1, year));
+
+                        //                        Toast.makeText(ReminderNoteActivity.this,
+                        //                                String.format("Selected day %d/%d/%d", dayOfMonth, month, year),
+                        //                                Toast.LENGTH_SHORT).show();
+                    }
+                }, year, month, day);
+
+        datePickerDialog.show();
+    }
+
+    public void btnTime_click(View view)
+    {
+        Calendar calendar = Calendar.getInstance();
+
+        int hour = calendar.get(Calendar.HOUR);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener()
+        {
+                    @SuppressLint("DefaultLocale") @Override
+                    public void onTimeSet(TimePicker view, int hour, int minute)
+                    {
+                        alarmTime.set(Calendar.MINUTE, minute);
+                        alarmTime.set(Calendar.HOUR, hour);
+
+                        ReminderNoteActivity.this.binding.btnTime.setText(
+                                String.format("%d:%d", hour, minute));
+
+                        //                        Toast.makeText(ReminderNoteActivity.this,
+                        //                                String.format("Selected time %d:%d", hour, minute),
+                        //                                Toast.LENGTH_SHORT).show();
+                    }
+                }, hour, minute, true);
+
+        timePickerDialog.show();
+    }
+
     private void SetAlarmListener()
     {
         Calendar calendar = Calendar.getInstance();
@@ -421,23 +391,29 @@ public class ReminderNoteActivity
         String sSnooze = this.binding.txbSnooze.getText().toString();
         int snooze = sSnooze.equals("") ? 1 : (Integer.parseInt(sSnooze) <= 0 ? 1 : Integer.parseInt(sSnooze));
 
+        if (this.fileName == null)
+        {
+            this.SaveNote(this.binding.txbTitle);
+        }
+
         Intent intent = new Intent(this, AlarmReceiver.class);
 
-//        Log.d("IsChecker: ", String.valueOf(this.binding.swRepeat.isChecked()));
+        //        Log.d("IsChecker: ", String.valueOf(this.binding.swRepeat.isChecked()));
 
-        intent.setAction("Calender");
-        intent.putExtra(Constants.BUNDLE_FILENAME_KEY, this.reminderNoteAfterSave.getFileName());
+        intent.setAction(Constants.REMINDER_NOTE_KEY);
+        intent.putExtra(Constants.BUNDLE_FILENAME_KEY, this.fileName);
 
         pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_MUTABLE);
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_MUTABLE
+        );
 
-//        Log.d("alarmTime: ", alarmTime.getTime() + "");
-//        Log.d("isChecked(): ", this.binding.swRepeat.isChecked() + "");
+        //        Log.d("alarmTime: ", alarmTime.getTime() + "");
+        //        Log.d("isChecked(): ", this.binding.swRepeat.isChecked() + "");
 
 
         if (this.binding.swRepeat.isChecked())
         {
-//            Log.d("alarmTime: ", "alarmTime.getTimeInMillis()");
+            //            Log.d("alarmTime: ", "alarmTime.getTimeInMillis()");
 
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(),
                     snooze * 1000L, pendingIntent
@@ -451,65 +427,45 @@ public class ReminderNoteActivity
         Toast.makeText(ReminderNoteActivity.this, "Set calender successfully!", Toast.LENGTH_SHORT).show();
     }
 
-    public void btnDay_click(View view){
-        Calendar calendar = Calendar.getInstance();
+    private void ResetReminder()
+    {
+        try
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+            {
+                alarmManager.cancelAll();
+            }
+            else
+            {
+                Intent intent = new Intent(this, AlarmReceiver.class);
 
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+                if (this.fileName == null || this.fileName.length() == 0)
+                {
+                    this.SaveNote(this.binding.txbTitle);
+                }
 
-        alarmTime.set(Calendar.DATE, day);
-        alarmTime.set(Calendar.MONTH, month);
-        alarmTime.set(Calendar.YEAR, year);
+                intent.setAction(Constants.REMINDER_NOTE_KEY);
+                intent.putExtra(Constants.BUNDLE_FILENAME_KEY, this.fileName);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @SuppressLint("DefaultLocale")
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        alarmTime.set(Calendar.DATE, dayOfMonth);
-                        alarmTime.set(Calendar.MONTH, month);
-                        alarmTime.set(Calendar.YEAR, year);
+                PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent,
+                        PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
+                );
 
-                        ReminderNoteActivity.this.binding.btnDate.setText(String.format("%d/%d/%d"
-                                , dayOfMonth, month + 1,
-                                year));
+                alarmManager.cancel(sender);
+            }
 
-//                        Toast.makeText(ReminderNoteActivity.this,
-//                                String.format("Selected day %d/%d/%d", dayOfMonth, month, year),
-//                                Toast.LENGTH_SHORT).show();
-                    }
-                }, year, month, day);
+            Toast.makeText(ReminderNoteActivity.this, "Calendar reset!", Toast.LENGTH_SHORT).show();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
 
-        datePickerDialog.show();
+            Toast.makeText(ReminderNoteActivity.this, "Calendar reset failed!", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public void btnTime_click(View view){
-        Calendar calendar = Calendar.getInstance();
-
-        int hour = calendar.get(Calendar.HOUR);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @SuppressLint("DefaultLocale")
-                    @Override
-                    public void onTimeSet(TimePicker view, int hour, int minute) {
-                        alarmTime.set(Calendar.MINUTE, minute);
-                        alarmTime.set(Calendar.HOUR, hour);
-
-                        ReminderNoteActivity.this.binding.btnTime.setText(String.format("%d:%d", hour, minute));
-
-//                        Toast.makeText(ReminderNoteActivity.this,
-//                                String.format("Selected time %d:%d", hour, minute),
-//                                Toast.LENGTH_SHORT).show();
-                    }
-                }, hour, minute, true);
-
-        timePickerDialog.show();
-    }
-
-    private boolean SaveNote(View view) {
+    private boolean SaveNote(View view)
+    {
         view.requestFocus();
 
         String dateFormat = "dd/MM/yyyy";
@@ -523,10 +479,8 @@ public class ReminderNoteActivity
             this.dateCreated = Calendar.getInstance().getTime();
         }
 
-        if (
-                this.binding.btnTime.getText().toString().equals("Pick Time") &&
-                this.binding.btnDate.getText().toString().equals("Pick Date")
-            )
+        if (this.binding.btnTime.getText().toString().equals("Pick Time") &&
+                this.binding.btnDate.getText().toString().equals("Pick Date"))
         {
             Toast.makeText(ReminderNoteActivity.this, "Please select time", Toast.LENGTH_SHORT).show();
 
@@ -573,27 +527,25 @@ public class ReminderNoteActivity
             }
         }
 
-        this.reminderNoteAfterSave = new ReminderNote(
-                this.fileName,
-                this.binding.txbTitle.getText().toString(),
-                this.dateCreated,
-                Calendar.getInstance().getTime(),
-                this.binding.txbContent.getText().toString(),
-                this.isFavorite,
-                calendarForAlarm.getTime(),
-                this.binding.txbSnooze.getText().toString().length() > 0 ?
-                        Integer.parseInt(this.binding.txbSnooze.getText().toString()) :
-                        0,
-                this.binding.swRepeat.isChecked()
-        );
+        ReminderNote reminderNote =
+                new ReminderNote(this.fileName, this.binding.txbTitle.getText().toString(), this.dateCreated,
+                        Calendar.getInstance().getTime(), this.binding.txbContent.getText().toString(),
+                        this.isFavorite, calendarForAlarm.getTime(),
+                        this.binding.txbSnooze.getText().toString().length() > 0 ?
+                                Integer.parseInt(this.binding.txbSnooze.getText().toString()) : 0,
+                        this.binding.swRepeat.isChecked()
+                );
+
+        this.fileName = reminderNote.getFileName();
 
         //      Not validated, just simply want to leave
-        if (!this.reminderNoteAfterSave.Validate()) {
+        if (!reminderNote.Validate())
+        {
             //			this.finish();
 
             return false;
         }
 
-        return this.reminderNoteAfterSave.WriteToStorage(this, false);
+        return reminderNote.WriteToStorage(this, false);
     }
 }

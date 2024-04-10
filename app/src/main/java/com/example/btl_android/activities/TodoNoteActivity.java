@@ -163,7 +163,7 @@ public class TodoNoteActivity
             this.binding.addNewTodoBtn.setVisibility(View.GONE);
         }
 
-        this.adapter.setEditting(this.isEditting);
+        this.adapter.setEditing(this.isEditting);
         this.adapter.notifyDataSetChanged();
     }
 

@@ -848,7 +848,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		}
 	}
 
-	private void SortNotes() {
+	public void SortNotes() {
 		//      Necessities
 		NoteComparator noteComparator = new NoteComparator();
 

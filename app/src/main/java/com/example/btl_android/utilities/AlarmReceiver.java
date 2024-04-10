@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -23,12 +22,11 @@ import java.util.Objects;
 public class AlarmReceiver
         extends BroadcastReceiver
 {
-
     @Override
     public void onReceive(Context context, Intent intent)
     {
 //        Log.d("oke", "Đây là Alarm");
-        if (Objects.equals(intent.getAction(), "Calender"))
+        if (Objects.equals(intent.getAction(), Constants.REMINDER_NOTE_KEY))
         {
             Bundle bundle = intent.getExtras();
             String fileName = bundle.getString(Constants.BUNDLE_FILENAME_KEY);
@@ -45,7 +43,7 @@ public class AlarmReceiver
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             {
-                NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID, "Chanel",
+                NotificationChannel channel = new NotificationChannel(Constants.REMINDER_NOTE_CHANNEL_ID, "Chanel",
                         NotificationManager.IMPORTANCE_HIGH
                 );
 
@@ -65,22 +63,23 @@ public class AlarmReceiver
                     context,
                     0,
                     notificationIntent,
-                    PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
+                    PendingIntent.FLAG_MUTABLE
             );
 
             NotificationCompat.Builder builder =
-                    new NotificationCompat.Builder(context, Constants.CHANNEL_ID)
+                    new NotificationCompat.Builder(context, Constants.REMINDER_NOTE_CHANNEL_ID)
                     .setContentTitle(reminderNote.getTitle() + ", " + reminderNote.getDateOfReminder())
                     .setContentText(reminderNote.getContent())
                     .setContentIntent(pendingIntent)
                     .setSmallIcon(R.drawable.baseline_notifications)
-                    .setCategory(NotificationCompat.CATEGORY_ALARM);
+                    .setCategory(NotificationCompat.CATEGORY_ALARM)
+                    .setAutoCancel(true);
 
-            notificationManager.notify(getNotificationid(), builder.build());
+            notificationManager.notify(getNotificationId(), builder.build());
         }
     }
 
-    private int getNotificationid()
+    private int getNotificationId()
     {
         int time = (int) new Date().getTime();
         return time;

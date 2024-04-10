@@ -889,7 +889,8 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		private final ItemContainerSmallReminderNoteBinding binding;
 		private ReminderNote reminderNote;
 
-		public ReminderNoteViewHolder(ItemContainerSmallReminderNoteBinding itemContainerSmallReminderNoteBinding)
+		public ReminderNoteViewHolder(ItemContainerSmallReminderNoteBinding itemContainerSmallReminderNoteBinding
+		)
 		{
 			super(itemContainerSmallReminderNoteBinding.getRoot());
 
@@ -953,25 +954,19 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 			TypedValue typedValueSecondary = new TypedValue(), typedValuePrimary = new TypedValue();
 			Resources.Theme theme = context.getTheme();
-			theme.resolveAttribute(
-					com.google.android.material.R.attr.colorOnPrimary,
-					typedValuePrimary,
-					true
+			theme.resolveAttribute(com.google.android.material.R.attr.colorOnPrimary,
+					typedValuePrimary, true
 			);
-			theme.resolveAttribute(
-					com.google.android.material.R.attr.colorOnSecondary,
-					typedValueSecondary,
-					true
+			theme.resolveAttribute(com.google.android.material.R.attr.colorOnSecondary,
+					typedValueSecondary, true
 			);
 
 			//      If Editing
 			if (NotesAdapter.this.isEditing)
 			{
-				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
-						(
-								0,
-								ConstraintLayout.LayoutParams.WRAP_CONTENT
-						);
+				ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(0,
+						ConstraintLayout.LayoutParams.WRAP_CONTENT
+				);
 				layoutParams.startToEnd = R.id.noteCheckbox;
 				layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
 				layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
@@ -1027,21 +1022,17 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			String dateAndType = null;
 
 			//      Has Deadline...
-				dateAndType = NotesAdapter.GetShorterDate(this.reminderNote.getDateOfReminder()) +
-						" | " +
-						this.reminderNote.getClass().getSimpleName().replace("Note", "");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+			dateAndType = dateFormat.format(this.reminderNote.getDateOfReminder()) + " | " +
+					this.reminderNote.getClass().getSimpleName().replace("Note", "");
 
-				if (!Calendar.getInstance().getTime().after(this.reminderNote.getDateOfReminder()))
-				{
-					this.binding.noteDateAndType.setTextColor(ContextCompat.getColor(NotesAdapter.this.context, R.color.red));
-				}
 
 			this.binding.noteDateAndType.setText(dateAndType);
 			this.binding.noteDateAndType.setVisibility(View.VISIBLE);
 
 			//      Note Main Content
-			String content = this.reminderNote.getContent().substring(0, Math.min(100,
-					this.reminderNote.getContent().length()));
+			String content = this.reminderNote.getContent()
+					.substring(0, Math.min(100, this.reminderNote.getContent().length()));
 
 			this.binding.noteContent.setText(content);
 		}

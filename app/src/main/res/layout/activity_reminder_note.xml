@@ -78,7 +78,7 @@
         android:layout_width="362dp"
         android:layout_height="79dp"
         android:layout_marginTop="8dp"
-        android:gravity="center"
+        android:gravity="left"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,6 +91,7 @@
             android:layout_height="wrap_content"
             android:focusedSearchResultHighlightColor="@color/design_default_color_secondary"
             android:layoutDirection="rtl"
+            android:layout_gravity="center"
             android:textColor="?android:attr/textColorPrimaryInverse"
             android:textColorHint="?android:attr/textColorSecondaryInverse"
             android:background="@android:color/transparent"
@@ -99,28 +100,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="124dp"
             android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txbNumber"
-                android:layout_width="105dp"
-                android:layout_height="52dp"
-                android:text=""
-                android:textColor="?android:attr/textColorPrimaryInverse"
-                android:textColorHint="?android:attr/textColorSecondaryInverse"
-                android:background="@android:color/transparent"
-                android:hint="Number"
-                android:inputType="numberDecimal" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="124dp"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+            android:layout_gravity="center">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txbSnooze"

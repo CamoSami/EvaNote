@@ -85,20 +85,24 @@ public class ReminderNoteActivity
                             {
                                 Intent intent = new Intent(ReminderNoteActivity.this, AlarmReceiver.class);
 
+                                intent.setAction("Calender");
+                                intent.putExtra(Constants.BUNDLE_FILENAME_KEY,
+                                        ReminderNoteActivity.this.reminderNoteAfterSave.getFileName());
+
                                 PendingIntent sender =
                                         PendingIntent.getBroadcast(ReminderNoteActivity.this, 0, intent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT
+                                                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
                                         );
 
                                 alarmManager.cancel(sender);
 
-                                Toast.makeText(ReminderNoteActivity.this, "Đã dừng các lịch đã đặt!",
+                                Toast.makeText(ReminderNoteActivity.this, "Calendar reset!",
                                         Toast.LENGTH_SHORT
                                 ).show();
                             }
                             catch (Exception e)
                             {
-                                Toast.makeText(ReminderNoteActivity.this, "Chưa lịch đặt!",
+                                Toast.makeText(ReminderNoteActivity.this, "Calendar reset failed!",
                                         Toast.LENGTH_SHORT
                                 ).show();
                             }
@@ -120,26 +124,31 @@ public class ReminderNoteActivity
         {
             @Override public void onClick(View v)
             {
-                try{
+                try
+                {
                     Intent intent = new Intent(ReminderNoteActivity.this, AlarmReceiver.class);
+
+                    intent.setAction("Calender");
+                    intent.putExtra(Constants.BUNDLE_FILENAME_KEY,
+                            ReminderNoteActivity.this.reminderNoteAfterSave.getFileName());
 
                     PendingIntent sender =
                             PendingIntent.getBroadcast(ReminderNoteActivity.this, 0, intent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT
+                                    PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
                             );
 
                     alarmManager.cancel(sender);
 
-                    Toast.makeText(ReminderNoteActivity.this, "Đã dừng các lịch đã đặt!",
+                    Toast.makeText(ReminderNoteActivity.this, "Calendar reset!",
                             Toast.LENGTH_SHORT
                     ).show();
                 }
-                catch (Exception e){
-                    Toast.makeText(ReminderNoteActivity.this, "Chưa lịch đặt!",
+                catch (Exception e)
+                {
+                    Toast.makeText(ReminderNoteActivity.this, "Calendar reset failed!",
                             Toast.LENGTH_SHORT
                     ).show();
                 }
-
             }
         });
 
@@ -164,20 +173,24 @@ public class ReminderNoteActivity
                             {
                                 Intent intent = new Intent(ReminderNoteActivity.this, AlarmReceiver.class);
 
+                                intent.setAction("Calender");
+                                intent.putExtra(Constants.BUNDLE_FILENAME_KEY,
+                                        ReminderNoteActivity.this.reminderNoteAfterSave.getFileName());
+
                                 PendingIntent sender =
                                         PendingIntent.getBroadcast(ReminderNoteActivity.this, 0, intent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT
+                                                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
                                         );
 
                                 alarmManager.cancel(sender);
 
-                                Toast.makeText(ReminderNoteActivity.this, "",
+                                Toast.makeText(ReminderNoteActivity.this, "Calendar reset!",
                                         Toast.LENGTH_SHORT
                                 ).show();
                             }
                             catch (Exception e)
                             {
-                                Toast.makeText(ReminderNoteActivity.this, "Calendar reseted",
+                                Toast.makeText(ReminderNoteActivity.this, "Calendar reset failed!",
                                         Toast.LENGTH_SHORT
                                 ).show();
                             }
@@ -208,20 +221,25 @@ public class ReminderNoteActivity
                             {
                                 Intent intent = new Intent(ReminderNoteActivity.this, AlarmReceiver.class);
 
+                                intent.setAction("Calender");
+                                intent.putExtra(Constants.BUNDLE_FILENAME_KEY,
+                                        ReminderNoteActivity.this.reminderNoteAfterSave.getFileName());
+
                                 PendingIntent sender =
                                         PendingIntent.getBroadcast(ReminderNoteActivity.this, 0, intent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT
+                                                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
                                         );
 
                                 alarmManager.cancel(sender);
 
-                                Toast.makeText(ReminderNoteActivity.this, "Đã dừng các lịch đã đặt!",
+                                Toast.makeText(ReminderNoteActivity.this, "Reminder is canceled!",
                                         Toast.LENGTH_SHORT
                                 ).show();
                             }
                             catch (Exception e)
                             {
-                                Toast.makeText(ReminderNoteActivity.this, "Chưa lịch đặt!",
+                                Toast.makeText(ReminderNoteActivity.this, "Canceling Reminder " +
+                                                "failed!",
                                         Toast.LENGTH_SHORT
                                 ).show();
                             }
@@ -323,13 +341,12 @@ public class ReminderNoteActivity
             ReminderNote reminderNote = ReminderNote.ReadFromStorage(this, fileName);
 
             this.fileName = fileName;
-            this.binding.txbTitle.setText(reminderNote.getTitle());
+            this.binding.txbTitle.setText(reminderNote.getTitle() == null ? "" : reminderNote.getTitle());
             this.binding.txbContent.setText(reminderNote.getContent());
             this.isFavorite = reminderNote.isFavorite();
             this.dateCreated = reminderNote.getDateCreated();
 
-            this.binding.txbNumber.setText(reminderNote.getMinutesEachSnooze() + "");
-            this.binding.txbSnooze.setText(reminderNote.getNumberOfSnoozes() + "");
+            this.binding.txbSnooze.setText(reminderNote.getMinutesEachSnooze() + "");
 
             Date tempDate = reminderNote.getDateOfReminder();
 
@@ -389,7 +406,7 @@ public class ReminderNoteActivity
         if (!Check(minute, hour, day, month, year))
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Notification").setMessage("Vui lòng chọn thời gian hợp lệ!")
+            builder.setTitle("Notification").setMessage("Please set time!")
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener()
                     {
                         @Override public void onClick(DialogInterface dialog, int which)
@@ -399,29 +416,6 @@ public class ReminderNoteActivity
             AlertDialog alert = builder.create();
             alert.show();
             return;
-        }
-
-        String sYear = String.valueOf(alarmTime.get(Calendar.YEAR));
-        String sMonth = String.valueOf(alarmTime.get(Calendar.MONTH));
-        String sDay = String.valueOf(alarmTime.get(Calendar.DATE));
-        String sHour = String.valueOf(alarmTime.get(Calendar.HOUR));
-        String sMinute = String.valueOf(alarmTime.get(Calendar.MINUTE));
-
-        if (alarmTime.get(Calendar.MONTH) < 10)
-        {
-            sMonth = "0" + sMonth;
-        }
-        if (alarmTime.get(Calendar.DATE) < 10)
-        {
-            sDay = "0" + sDay;
-        }
-        if (alarmTime.get(Calendar.HOUR) < 10)
-        {
-            sHour = "0" + sHour;
-        }
-        if (alarmTime.get(Calendar.MINUTE) < 10)
-        {
-            sMinute = "0" + sMinute;
         }
 
         String sSnooze = this.binding.txbSnooze.getText().toString();
@@ -434,7 +428,8 @@ public class ReminderNoteActivity
         intent.setAction("Calender");
         intent.putExtra(Constants.BUNDLE_FILENAME_KEY, this.reminderNoteAfterSave.getFileName());
 
-        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_MUTABLE);
 
 //        Log.d("alarmTime: ", alarmTime.getTime() + "");
 //        Log.d("isChecked(): ", this.binding.swRepeat.isChecked() + "");
@@ -477,12 +472,12 @@ public class ReminderNoteActivity
                         alarmTime.set(Calendar.YEAR, year);
 
                         ReminderNoteActivity.this.binding.btnDate.setText(String.format("%d/%d/%d"
-                                , dayOfMonth, month,
+                                , dayOfMonth, month + 1,
                                 year));
 
-                        Toast.makeText(ReminderNoteActivity.this,
-                                String.format("Selected day %d/%d/%d", dayOfMonth, month, year),
-                                Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ReminderNoteActivity.this,
+//                                String.format("Selected day %d/%d/%d", dayOfMonth, month, year),
+//                                Toast.LENGTH_SHORT).show();
                     }
                 }, year, month, day);
 
@@ -505,9 +500,9 @@ public class ReminderNoteActivity
 
                         ReminderNoteActivity.this.binding.btnTime.setText(String.format("%d:%d", hour, minute));
 
-                        Toast.makeText(ReminderNoteActivity.this,
-                                String.format("Selected time %d:%d", hour, minute),
-                                Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ReminderNoteActivity.this,
+//                                String.format("Selected time %d:%d", hour, minute),
+//                                Toast.LENGTH_SHORT).show();
                     }
                 }, hour, minute, true);
 
@@ -586,9 +581,6 @@ public class ReminderNoteActivity
                 this.binding.txbContent.getText().toString(),
                 this.isFavorite,
                 calendarForAlarm.getTime(),
-                this.binding.txbNumber.getText().toString().length() > 0 ?
-                        Integer.parseInt(this.binding.txbNumber.getText().toString()) :
-                        0,
                 this.binding.txbSnooze.getText().toString().length() > 0 ?
                         Integer.parseInt(this.binding.txbSnooze.getText().toString()) :
                         0,

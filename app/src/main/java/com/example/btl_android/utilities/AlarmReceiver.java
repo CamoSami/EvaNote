@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -33,7 +34,12 @@ public class AlarmReceiver
             String fileName = bundle.getString(Constants.BUNDLE_FILENAME_KEY);
 
             ReminderNote reminderNote = ReminderNote.ReadFromStorage(context, fileName);
-            assert reminderNote != null;
+            if (reminderNote == null)
+            {
+                Log.d("AlarmReceiver", "ReminderNote is null, filename: " + fileName);
+
+                return;
+            }
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -42,7 +48,9 @@ public class AlarmReceiver
                 NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID, "Chanel",
                         NotificationManager.IMPORTANCE_HIGH
                 );
+
                 channel.setDescription("DES");
+
                 notificationManager.createNotificationChannel(channel);
             }
 
@@ -57,7 +65,7 @@ public class AlarmReceiver
                     context,
                     0,
                     notificationIntent,
-                    PendingIntent.FLAG_MUTABLE
+                    PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
             );
 
             NotificationCompat.Builder builder =

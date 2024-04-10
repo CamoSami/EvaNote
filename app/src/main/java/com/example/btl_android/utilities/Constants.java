@@ -60,7 +60,6 @@ public class Constants
 	public static final String JSON_TASK_NOTE_SUB_TASKS_IS_DONE = "taskNoteSubTasksIsDone";
 	//			REMINDER NOTE
 	public static final String JSON_REMINDER_NOTE_TIME_OF_REMINDER = "timeOfReminder";
-	public static final String JSON_REMINDER_NOTE_NUMBER_OF_SNOOZES = "numberOfSnoozes";
 	public static final String JSON_REMINDER_NOTE_MINUTES_EACH_SNOOZE = "minutesEachSnooze";
 	public static final String JSON_REMINDER_NOTE_REPEAT_OF_SNOOZE = "repeatOfSnooze";
 	//          TO DO NOTE

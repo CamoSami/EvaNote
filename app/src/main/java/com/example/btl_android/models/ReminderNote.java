@@ -26,12 +26,7 @@ import java.util.regex.Pattern;
 public class ReminderNote
 		extends _DefaultNote
 {
-
-
-    //      Tuwj xoas
-
     private Date timeOfReminder;
-    private int numberOfSnoozes;
     private int minutesEachSnooze;
     private Boolean repeatOfSnooze;
 
@@ -41,13 +36,11 @@ public class ReminderNote
     }
 
     public ReminderNote(String fileName, String title, Date dateCreated, Date dateModified, String content,
-                        boolean isFavorite, Date time, int number, int snooze, boolean repeat
+                        boolean isFavorite, Date time, int snooze, boolean repeat
     )
     {
         super(fileName, title, dateCreated, dateModified, content, isFavorite);
-
         this.timeOfReminder = time;
-        this.numberOfSnoozes = number;
         this.minutesEachSnooze = snooze;
         this.repeatOfSnooze = repeat;
     }
@@ -60,16 +53,6 @@ public class ReminderNote
     public void setTimeOfReminder(Date timeOfReminder)
     {
         this.timeOfReminder = timeOfReminder;
-    }
-
-    public int getNumberOfSnoozes()
-    {
-        return numberOfSnoozes;
-    }
-
-    public void setNumberOfSnoozes(int numberOfSnoozes)
-    {
-        this.numberOfSnoozes = numberOfSnoozes;
     }
 
     public int getMinutesEachSnooze()
@@ -118,9 +101,6 @@ public class ReminderNote
         );
         map.put(Constants.JSON_REMINDER_NOTE_REPEAT_OF_SNOOZE,
                 String.valueOf(this.getRepeatOfSnooze())
-        );
-        map.put(Constants.JSON_REMINDER_NOTE_NUMBER_OF_SNOOZES,
-                String.valueOf(this.getNumberOfSnoozes())
         );
         map.put(Constants.JSON_REMINDER_NOTE_MINUTES_EACH_SNOOZE,
                 String.valueOf(this.getMinutesEachSnooze())
@@ -326,7 +306,6 @@ public class ReminderNote
 
             note.setTimeOfReminder(longDateFormat.parse(map.get(Constants.JSON_REMINDER_NOTE_TIME_OF_REMINDER)));
             note.setRepeatOfSnooze(Boolean.parseBoolean(map.get(Constants.JSON_REMINDER_NOTE_REPEAT_OF_SNOOZE)));
-            note.setNumberOfSnoozes(Integer.parseInt(map.get(Constants.JSON_REMINDER_NOTE_NUMBER_OF_SNOOZES)));
             note.setMinutesEachSnooze(Integer.parseInt(map.get(Constants.JSON_REMINDER_NOTE_MINUTES_EACH_SNOOZE)));
 
             return note;

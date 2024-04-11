@@ -6,8 +6,6 @@ import com.example.btl_android.models._DefaultNote;
 
 import java.util.Comparator;
 
-import javax.sql.CommonDataSource;
-
 public class NoteComparator implements Comparator<_DefaultNote>
 {
 	public static boolean isReversed = true;
@@ -74,11 +72,11 @@ public class NoteComparator implements Comparator<_DefaultNote>
 				TodoListNote todoListNote1 = (TodoListNote) o1;
 				TodoListNote todoListNote2 = (TodoListNote) o2;
 
-				if (todoListNote1.checkAllTodoChecked() && !todoListNote2.checkAllTodoChecked())
+				if (todoListNote1.checkAllTodoDone() && !todoListNote2.checkAllTodoDone())
 				{
 					return 1;
 				}
-				else if (!todoListNote1.checkAllTodoChecked() && todoListNote2.checkAllTodoChecked())
+				else if (!todoListNote1.checkAllTodoDone() && todoListNote2.checkAllTodoDone())
 				{
 					return -1;
 				}
@@ -87,7 +85,7 @@ public class NoteComparator implements Comparator<_DefaultNote>
 			{
 				TodoListNote todoListNote1 = (TodoListNote) o1;
 
-				if (todoListNote1.checkAllTodoChecked())
+				if (todoListNote1.checkAllTodoDone())
 				{
 					return 1;
 				}
@@ -96,7 +94,7 @@ public class NoteComparator implements Comparator<_DefaultNote>
 			{
 				TodoListNote todoListNote2 = (TodoListNote) o2;
 
-				if (todoListNote2.checkAllTodoChecked())
+				if (todoListNote2.checkAllTodoDone())
 				{
 					return -1;
 				}

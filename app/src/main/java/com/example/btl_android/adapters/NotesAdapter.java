@@ -457,8 +457,11 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 		}
 
 		@Override
-		public void onTodoNoteChanged() {
-			NotesAdapter.this.noteListener.SortNotes();
+		public void onTodoNoteChanged(TodoListNote todoListNote) {
+			if (todoListNote.isDone())
+			{
+				NotesAdapter.this.noteListener.SortNotes();
+			}
 		}
 	}
 

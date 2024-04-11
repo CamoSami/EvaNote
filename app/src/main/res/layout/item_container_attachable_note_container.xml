@@ -7,7 +7,7 @@
     <View
         android:id="@+id/containerView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_36sdp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_6sdp"
         android:layout_marginStart="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_12sdp"
@@ -40,7 +40,8 @@
     <TextView
         android:id="@+id/containerName"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_36sdp"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/_36sdp"
         android:layout_marginStart="@dimen/_40sdp"
         android:layout_marginEnd="@dimen/_4sdp"
         android:layout_marginBottom="@dimen/_8sdp"
@@ -52,8 +53,6 @@
         android:textColorHint="?android:attr/textColorSecondaryInverse"
         android:text=""
         android:background="@android:color/transparent"
-        android:maxLines="1"
-        android:ellipsize="end"
         android:gravity="center_vertical"
         app:layout_constraintStart_toStartOf="@id/containerView"
         app:layout_constraintTop_toTopOf="@id/containerView"
@@ -75,7 +74,7 @@
         android:textColorHint="?android:attr/textColorSecondaryInverse"
         android:text=""
         android:background="@android:color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/containerView"
+        app:layout_constraintTop_toBottomOf="@id/containerName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

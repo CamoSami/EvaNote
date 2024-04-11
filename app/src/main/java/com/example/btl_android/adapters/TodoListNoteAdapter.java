@@ -89,8 +89,8 @@ public class TodoListNoteAdapter extends RecyclerView.Adapter<TodoListNoteAdapte
             }
 
             // Set background if all todo is checked
-            Log.d("CheckAll", "SetData: " + todoListNote.checkAllTodoChecked());
-            if (todoListNote.checkAllTodoChecked())
+            Log.d("CheckAll", "SetData: " + todoListNote.checkAllTodoDone());
+            if (todoListNote.checkAllTodoDone())
             {
                 this.binding.todoListItem.setBackground(this.binding.getRoot().getContext().getDrawable(R.drawable.background_todolist_finished));
             }

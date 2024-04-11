@@ -11,8 +11,9 @@ public class TodoListNote extends TodoNote {
         super();
     }
 
-    public TodoListNote(String title) {
-        super(title);
+    public TodoListNote(String title, boolean isDone) {
+        super(title, isDone);
+
         this.dateCreated = new Date();
         this.dateModified = new Date();
         this.todoNotes = new ArrayList<>();
@@ -20,19 +21,20 @@ public class TodoListNote extends TodoNote {
 
     public TodoListNote(TodoListNote todoListNote) {
         super(todoListNote);
+
         this.dateCreated = todoListNote.dateCreated;
         this.dateModified = todoListNote.dateModified;
         this.todoNotes = todoListNote.todoNotes;
     }
 
-    public boolean checkAllTodoChecked() {
+    public boolean checkAllTodoDone() {
         Log.d("TodoNoteAdapter dddd", "isChecked: ");
         if(this.todoNotes.size() == 1 && this.todoNotes.get(0).getTitle().length() == 0) {
             return false;
         }
 
         for(TodoNote todoNote : this.todoNotes) {
-            if(!todoNote.isChecked && todoNote.getTitle().length() > 0) {
+            if(!todoNote.isDone() && todoNote.getTitle().length() > 0) {
                 return false;
             }
         }

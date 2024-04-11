@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public class TodoNote extends _DefaultNote {
     private UUID id;
+    private boolean isDone = false;
     public int layer = 1;
 
     public ArrayList<TodoNote> todoNotes;
@@ -17,24 +18,27 @@ public class TodoNote extends _DefaultNote {
         this.layer = layer;
     }
 
-    public TodoNote(String title) {
+    public TodoNote(String title, boolean isDone) {
         this.id = UUID.randomUUID();
         this.title = title;
-        this.isChecked = false;
+        this.isDone = isDone;
         this.todoNotes = new ArrayList<>();
     }
 
-    public TodoNote(String title, int layer) {
+    public TodoNote(String title, int layer, boolean isDone) {
         this.title = title;
+        this.isDone = isDone;
         this.layer = layer;
         this.todoNotes = new ArrayList<>();
     }
 
     public TodoNote(TodoNote todoNote) {
+        super(todoNote);
+
         this.id = todoNote.id;
         this.layer = todoNote.layer;
         this.title = todoNote.getTitle();
-        this.isChecked = todoNote.isChecked;
+        this.isDone = todoNote.isDone();
         this.todoNotes = todoNote.getTodoNotes();
     }
 
@@ -46,8 +50,11 @@ public class TodoNote extends _DefaultNote {
         this.id = UUID.randomUUID();
     }
 
-    public void setIsChecked(boolean isChecked) {
-        this.isChecked = isChecked;
+    public void setDone (boolean isDone) {
+        this.isDone = isDone;
+    }
+    public boolean isDone() {
+        return this.isDone;
     }
 
     public ArrayList<TodoNote> getTodoNotes() {

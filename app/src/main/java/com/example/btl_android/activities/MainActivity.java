@@ -242,7 +242,6 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					MainActivity.this.SortNotes();
 
 					MainActivity.this.listAdapter.notifyDataSetChanged();
-					MainActivity.this.binding.noteRecyclerView.scrollToPosition(0);
 				}
 
 				@Override public void onNothingSelected(AdapterView<?> parent)
@@ -724,7 +723,6 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			this.binding.noDirLayout.setVisibility(View.VISIBLE);
 
 			this.listAdapter.notifyDataSetChanged();
-			this.binding.noteRecyclerView.scrollToPosition(0);
 
 			return;
 		}
@@ -743,7 +741,6 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			this.binding.noNoteLayout.setVisibility(View.VISIBLE);
 
 			this.listAdapter.notifyDataSetChanged();
-			this.binding.noteRecyclerView.scrollToPosition(0);
 		}
 		else
 		{
@@ -855,7 +852,6 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		Collections.sort(this.noteList, noteComparator);
 
 		this.listAdapter.notifyDataSetChanged();
-		this.binding.noteRecyclerView.scrollToPosition(0);
 	}
 
 	private void DeleteTodoListNoteById(UUID id)

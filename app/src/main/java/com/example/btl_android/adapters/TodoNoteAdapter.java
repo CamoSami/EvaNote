@@ -101,7 +101,7 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
             Log.d("ReadFilesByHelpers", "TodoNoteViewHolder.SetData: ");
 
             this.binding.todoName.setText(item.getTitle());
-            this.binding.todoCheckBox.setChecked(item.isChecked());
+            this.binding.todoCheckBox.setChecked(item.isDone());
 
             this.recyclerSubTodoView.setVisibility(View.GONE);
 
@@ -133,7 +133,7 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
                 if (item.getTodoNotes().size() == 0 && item.layer == 1)
                 {
                     System.out.println("Add new item");
-                    TodoNote newTodoNote = new TodoNote("", 2);
+                    TodoNote newTodoNote = new TodoNote("", 2, false);
                     item.getTodoNotes().add(newTodoNote);
                 }
 
@@ -151,6 +151,7 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
 
                 return true;
             });
+
             this.binding.todoName.addTextChangedListener(new TextWatcher()
             {
                 @Override
@@ -170,7 +171,9 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
                     if (index == todoNotes.size() - 1 && item.getTitle().length() > 0)
                     {
                         System.out.println("Add new item");
-                        TodoNote newTodoNote = new TodoNote("", item.layer);
+
+                        TodoNote newTodoNote = new TodoNote("", item.layer, false);
+
                         todoNotes.add(newTodoNote);
                         adapter.notifyItemInserted(todoNotes.size() - 1);
                     }
@@ -182,24 +185,24 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
                 }
             });
 
-            this.binding.todoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) ->
+            this.binding.todoCheckBox.setOnCheckedChangeListener((buttonView, isDone) ->
             {
-                Log.d("Checked---", "SetListener: ");
+//                Log.d("Checked---", "SetListener: ");
 
-                if (isChecked)
+                if (isDone)
                 {
-                    item.setChecked(true);
+                    item.setDone(true);
                 }
                 else
                 {
-                    item.setChecked(false);
+                    item.setDone(false);
                 }
 
                 if (item.layer == 1)
                 {
-                    if (TodoNoteAdapter.this.todoListNoteCurrent.checkAllTodoChecked())
+                    if (TodoNoteAdapter.this.todoListNoteCurrent.checkAllTodoDone())
                     {
-                        TodoNoteAdapter.this.todoListNoteCurrent.setChecked(true);
+                        TodoNoteAdapter.this.todoListNoteCurrent.setDone(true);
 
                         // Sort todo list
                         this.sortTodoListNotes();
@@ -208,7 +211,7 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
                     }
                     else
                     {
-                        TodoNoteAdapter.this.todoListNoteCurrent.setChecked(false);
+                        TodoNoteAdapter.this.todoListNoteCurrent.setDone(false);
                     }
 
                     TodoNoteAdapter.this.todoListNoteAdapter.notifyDataSetChanged();
@@ -216,7 +219,9 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
 
                 if (TodoNoteAdapter.this.todoNoteViewHolderListener != null)
                 {
-                    TodoNoteAdapter.this.todoNoteViewHolderListener.onTodoNoteChanged();
+                    TodoNoteAdapter.this.todoNoteViewHolderListener.onTodoNoteChanged(
+                            TodoNoteAdapter.this.todoListNoteCurrent
+                    );
                 }
             });
 
@@ -234,7 +239,7 @@ public class TodoNoteAdapter extends RecyclerView.Adapter<TodoNoteAdapter.TodoNo
             {
                 @Override public int compare(TodoListNote o1, TodoListNote o2)
                 {
-                    return o1.isChecked() ? 1 : -1;
+                    return o1.isDone() ? 1 : -1;
                 }
             });
         }

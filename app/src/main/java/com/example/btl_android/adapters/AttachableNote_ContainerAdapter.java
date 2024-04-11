@@ -202,7 +202,7 @@ public class AttachableNote_ContainerAdapter extends RecyclerView.Adapter<Recycl
 				public void onFocusChange(View v, boolean hasFocus)
 				{
 					if (!hasFocus) {
-						Log.d("FileNote_LinkViewHolderTemp", "Content: " + binding.containerContent.getText().toString());
+//						Log.d("FileNote_LinkViewHolderTemp", "Content: " + binding.containerContent.getText().toString());
 
 						container.setContainerContent(binding.containerContent.getText().toString());
 					}

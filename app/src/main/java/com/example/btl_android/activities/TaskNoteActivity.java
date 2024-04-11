@@ -89,6 +89,7 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 	public void onBackPressed()
 	{
 		View view = new View(this);
+		view.requestFocus();
 
 		if (
 				this.binding.noteTaskCheckBox.isChecked() &&
@@ -249,76 +250,7 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 		//      Back Button
 		this.binding.backButton.setOnClickListener(view ->
 		{
-			if (
-				this.binding.noteTaskCheckBox.isChecked() &&
-				this.binding.editTextRepeatableCount.getText().toString().length() <= 0
-				)
-			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(TaskNoteActivity.this);
-
-				builder.setTitle("Delete Confirmation");
-				builder.setMessage("Since you have completed the Task, do you wish to delete the " +
-						"Note?");
-
-				builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if (fileName == null) {
-							finish();
-
-							return;
-						}
-
-						if (_DefaultNote.DeleteFromStorage(TaskNoteActivity.this, fileName)) {
-							TaskNoteActivity.this.finish();
-						}
-						else {
-							Log.d("AttachableNoteActivityTemp", "FileName = " + fileName);
-
-							Toast.makeText(TaskNoteActivity.this, "Failed to delete note",
-									Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-
-				builder.setNegativeButton("Nah", new DialogInterface.OnClickListener()
-				{
-					@Override public void onClick(DialogInterface dialog, int which)
-					{
-						TaskNoteActivity.this.SaveNote(view);
-
-						finish();
-					}
-				});
-
-				builder.create().show();
-			}
-			else if (this.SaveNote(view))
-			{
-				setResult(Activity.RESULT_OK);
-
-				finish();
-			}
-			else
-			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-				builder.setTitle("Leave Confirmation");
-				builder.setMessage("Note can not be saved, do you still want to leave?");
-
-				builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						finish();
-					}
-				});
-
-				builder.setNegativeButton("Nah", null);
-
-				builder.create().show();
-
-				return;
-			}
+			this.onBackPressed();
 		});
 
 		//      Menu Button!

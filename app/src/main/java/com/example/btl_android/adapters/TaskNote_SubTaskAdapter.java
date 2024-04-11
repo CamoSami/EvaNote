@@ -4,6 +4,7 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,8 +101,16 @@ public class TaskNote_SubTaskAdapter extends RecyclerView.Adapter<RecyclerView.V
 					this.LoadSummarizedSubTask(subTask);
 				});
 
-				this.binding.noteSubTaskTitle.setOnClickListener(view -> {
+				this.binding.noteSubTaskTitle.setOnFocusChangeListener(new View.OnFocusChangeListener()
+				{
+					@Override public void onFocusChange(View v, boolean hasFocus)
+					{
+						if (!hasFocus) {
+//							Log.d("FileNote_LinkViewHolderTemp", "Content: " + binding.containerContent.getText().toString());
 
+							subTask.setTaskTitle(binding.noteSubTaskTitle.getText().toString());
+						}
+					}
 				});
 			}
 			else

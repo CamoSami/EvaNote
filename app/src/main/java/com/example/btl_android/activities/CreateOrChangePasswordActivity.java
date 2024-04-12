@@ -36,7 +36,6 @@ public class CreateOrChangePasswordActivity
     private ActivityCreateOrChangePasswordActivityBinding binding;
     BiometricPrompt biometricPrompt;
     BiometricPrompt.PromptInfo promptInfo;
-    private final static String TOKEN_KEY = "123456781234567812345678";
     private final static int REQUEST_CODE_PIN_LOCK = 0;
 
     @Override protected void onCreate(Bundle savedInstanceState)
@@ -223,8 +222,7 @@ public class CreateOrChangePasswordActivity
     private void ChangePassword()
     {
         //Lưu pass
-        String newPass =
-                encrypt(CreateOrChangePasswordActivity.this.binding.COCPEdtNewPass.getText().toString());
+        String newPass = CreateOrChangePasswordActivity.this.binding.COCPEdtNewPass.getText().toString();
 
         PreferenceManager preferenceManager =
                 new PreferenceManager(CreateOrChangePasswordActivity.this);
@@ -232,39 +230,5 @@ public class CreateOrChangePasswordActivity
 
         //  Quay về
         CreateOrChangePasswordActivity.this.finish();
-    }
-
-    public static String encrypt(String plain)
-    {
-        try
-        {
-            byte[] iv = new byte[16];
-
-            new SecureRandom().nextBytes(iv); //Hàm tạo các giá trị ngẫu nhiên an toàn
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(TOKEN_KEY.getBytes("utf-8"), "AES"),
-                    new IvParameterSpec(iv)
-            );
-
-            byte[] cipherText = cipher.doFinal(plain.getBytes("utf-8"));
-            byte[] ivAndCipherText = getCombineArray(iv, cipherText);
-
-            return Base64.encodeToString(ivAndCipherText, Base64.NO_WRAP);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private static byte[] getCombineArray(byte[] one, byte[] two)
-    {
-        byte[] combined = new byte[one.length + two.length];
-        for (int i = 0; i < combined.length; ++i)
-        {
-            combined[i] = i < one.length ? one[i] : two[i - one.length];
-        }
-        return combined;
     }
 }

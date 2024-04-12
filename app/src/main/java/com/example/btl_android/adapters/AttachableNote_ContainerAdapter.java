@@ -309,11 +309,9 @@ public class AttachableNote_ContainerAdapter extends RecyclerView.Adapter<Recycl
 				{
 					contentEditText.setVisibility(View.GONE);
 				}
-				else
-				{
-					contentEditText.setFocusable(false);
-					contentEditText.setFocusableInTouchMode(false);
-				}
+
+				contentEditText.setFocusable(false);
+				contentEditText.setFocusableInTouchMode(false);
 			}
 			else
 			{
@@ -325,11 +323,9 @@ public class AttachableNote_ContainerAdapter extends RecyclerView.Adapter<Recycl
 				{
 					contentEditText.setVisibility(View.VISIBLE);
 				}
-				else
-				{
-					contentEditText.setFocusable(true);
-					contentEditText.setFocusableInTouchMode(true);
-				}
+
+				contentEditText.setFocusable(true);
+				contentEditText.setFocusableInTouchMode(true);
 			}
 
 			this.SetLinkIcon(container);

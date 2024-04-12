@@ -359,11 +359,6 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 		// This will give you the file path
 		String directoryPath = Uri.decode(uri.toString());
 
-		//                    directoryPath = directoryPath.replaceAll("%2F", "/");
-
-		// Now you can use this directory path in your app
-		//                    Log.d("FileNoteActivityTemp", "File Directory Path: " + directoryPath);
-
 		String fileName = directoryPath.substring(directoryPath.lastIndexOf("/") + 1);
 		String finalizedUri = Environment.getExternalStorageDirectory() + "/" + directoryPath.substring(directoryPath.lastIndexOf(":") + 1);
 

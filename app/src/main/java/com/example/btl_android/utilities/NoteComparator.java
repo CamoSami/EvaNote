@@ -21,10 +21,8 @@ public class NoteComparator implements Comparator<_DefaultNote>
 		}
 
 		//      Check if 1 of them is taskNote something something
-		if (
-				!NoteComparator.taskNoteDeleteOnCompletion &&
-				NoteComparator.taskNoteSortToBottomOnCompletion
-			)
+		if (!NoteComparator.taskNoteDeleteOnCompletion &&
+				NoteComparator.taskNoteSortToBottomOnCompletion)
 		{
 			if (o1 instanceof TaskNote && o2 instanceof TaskNote)
 			{
@@ -61,43 +59,36 @@ public class NoteComparator implements Comparator<_DefaultNote>
 		}
 
 		//      Check if 1 of them is taskNote something something
-		if (
-//				!NoteComparator.taskNoteDeleteOnCompletion &&
-//						NoteComparator.taskNoteSortToBottomOnCompletion
-			true
-			)
+		if (o1 instanceof TodoListNote && o2 instanceof TodoListNote)
 		{
-			if (o1 instanceof TodoListNote && o2 instanceof TodoListNote)
-			{
-				TodoListNote todoListNote1 = (TodoListNote) o1;
-				TodoListNote todoListNote2 = (TodoListNote) o2;
+			TodoListNote todoListNote1 = (TodoListNote) o1;
+			TodoListNote todoListNote2 = (TodoListNote) o2;
 
-				if (todoListNote1.checkAllTodoDone() && !todoListNote2.checkAllTodoDone())
-				{
-					return 1;
-				}
-				else if (!todoListNote1.checkAllTodoDone() && todoListNote2.checkAllTodoDone())
-				{
-					return -1;
-				}
+			if (todoListNote1.checkAllTodoDone() && !todoListNote2.checkAllTodoDone())
+			{
+				return 1;
 			}
-			else if (o1 instanceof TodoListNote)
+			else if (!todoListNote1.checkAllTodoDone() && todoListNote2.checkAllTodoDone())
 			{
-				TodoListNote todoListNote1 = (TodoListNote) o1;
-
-				if (todoListNote1.checkAllTodoDone())
-				{
-					return 1;
-				}
+				return -1;
 			}
-			else if (o2 instanceof TodoListNote)
-			{
-				TodoListNote todoListNote2 = (TodoListNote) o2;
+		}
+		else if (o1 instanceof TodoListNote)
+		{
+			TodoListNote todoListNote1 = (TodoListNote) o1;
 
-				if (todoListNote2.checkAllTodoDone())
-				{
-					return -1;
-				}
+			if (todoListNote1.checkAllTodoDone())
+			{
+				return 1;
+			}
+		}
+		else if (o2 instanceof TodoListNote)
+		{
+			TodoListNote todoListNote2 = (TodoListNote) o2;
+
+			if (todoListNote2.checkAllTodoDone())
+			{
+				return -1;
 			}
 		}
 

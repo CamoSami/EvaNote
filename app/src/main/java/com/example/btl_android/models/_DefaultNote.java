@@ -179,7 +179,7 @@ public class _DefaultNote implements Serializable
 		Gson gson = new Gson();
 		String json = gson.toJson(noteMap);
 
-		//      Get Directory via PrefereceManager
+		//      Get Directory via PreferenceManager
 		PreferenceManager preferenceManager = new PreferenceManager(context);
 		String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
 		File file;
@@ -187,7 +187,6 @@ public class _DefaultNote implements Serializable
 
 		if (this.fileName == null)
 		{
-			//      TODO: File + Date Format + .txt
 			this.fileName = "DefaultNote" + longDateFormat.format(this.getDateCreated()) + ".txt";
 
 			file = new File(directory, this.fileName);

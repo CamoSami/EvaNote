@@ -1,5 +1,6 @@
 package com.example.btl_android.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,6 +37,16 @@ public class EnterPassWordActivity
     @Override protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        if (new PreferenceManager(this).getString(Constants.PRIVATE_NOTE_PASSWORD) == null)
+        {
+            Intent intent = new Intent(this, CreateOrChangePasswordActivity.class);
+
+            startActivity(intent);
+
+            finish();
+        }
+
         this.binding = ActivityEnterPassWordBinding.inflate(getLayoutInflater());
         this.setContentView(this.binding.getRoot());
 
@@ -242,14 +253,14 @@ public class EnterPassWordActivity
 
             // Lấy dữ liệu từ SharedPreferences
             String oldPass = preferenceManager.getString(Constants.PRIVATE_NOTE_PASSWORD);
-            oldPass = decrypt(oldPass);
 
             if (oldPass.length() < 6)
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                 builder.setTitle("Error").setMessage(
-                                "The file containing the password has been deleted. Please create a new password")
+                                "The file containing the password has been deleted. Please create a new password"
+                        )
                         .setPositiveButton("Update password", new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int whichButton)
@@ -266,16 +277,25 @@ public class EnterPassWordActivity
 
             if (this.binding.EPEdtPassword.getText().toString().equals(oldPass))
             {
-                Intent intent = new Intent(this, PrivateNoteActivity.class);
-
-                if (this.fileName != null)
+                if (this.getCallingActivity() != null)
                 {
-                    intent.putExtra(Constants.BUNDLE_FILENAME_KEY, this.fileName);
+                    setResult(Activity.RESULT_OK);
+
+                    finish();
                 }
+                else
+                {
+                    Intent intent = new Intent(this, PrivateNoteActivity.class);
 
-                startActivity(intent);
+                    if (this.fileName != null)
+                    {
+                        intent.putExtra(Constants.BUNDLE_FILENAME_KEY, this.fileName);
+                    }
 
-                finish();
+                    startActivity(intent);
+
+                    finish();
+                }
             }
             else
             {
@@ -319,27 +339,5 @@ public class EnterPassWordActivity
             // Showing the popup menu
             popupMenu.show();
         });
-    }
-
-    public static String decrypt(String encoded)
-    {
-        try
-        {
-            // Base64.decode: Giải mã,
-            byte[] ivAndCipherText = Base64.decode(encoded, Base64.NO_WRAP); // Loại bỏ kí tự xuống dòng trong chuỗi
-            byte[] iv = Arrays.copyOfRange(ivAndCipherText, 0, 16);
-            byte[] cipherText = Arrays.copyOfRange(ivAndCipherText, 16, ivAndCipherText.length);
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(TOKEN_KEY.getBytes("utf-8"), "AES"),
-                    new IvParameterSpec(iv));
-
-            return new String(cipher.doFinal(cipherText), "utf-8");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

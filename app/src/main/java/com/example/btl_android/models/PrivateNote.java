@@ -53,6 +53,7 @@ public class PrivateNote extends _DefaultNote{
     {
         return (!Objects.equals(title, "") || !Objects.equals(content, ""));
     }
+
     @Override
     public boolean WriteToStorage(Context context, boolean isDuplicated)
     {

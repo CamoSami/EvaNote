@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 	private PreferenceManager preferenceManager;
 	private boolean isEditing = false;
 	private boolean isReversed = true;
+	private List<Integer> noteIndexDeleteList = new ArrayList<>();
+	private static int REQUEST_ENTER_PASSWORD = 0;
 
 	@Override protected void onCreate(Bundle savedInstanceState)
 	{
@@ -298,7 +300,71 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode != Activity.RESULT_OK || data == null)
+		if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_ENTER_PASSWORD)
+		{
+			//      Special Delete
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+			builder.setTitle("Delete Confirmation");
+			builder.setMessage("Are you sure you want to delete the Note(s)?");
+
+			builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
+			{
+				@Override public void onClick(DialogInterface dialog, int which)
+				{
+					for (int i = 0; i < MainActivity.this.noteIndexDeleteList.size(); i++)
+					{
+						_DefaultNote defaultNote = MainActivity.this.noteList.get(
+								MainActivity.this.noteIndexDeleteList.get(i)
+						);
+
+						if (defaultNote instanceof TodoListNote)
+						{
+//							Log.d("Delete Confirmation", "onClick: :>>");
+							MainActivity.this.noteList.remove(
+									MainActivity.this.noteIndexDeleteList.get(i)
+							);
+
+							MainActivity.this.DeleteTodoListNoteById(((TodoListNote) defaultNote).getId());
+						}
+						else
+						{
+							String fileName = defaultNote.getFileName();
+
+							if (_DefaultNote.DeleteFromStorage(MainActivity.this, fileName))
+							{
+								MainActivity.this.noteList.remove(
+										MainActivity.this.noteIndexDeleteList.get(i)
+								);
+							}
+							else
+							{
+								Log.d("MainActivity.onActivityResult() + Delete",
+										"FileName = " + fileName);
+
+								Toast.makeText(MainActivity.this, "Failed to delete note",
+										Toast.LENGTH_SHORT
+								).show();
+							}
+						}
+					}
+
+					MainActivity.this.noteIndexDeleteList.clear();
+
+					MainActivity.this.ReadFiles();
+					MainActivity.this.ReadFilesByHelpers();
+					MainActivity.this.SortNotes();
+
+					MainActivity.this.isEditing = false;
+					MainActivity.this.ChangeEditingLayout();
+				}
+			});
+
+			builder.setNegativeButton("Nah", null);
+
+			builder.create().show();
+		}
+		else if (resultCode != Activity.RESULT_OK || data == null)
 		{
 			return;
 		}
@@ -399,6 +465,47 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 	private void onNoteDelete()
 	{
+		//      Pre Check if PrivateNote is here
+		boolean deletedNotesIncludePrivate = false;
+
+		if (this.noteIndexDeleteList.size() != 0)
+		{
+			for (int i = 0; i < MainActivity.this.noteIndexDeleteList.size(); i++)
+			{
+					if (MainActivity.this.noteList.get(
+							MainActivity.this.noteIndexDeleteList.get(i)
+						) instanceof PrivateNote
+					)
+					{
+						deletedNotesIncludePrivate = true;
+					}
+
+			}
+		}
+
+		for (int i = 0; i < MainActivity.this.noteList.size(); i++)
+		{
+			if (MainActivity.this.noteList.get(i).isChecked())
+			{
+				if (MainActivity.this.noteList.get(i) instanceof PrivateNote)
+				{
+					deletedNotesIncludePrivate = true;
+				}
+
+				this.noteIndexDeleteList.add(i);
+			}
+		}
+
+		if (deletedNotesIncludePrivate)
+		{
+			Intent intent = new Intent(MainActivity.this, EnterPassWordActivity.class);
+
+			startActivityForResult(intent, REQUEST_ENTER_PASSWORD);
+
+			return;
+		}
+
+		//      If not, delete like normal
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		builder.setTitle("Delete Confirmation");
@@ -438,6 +545,8 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					}
 				}
 
+				MainActivity.this.ReadFiles();
+				MainActivity.this.ReadFilesByHelpers();
 				MainActivity.this.SortNotes();
 
 				MainActivity.this.isEditing = false;
@@ -449,7 +558,6 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 		builder.create().show();
 	}
-
 
 	private void onNoteDuplicate()
 	{
@@ -688,8 +796,9 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 
 	private void ChangeEditingLayout()
 	{
-		Collections.sort(this.noteList, new NoteComparator());
+		this.SortNotes();
 		this.listAdapter.SetEditing(this.isEditing);
+		this.noteIndexDeleteList.clear();
 
 		if (this.isEditing)
 		{

@@ -93,6 +93,11 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
+					if (AttachableNoteActivity.this.fileName != null)
+					{
+						_DefaultNote.DeleteFromStorage(AttachableNoteActivity.this, AttachableNoteActivity.this.fileName);
+					}
+
 					finish();
 				}
 			});
@@ -149,32 +154,7 @@ public class AttachableNoteActivity extends AppCompatActivity implements Attacha
 		//      Back Button
 		this.binding.backButton.setOnClickListener(view ->
 		{
-			if (this.SaveNote(view))
-			{
-				setResult(Activity.RESULT_OK);
-
-				finish();
-			}
-			else
-			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-				builder.setTitle("Leave Confirmation");
-				builder.setMessage("Note can not be saved, do you still want to leave?");
-
-				builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						finish();
-					}
-				});
-
-				builder.setNegativeButton("Nah", null);
-
-				builder.create().show();
-
-				return;
-			}
+			this.onBackPressed();
 		});
 
 		//      Menu Button!

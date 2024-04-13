@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupMenu;
@@ -77,39 +78,14 @@ public class PrivateNoteActivity
 
     private void SetListeners(){
         this.binding.backButton.setOnClickListener(view ->{
-            if (this.SaveNote(view)) {
-                setResult(Activity.RESULT_OK);
-
-                finish();
-            }
-            else {
-                if (this.isConfirmed) {
-                    return;
-                }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Leave Confirmation");
-                builder.setMessage("Note can not be saved, do you still want to leave?");
-
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-
-                builder.setNegativeButton("No", null);
-
-                builder.create().show(); //Dialog được tạo và hiện lên màn hình
-
-                return;
-            }
-            //startActivity(MainActivity);
+            this.onBackPressed();
         });
+
         this.binding.editButton.setOnClickListener(view ->
         {
             this.SetEditing(!this.isEditing);
         });
+
         this.binding.settingsButton.setOnClickListener(view ->
         {
             PopupMenu popupMenu = new PopupMenu(view.getContext(), this.binding.settingsButton);
@@ -174,6 +150,44 @@ public class PrivateNoteActivity
             // Showing the popup menu
             popupMenu.show();
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        View view = new View(this);
+
+        if (this.SaveNote(view)) {
+            super.onBackPressed();
+        }
+        else
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Leave Confirmation");
+            builder.setMessage("Note can not be saved, do you still want to leave?");
+
+            builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    if (PrivateNoteActivity.this.fileName != null)
+                    {
+                        _DefaultNote.DeleteFromStorage(PrivateNoteActivity.this,
+                                PrivateNoteActivity.this.fileName);
+                    }
+
+                    finish();
+                }
+            });
+
+            builder.setNegativeButton("Nah", null);
+
+            builder.create().show();
+
+            return;
+        }
     }
 
     private boolean SaveNote(View view) {

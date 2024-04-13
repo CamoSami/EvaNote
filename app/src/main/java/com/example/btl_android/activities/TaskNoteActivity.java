@@ -153,6 +153,11 @@ public class TaskNoteActivity extends AppCompatActivity implements TaskNoteListe
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
+					if (TaskNoteActivity.this.fileName != null)
+					{
+						_DefaultNote.DeleteFromStorage(TaskNoteActivity.this, TaskNoteActivity.this.fileName);
+					}
+
 					finish();
 				}
 			});

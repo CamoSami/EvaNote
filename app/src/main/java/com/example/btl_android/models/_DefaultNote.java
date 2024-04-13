@@ -1,9 +1,15 @@
 package com.example.btl_android.models;
 
+import static android.content.Context.ALARM_SERVICE;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.btl_android.utilities.AlarmReceiver;
 import com.example.btl_android.utilities.Constants;
 import com.example.btl_android.utilities.PreferenceManager;
 import com.google.gson.Gson;

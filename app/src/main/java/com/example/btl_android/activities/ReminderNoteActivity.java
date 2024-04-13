@@ -54,7 +54,7 @@ public class ReminderNoteActivity
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
 
-        this.alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        this.alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
 
         this.SetListeners();
         this.ReadToActivity(bundle);
@@ -118,51 +118,7 @@ public class ReminderNoteActivity
         {
             @Override public void onClick(View v)
             {
-                if (ReminderNoteActivity.this.SaveNote(v))
-                {
-                    AlertDialog.Builder builder =
-                            new AlertDialog.Builder(ReminderNoteActivity.this);
-
-                    builder.setTitle("Alarm not active");
-                    builder.setMessage(
-                            "Note is saved but alarm is not up, do you still want to " + "leave?");
-
-                    builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
-                    {
-                        @Override public void onClick(DialogInterface dialog, int which)
-                        {
-                            ReminderNoteActivity.this.ResetReminder();
-
-                            finish();
-                        }
-                    });
-
-                    builder.setNegativeButton("Nah", null);
-
-                    builder.create().show();
-                }
-                else
-                {
-                    AlertDialog.Builder builder =
-                            new AlertDialog.Builder(ReminderNoteActivity.this);
-
-                    builder.setTitle("Leave Confirmation");
-                    builder.setMessage("Note can not be saved, do you still want to leave?");
-
-                    builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
-                    {
-                        @Override public void onClick(DialogInterface dialog, int which)
-                        {
-                            ReminderNoteActivity.this.ResetReminder();
-
-                            finish();
-                        }
-                    });
-
-                    builder.setNegativeButton("Nah", null);
-
-                    builder.create().show();
-                }
+                ReminderNoteActivity.this.onBackPressed();
             }
         });
 
@@ -197,7 +153,26 @@ public class ReminderNoteActivity
 
         if (this.SaveNote(view))
         {
-            super.onBackPressed();
+            AlertDialog.Builder builder =
+                    new AlertDialog.Builder(ReminderNoteActivity.this);
+
+            builder.setTitle("Alarm not active");
+            builder.setMessage(
+                    "Note is saved but alarm is not up, do you still want to " + "leave?");
+
+            builder.setPositiveButton("Yes :(", new DialogInterface.OnClickListener()
+            {
+                @Override public void onClick(DialogInterface dialog, int which)
+                {
+                    ReminderNoteActivity.this.ResetReminder();
+
+                    ReminderNoteActivity.super.onBackPressed();
+                }
+            });
+
+            builder.setNegativeButton("Nah", null);
+
+            builder.create().show();
         }
         else
         {
@@ -210,15 +185,13 @@ public class ReminderNoteActivity
             {
                 @Override public void onClick(DialogInterface dialog, int which)
                 {
-                    finish();
+                    ReminderNoteActivity.super.onBackPressed();
                 }
             });
 
             builder.setNegativeButton("Nah", null);
 
             builder.create().show();
-
-            return;
         }
     }
 
@@ -391,17 +364,14 @@ public class ReminderNoteActivity
         String sSnooze = this.binding.txbSnooze.getText().toString();
         int snooze = sSnooze.equals("") ? 1 : (Integer.parseInt(sSnooze) <= 0 ? 1 : Integer.parseInt(sSnooze));
 
-        if (this.fileName == null)
-        {
-            this.SaveNote(this.binding.txbTitle);
-        }
-
         Intent intent = new Intent(this, AlarmReceiver.class);
 
         //        Log.d("IsChecker: ", String.valueOf(this.binding.swRepeat.isChecked()));
 
         intent.setAction(Constants.REMINDER_NOTE_KEY);
         intent.putExtra(Constants.BUNDLE_FILENAME_KEY, this.fileName);
+
+        Log.d("filename: ", this.fileName);
 
         pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_MUTABLE
@@ -438,11 +408,6 @@ public class ReminderNoteActivity
             else
             {
                 Intent intent = new Intent(this, AlarmReceiver.class);
-
-                if (this.fileName == null || this.fileName.length() == 0)
-                {
-                    this.SaveNote(this.binding.txbTitle);
-                }
 
                 intent.setAction(Constants.REMINDER_NOTE_KEY);
                 intent.putExtra(Constants.BUNDLE_FILENAME_KEY, this.fileName);
@@ -546,6 +511,15 @@ public class ReminderNoteActivity
             return false;
         }
 
-        return reminderNote.WriteToStorage(this, false);
+        if (reminderNote.WriteToStorage(this, false))
+        {
+            this.fileName = reminderNote.getFileName();
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

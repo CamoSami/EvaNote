@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import com.example.btl_android.models.ReminderNote;
 import com.example.btl_android.models.TaskNote;
 import com.example.btl_android.models.TodoListNote;
 import com.example.btl_android.models._DefaultNote;
+import com.example.btl_android.utilities.AlarmReceiver;
 import com.example.btl_android.utilities.Constants;
 import com.example.btl_android.utilities.Helpers;
 import com.example.btl_android.utilities.NoteComparator;
@@ -529,6 +532,33 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					else if (defaultNote.isChecked())
 					{
 						String fileName = defaultNote.getFileName();
+
+						if (defaultNote.isChecked() && defaultNote instanceof ReminderNote)
+						{
+							try
+							{
+								Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+
+								intent.setAction(Constants.REMINDER_NOTE_KEY);
+								intent.putExtra(Constants.BUNDLE_FILENAME_KEY, fileName);
+
+								PendingIntent sender =
+										PendingIntent.getBroadcast(MainActivity.this, 0, intent,
+												PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
+										);
+
+								AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+								alarmManager.cancel(sender);
+							}
+							catch (Exception e)
+							{
+								e.printStackTrace();
+
+								Toast.makeText(MainActivity.this, "Calendar reset failed!",
+										Toast.LENGTH_SHORT
+								).show();
+							}
+						}
 
 						if (_DefaultNote.DeleteFromStorage(MainActivity.this, fileName))
 						{

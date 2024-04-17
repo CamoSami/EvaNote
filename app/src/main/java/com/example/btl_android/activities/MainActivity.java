@@ -870,6 +870,29 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 			this.binding.noDirLayout.setVisibility(View.GONE);
 		}
 
+		//      Get App Files
+		File dirAppFiles = this.getFilesDir();
+		File[] appFiles = dirAppFiles.listFiles();
+
+		//      Check if any Files scanned
+		if (appFiles != null && appFiles.length > 0)
+		{
+			for (File file : appFiles)
+			{
+				String noteName = file.getName();
+
+				if (noteName.contains("PrivateNote"))
+				{
+					PrivateNote privateNote = PrivateNote.ReadFromStorage(this, noteName);
+
+					if (privateNote != null)
+					{
+						this.noteList.add(privateNote);
+					}
+				}
+			}
+		}
+
 		//      Get Files
 		File dir = new File(directory);
 		File[] files = dir.listFiles();
@@ -905,15 +928,6 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 					if (taskNote != null)
 					{
 						this.noteList.add(taskNote);
-					}
-				}
-				else if (noteName.contains("PrivateNote"))
-				{
-					PrivateNote privateNote = PrivateNote.ReadFromStorage(this, file.getName());
-
-					if (privateNote != null)
-					{
-						this.noteList.add(privateNote);
 					}
 				}
 				else if (noteName.contains("ReminderNote"))

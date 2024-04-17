@@ -73,8 +73,7 @@ public class PrivateNote extends _DefaultNote{
         String json = gson.toJson(noteMap);
 
         //      Get Directory via PrefereceManager
-        PreferenceManager preferenceManager = new PreferenceManager(context);
-        String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
+        File appFileDir = context.getFilesDir();
         File file;
         int i = 1;
 
@@ -83,14 +82,14 @@ public class PrivateNote extends _DefaultNote{
             //      TODO: File + Date Format + .txt
             this.fileName = "PrivateNote" + longDateFormat.format(this.getDateCreated()) + ".txt";
 
-            file = new File(directory, this.fileName);
+            file = new File(appFileDir, this.fileName);
 
             try
             {
                 while (!file.createNewFile()) {
                     this.fileName = "PrivateNote" + longDateFormat.format(this.getDateCreated()) + "(" + i++ + ").txt";
 
-                    file = new File(directory, this.fileName);
+                    file = new File(appFileDir, this.fileName);
                 }
             }
             catch (IOException e)
@@ -128,13 +127,13 @@ public class PrivateNote extends _DefaultNote{
             }
 
             //      Create a New File with Similar Name
-            file = new File(directory, this.fileName = fileName + "(" + i++ + ").txt");
+            file = new File(appFileDir, this.fileName = fileName + "(" + i++ + ").txt");
             try
             {
                 while (!file.createNewFile()) {
                     this.fileName = fileName + "(" + i++ + ").txt";
 
-                    file = new File(directory, this.fileName);
+                    file = new File(appFileDir, this.fileName);
                 }
             }
             catch (IOException e)
@@ -151,7 +150,7 @@ public class PrivateNote extends _DefaultNote{
         }
         else
         {
-            file = new File(directory, this.fileName);
+            file = new File(appFileDir, this.fileName);
         }
 
         //      Attempt to Write File
@@ -186,8 +185,10 @@ public class PrivateNote extends _DefaultNote{
 
         PreferenceManager preferenceManager = new PreferenceManager(context);
         String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
-        File file = new File(directory, fileName);
+        File appFileDir = context.getFilesDir();
+        File file = new File(appFileDir, fileName);
         String readFile;
+
         try {
             FileInputStream stream = new FileInputStream(file);
 

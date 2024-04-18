@@ -138,7 +138,21 @@
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginBottom="@dimen/_6sdp"
-                    android:text="A Note protected by a password to safeguard its content (don't rely on it though)"
+                    android:text="A Note protected by a password to safeguard its content"
+                    android:textSize="@dimen/_16ssp"
+                    android:textStyle="normal"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
+                    android:background="@android:color/transparent"/>
+
+                <TextView
+                    android:id="@+id/descPrivateNote2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_72sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginBottom="@dimen/_6sdp"
+                    android:text="Warning: Deleting the application will also delete all PrivateNotes"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="normal"
                     android:textColor="?android:attr/textColorPrimaryInverse"

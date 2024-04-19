@@ -898,7 +898,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener
 		File[] files = dir.listFiles();
 
 		//      Check if any Files scanned
-		if (files == null || files.length == 0)
+		if ((files == null || files.length == 0) && (appFiles == null || appFiles.length == 0))
 		{
 			this.binding.noNoteLayout.setVisibility(View.VISIBLE);
 

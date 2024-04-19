@@ -1234,11 +1234,13 @@ public class NotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 	public class PrivateNoteViewHolder extends RecyclerView.ViewHolder implements NoteViewHolderInterface
 	{
 		private final ItemContainerSmallPrivateNoteBinding binding;
+
 		public PrivateNoteViewHolder(ItemContainerSmallPrivateNoteBinding itemContainerSmallPrivateNoteBinding){
 			super(itemContainerSmallPrivateNoteBinding.getRoot());
 
 			binding = itemContainerSmallPrivateNoteBinding;
 		}
+
 		public void SetListeners(_DefaultNote defaultNote) {
 			this.binding.noteCheckbox.setOnClickListener(view ->
 			{

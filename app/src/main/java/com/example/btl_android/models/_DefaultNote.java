@@ -366,11 +366,21 @@ public class _DefaultNote implements Serializable
 
 	public static boolean DeleteFromStorage(Context context, String fileName)
 	{
-		PreferenceManager preferenceManager = new PreferenceManager(context);
+		if (fileName.contains("PrivateNote"))
+		{
+			File appFileDir = context.getFilesDir();
+			File file = new File(appFileDir, fileName);
 
-		String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
-		File file = new File(directory, fileName);
+			return file.delete();
+		}
+		else
+		{
+			PreferenceManager preferenceManager = new PreferenceManager(context);
 
-		return file.delete();
+			String directory = preferenceManager.getString(Constants.SETTINGS_STORAGE_LOCATION);
+			File file = new File(directory, fileName);
+
+			return file.delete();
+		}
 	}
 }
